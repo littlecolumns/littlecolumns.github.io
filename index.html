@@ -1,0 +1,478 @@
+<!doctype html>
+<html lang="en">
+  <head>
+	<meta name="generator" content="Hugo 0.36.1" />
+    <title>Little Columns</title>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/css?family=Raleway:600,700|Lato:300,400,700|Open+Sans:400,700" rel="stylesheet">
+
+    <style>
+      body {
+        font-family: 'Lato', 'Open Sans', sans-serif;
+        color: #555;
+      }
+      
+      h1, h2, h3, h4, h5, h6 {
+        font-family: 'Raleway';
+        font-weight: 600;
+        color: #444;
+      }
+
+      img {
+        max-width: 100%;
+      }
+
+      a {
+        color: #1ABC9C;
+      }
+
+      .title-container {
+        padding: 4rem 0 4rem 0;
+        text-align: center;
+      }
+
+      .btn-primary {
+        background: #1ABC9C;
+        border-color: #1ABC9C;
+      }
+
+      .title-container h2 {
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #333;
+      }
+
+      .title-container p {
+        font-size: 22px;
+        font-family: Lato;
+        color: #777;
+        font-weight: 300;
+      }
+
+      .title-container sup {
+        font-size: 10px;
+        top: -1.5em;
+      }
+
+      .product-container {
+        padding: 2rem 0;
+      }
+
+      .product-container h2 + p {
+        font-weight: bold;
+      }
+
+      .product-container:nth-child(odd) {
+        background: #f5f5f5;
+        text-align: right;
+      }
+
+      .product-container h2 {
+        margin-bottom: 30px;
+      }
+
+      .title-container h2:before,
+      .title-container h2:after { 
+        content: ' • ';
+        display: 'inline';
+        padding: 0 1em;
+      }
+
+      .product-container h2 img {
+        position: relative;
+        top: 5px;
+        vertical-align: text-bottom;
+        padding-right: 5px;
+      }
+
+      .product-container:nth-child(odd) h2 {
+        margin-bottom: 60px;
+      }
+
+      .product-container:nth-child(odd) h2:after {
+        position: absolute;
+        right: 15px;
+      }
+
+      .product-container h2:after {
+        content: '';
+        display: block;
+        margin-top: 30px;
+        width: 40px;
+        border-top: 2px solid #444;
+      }
+
+      .product-container .btn {
+        margin-top: 15px;
+      }
+
+      .headshot {
+        }
+
+      .todo-container .col-sm-6 {
+        margin-bottom: 30px;
+      }
+
+      .fbox-icon a:hover {
+        text-decoration: none;
+      }
+
+      .todo-container {
+        margin-bottom: 5rem;
+      }
+
+      .subscribe {
+        background: #f5f5f5;
+        padding-bottom: 5rem;
+      }
+
+      .subscribe form {
+        margin-top: 60px;
+      }
+
+      .subscribe .form-control, .subscribe .btn {
+        font-size: 22px;
+        font-weight: 300;
+      }
+
+      .subscribe .btn {
+        padding-left: 1.5rem;
+        padding-right: 1.5rem;
+        font-size: 22px;
+      }
+
+      .dark {
+        color: #FFF;
+        background: #1ABC9C;
+        text-shadow: 1px 1px 3px #444;
+      }
+
+      .dark h1, .dark h3, .dark h4 {
+        color: #FFF;
+        text-shadow: 1px 1px 2px #444;
+      }
+
+      .footer {
+        margin-top: 5rem;
+        padding: 2rem 0;
+        font-size: 16px;
+      }
+
+      .footer h3, .footer h4 {
+        color: #fff;
+      }
+
+      .dark i {
+        text-shadow: none;
+        font-size: 18px;
+      }
+
+      .footer a {
+        background: white;
+        padding: 2px 4px;
+        color: #444;
+        text-shadow: none;
+      }
+
+      .footer i {
+        width: 18px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 5px;
+      }
+
+    </style>
+
+    <link href="/css/font-icons.css" rel="stylesheet">
+    <link href="/css/feature-box.css" rel="stylesheet">
+  </head>
+  <body>
+
+<style>
+.top-container {
+ 
+  padding: 150px 0;
+  background-attachment: fixed;
+}
+
+.top-container h1 {
+  font-size: 72px;
+  letter-spacing: 1px;
+}
+
+.top-container p {
+  font-size: 22px;
+  font-weight: 300;
+}
+
+.top-container img {
+  max-width: 200px;
+}
+</style>
+
+<div class="top-container dark">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-sm-4 text-right">
+        <img src="/images/spreadsheet.png">
+      </div>
+      <div class="col">
+        <h1>Little Columns</h1>
+        <p>Making data easier for everyone (but mostly just journalists)</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Let's solve some problems</h2>
+      </div>
+      <div class="col-md-10 offset-md-1">
+        <p>You need solutions that work for journalists, not <del>rocket</del> data scientists<sup>1</sup></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="todo-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-6">
+
+        <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
+  <div class="fbox-icon">
+    <a href="#" onclick="return false"><i class="icon-map-marker i-alt"></i></a>
+  </div>
+</div>
+
+        <h4>Mapping and Geographic Analysis</h4>
+        <p>Maps cover a lot of ground &mdash; everything from annotated reference maps like <a href="https://www.washingtonpost.com/graphics/2018/national/florida-school-shooting/">the Washington Post's coverage of Parkland</a> to complex data-driven pieces like <a href="https://www.nytimes.com/elections/results/president">this NYT electoral map</a>.</p>
+      </div>
+      <div class="col-sm-6">
+        <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
+  <div class="fbox-icon">
+    <a href="#" onclick="return false"><i class="icon-paperplane i-alt"></i></a>
+  </div>
+</div>
+
+        <h4>Web applications</h4>
+        <p>Build browseable databases like the Texas Tribune's <a href="https://salaries.texastribune.org/">Government Salaries Explorer</a> or ProPublica's <a href="https://projects.propublica.org/docdollars/">Dollars for Docs</a>. <em>Amazing data collections not included</em></p>
+      </div>
+      <div class="col-sm-6">
+        <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
+  <div class="fbox-icon">
+    <a href="#" onclick="return false"><i class="icon-chart i-alt"></i></a>
+  </div>
+</div>
+        <h4>Charts and Graphs</h4>
+        <p>Sometimes people overlook simple charts<sup>2</sup> and graphics like those from <a href="https://fivethirtyeight.com/features/what-makes-nigel-richards-the-best-scrabble-player-on-earth/">FiveThirtyEight</a> and <a href="https://www.nytimes.com/2017/12/20/upshot/democrats-2018-congressional-elections-polling.html">the Upshot</a> in favor of interactives. Don't be a goofball.</p>
+      </div>
+      <div class="col-sm-6">
+        <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
+  <div class="fbox-icon">
+    <a href="#" onclick="return false"><i class="icon-bolt i-alt"></i></a>
+  </div>
+</div>
+        <h4>Data Cleaning and Analysis</h4>
+        <p>Installing Python is the worst part of learning Python, I promise. And I'm not teaching you R, because, well, I don't know it. <a href="https://www.buzzfeed.com/lamvo/oscars-script-diversity-analysis">This piece from BuzzFeed</a> was done <a href="https://github.com/BuzzFeedNews/2018-03-oscars-script-diversity-analysis/blob/master/notebooks/calculate_word_frequencies.ipynb">using Python</a>.</p>
+      </div>
+      <div class="col-sm-6">
+        <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
+  <div class="fbox-icon">
+    <a href="#" onclick="return false"><i class="icon-play i-alt"></i></a>
+  </div>
+</div>
+        <h4>D3-driven interactives (sigh)</h4>
+        <p>Everyone wants to learn D3 and work for <a href="https://pudding.cool/2017/03/hamilton/">The Pudding</a>, although I can only help with the first half. But only if you also listen to like twelve hours of me complaining about why interactivity is a <em>curse</em>.</p>
+      </div>
+
+      <div class="col-sm-6">
+        <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
+  <div class="fbox-icon">
+    <a href="#" onclick="return false"><i class="icon-file i-alt"></i></a>
+  </div>
+</div>
+        <h4>More things!</h4>
+        <p>You want buzzwords? Here we go: Scraping! Python! Jupyter Notebooks! Illustrator! Machine learning! QGIS! Flask! OpenRefine! LANDSAT! Most everything people mentioned at NICAR, probably.</p>
+      </div>
+    </div>
+    <div class="col-sm-10 offset-sm-1">
+      <p><small><sup>1</sup> Yes, you're right, it might be fun to do some <a href="https://www.propublica.org/article/how-we-analyzed-the-compas-recidivism-algorithm">regressions</a> or <a href="https://www.nytimes.com/interactive/2017/02/28/upshot/trump-sounds-different-tone-in-first-address-to-congress.html">text analysis</a> or whatever using <a href="http://scikit-learn.org/">scikit-learn</a>, but you get the idea. Us data journos have a much wider scope than the number crunchers of the world.</small></p>
+      <p><small><sup>2</sup> Is that pie chart making you lose your mind? If it isn't, let's go on a journey to find out why it's so painful.</small></p>
+    </div>
+  </div>
+</div>
+
+<div class="title-container subscribe">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Keep in the loop</h2>
+      </div>
+      <div class="col-md-8 offset-md-2">
+        <p>We'll let you know when we have fun new releases. Courses, tools, showtunes, furniture, etc.</p>
+
+        <form action="https://littlecolumns.us12.list-manage.com/subscribe/post?u=ecdebf156be0b7e068fac7c25&amp;id=16537e7c90" method="post" role="form" target="_blank" novalidate>
+          <div class="input-group">
+            <input name="EMAIL" type="email" class="form-control" placeholder="Enter your Email" required="">
+            <div style="position: absolute; left: -5000px;" aria-hidden="true"><input type="text" name="b_ecdebf156be0b7e068fac7c25_16537e7c90" tabindex="-1" value=""></div>
+            <div class="input-group-append">
+              <button class="btn btn-primary" type="submit"><i class="icon-email2"></i></button>
+            </div>
+          </div>
+        </form>
+
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="title-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>Tools</h2>
+      </div>
+      <div class="col-md-8 offset-md-2">
+        <p>Point-and-click tools so you don't need to get your hands dirty with the command line.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product-container">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-5">
+        <h2>
+          <img src="/images/little-geocoder-icon-small.png">
+          Little Geocoder
+        </h2>
+        <p>Easily convert US street addresses to latitude/longitude.</p>
+        <p>Take advantage of the Census Bureau's bulk geocoding service with a simple app. Includes simple cleaning and data manipulation tools so you can spend less time in Excel and more time building your maps.</p>
+        <p><a class="btn btn-primary" href="/tools/little-geocoder">Check out Little Geocoder</a></p>
+      </div>
+      <div class="col-md-7">
+          <img src="/images/little-geocoder-screenshot.png">
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product-container">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-7">
+          <img src="/images/pathwinder-screenshot.png">
+      </div>
+      <div class="col-md-5">
+          <h2>
+            <img src="/images/pathwinder-icon-small.png">
+            Pathwinder
+          </h2>
+          <p>Easily view and update your $PATH variable on OS X.</p>
+          <p>Organize your command line without opening <code>~/.bash_profile</code> ever again! (or even knowing what that heck that means)</p>
+          <p><a class="btn btn-primary" href="/tools/pathwinder-path-editor">Check out Pathwinder</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="product-container">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-5">
+          <h2>
+            <img src="/images/wrangler-icon-small.png">
+            Python Wrangler
+          </h2>
+          <p>Installing Python can be a pain. Python Wrangler can help.</p>
+          <p>Discover and organize all of the Python versions installed on your system, and get tips on how to clean house and set everything up in a nice standard way.</p>
+          <p><a class="btn btn-primary" href="/tools/python-wrangler">Check out Python Wrangler</a></p>
+      </div>
+      <div class="col-md-7">
+          <img src="/images/wrangler-screenshot.png">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+<div class="title-container">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h2>About Little Columns</h2>
+      </div>
+      <div class="col-md-8 offset-md-2">
+        <p>Time to solve the deepest darkest mystery</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+  <div class="row align-items-center">
+    <div class="col-sm-3">
+      <img src="/images/headshot.jpg" class="headshot rounded-circle">
+    </div>
+    <div class="col-sm-9">
+      <p>Oh, hi. It's actually just me, Soma. My major qualifications are that I think programming is boring.</p>
+
+      <p>I also run the <a href="http://ledeprogram.com/">Lede Program</a> at Columbia's Journalism School. We do data analysis, data viz, that kind of stuff, mostly over the course of 14 weeks in the summer. <a href="http://ledeprogram.com/">Learn more here.</a></p>
+
+      <p>But really, I'd like for more than just my students to have an easy time doing this stuff, so here we are.</p>
+    </div>
+  </div>
+</div>
+
+
+  <div class="footer dark">
+    <div class="container">
+      <div class="row">
+        <div class="col-md-5">
+          <h4>About</h4>
+          <p><a href="/">Little Columns</a> is classes, tools and tutorials to help data journalists get projects done. It's mostly <a href="http://jonathansoma.com">Soma's</a> doing, whatever that's worth.</p>
+          <p>Wicked spreadsheet icon by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
+        </div>
+        <div class="col-sm-4">
+          <h4>Projects</h4>
+          <ul>
+            <li><a href="/tools/little-geocoder">Little Geocoder</a> for geocoding</li>
+            <li><a href="/tools/pathwinder">Pathwinder</a> for $PATH editing</li>
+            <li><a href="/tools/python-wrangler">Python Wrangler</a> for installing Python</li>
+          </ul>
+        </div>
+        <div class="col-sm-3">
+          <h4>Find us</h4>
+          <ul>
+            <li><i class="icon-envelope-alt i-alt"></i> <a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></li>
+            <li><i class="icon-youtube-play i-alt"></i> <a href="http://youtube.com/littlecolumns">YouTube</a>
+            <li><i class="icon-github2 i-alt"></i> <a href="http://github.com/littlecolumns">Github</a>
+            <li><i class="icon-map-marker i-alt"></i> Brooklyn, NY</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  </body>
+</html>
