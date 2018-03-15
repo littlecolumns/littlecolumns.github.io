@@ -8,226 +8,50 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css?family=Raleway:600,700|Lato:300,400,700|Open+Sans:400,700" rel="stylesheet">
 
-    <style>
-      body {
-        font-family: 'Lato', 'Open Sans', sans-serif;
-        color: #555;
-      }
-      
-      h1, h2, h3, h4, h5, h6 {
-        font-family: 'Raleway';
-        font-weight: 600;
-        color: #444;
-      }
-
-      img {
-        max-width: 100%;
-      }
-
-      a {
-        color: #1ABC9C;
-      }
-
-      .title-container {
-        padding: 4rem 0 4rem 0;
-        text-align: center;
-      }
-
-      .btn-primary {
-        background: #1ABC9C;
-        border-color: #1ABC9C;
-      }
-
-      .title-container h2 {
-        font-weight: 700;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        color: #333;
-      }
-
-      .title-container p {
-        font-size: 22px;
-        font-family: Lato;
-        color: #777;
-        font-weight: 300;
-      }
-
-      .title-container sup {
-        font-size: 10px;
-        top: -1.5em;
-      }
-
-      .product-container {
-        padding: 2rem 0;
-      }
-
-      .product-container h2 + p {
-        font-weight: bold;
-      }
-
-      .product-container:nth-child(odd) {
-        background: #f5f5f5;
-        text-align: right;
-      }
-
-      .product-container h2 {
-        margin-bottom: 30px;
-      }
-
-      .title-container h2:before,
-      .title-container h2:after { 
-        content: ' • ';
-        display: 'inline';
-        padding: 0 1em;
-      }
-
-      .product-container h2 img {
-        position: relative;
-        top: 5px;
-        vertical-align: text-bottom;
-        padding-right: 5px;
-      }
-
-      .product-container:nth-child(odd) h2 {
-        margin-bottom: 60px;
-      }
-
-      .product-container:nth-child(odd) h2:after {
-        position: absolute;
-        right: 15px;
-      }
-
-      .product-container h2:after {
-        content: '';
-        display: block;
-        margin-top: 30px;
-        width: 40px;
-        border-top: 2px solid #444;
-      }
-
-      .product-container .btn {
-        margin-top: 15px;
-      }
-
-      .headshot {
-        }
-
-      .todo-container .col-sm-6 {
-        margin-bottom: 30px;
-      }
-
-      .fbox-icon a:hover {
-        text-decoration: none;
-      }
-
-      .todo-container {
-        margin-bottom: 5rem;
-      }
-
-      .subscribe {
-        background: #f5f5f5;
-        padding-bottom: 5rem;
-      }
-
-      .subscribe form {
-        margin-top: 60px;
-      }
-
-      .subscribe .form-control, .subscribe .btn {
-        font-size: 22px;
-        font-weight: 300;
-      }
-
-      .subscribe .btn {
-        padding-left: 1.5rem;
-        padding-right: 1.5rem;
-        font-size: 22px;
-      }
-
-      .dark {
-        color: #FFF;
-        background: #1ABC9C;
-        text-shadow: 1px 1px 3px #444;
-      }
-
-      .dark h1, .dark h3, .dark h4 {
-        color: #FFF;
-        text-shadow: 1px 1px 2px #444;
-      }
-
-      .footer {
-        margin-top: 5rem;
-        padding: 2rem 0;
-        font-size: 16px;
-      }
-
-      .footer h3, .footer h4 {
-        color: #fff;
-      }
-
-      .dark i {
-        text-shadow: none;
-        font-size: 18px;
-      }
-
-      .footer a {
-        background: white;
-        padding: 2px 4px;
-        color: #444;
-        text-shadow: none;
-      }
-
-      .footer i {
-        width: 18px;
-      }
-
-      .footer ul {
-        list-style-type: none;
-        margin-left: 0;
-        padding-left: 0;
-      }
-
-      .footer li {
-        margin-bottom: 5px;
-      }
-
-    </style>
-
+    <link href="/css/custom.css" rel="stylesheet">
     <link href="/css/font-icons.css" rel="stylesheet">
     <link href="/css/feature-box.css" rel="stylesheet">
   </head>
   <body>
+    <nav class="navbar navbar-expand-sm navbar-dark" style="background-color: #1ABC9C">
+  <a class="navbar-brand" href="/">
+    <img src="/images/logo-tiny.png" class="d-inline-block align-top" width="30" height="30">
+    Little Columns
+  </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavDropdown" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarNavDropdown">
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="/#tools" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Tools
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="/tools/little-geocoder">Little Geocoder</a>
+          <a class="dropdown-item" href="/tools/pathwinder">Pathwinder</a>
+          <a class="dropdown-item" href="/tools/python-wrangler">Python Wrangler</a>
+        </div>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/#intro">Thoughts &amp; Feelings</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="/#about">About</a>
+      </li>
+    </ul>
+  </div>
+</nav>
 
-<style>
-.top-container {
- 
-  padding: 150px 0;
-  background-attachment: fixed;
-}
-
-.top-container h1 {
-  font-size: 72px;
-  letter-spacing: 1px;
-}
-
-.top-container p {
-  font-size: 22px;
-  font-weight: 300;
-}
-
-.top-container img {
-  max-width: 200px;
-}
-</style>
 
 <div class="top-container dark">
   <div class="container">
     <div class="row align-items-center">
       <div class="col-sm-4 text-right">
-        <img src="/images/spreadsheet.png">
+        <img src="/images/logo-large.png">
       </div>
       <div class="col">
         <h1>Little Columns</h1>
@@ -237,7 +61,7 @@
   </div>
 </div>
 
-<div class="title-container">
+<div class="title-container" id="intro">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -344,7 +168,7 @@
   </div>
 </div>
 
-<div class="title-container">
+<div class="title-container" id="tools">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -400,7 +224,7 @@
     <div class="row align-items-center">
       <div class="col-md-5">
           <h2>
-            <img src="/images/wrangler-icon-small.png">
+            <img src="/images/python-wrangler-icon-small.png">
             Python Wrangler
           </h2>
           <p>Installing Python can be a pain. Python Wrangler can help.</p>
@@ -408,7 +232,7 @@
           <p><a class="btn btn-primary" href="/tools/python-wrangler">Check out Python Wrangler</a></p>
       </div>
       <div class="col-md-7">
-          <img src="/images/wrangler-screenshot.png">
+          <img src="/images/python-wrangler-screenshot.png">
       </div>
     </div>
   </div>
@@ -416,7 +240,7 @@
 
 
 
-<div class="title-container">
+<div class="title-container" id="about">
   <div class="container">
     <div class="row">
       <div class="col-md-12">
@@ -450,7 +274,7 @@
       <div class="row">
         <div class="col-md-5">
           <h4>About</h4>
-          <p><a href="/">Little Columns</a> is classes, tools and tutorials to help data journalists get projects done. It's mostly <a href="http://jonathansoma.com">Soma's</a> doing, whatever that's worth.</p>
+          <p><a href="/">Little Columns</a> is classes, tools and tutorials to help data journalists get projects done.</p>
           <p>Wicked spreadsheet icon by <a href="http://www.freepik.com" title="Freepik">Freepik</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></p>
         </div>
         <div class="col-sm-4">
@@ -473,6 +297,9 @@
       </div>
     </div>
   </div>
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
   </body>
 </html>
