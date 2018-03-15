@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Little Columns</title>
-    <link>http://www.littlecolumns.com/</link>
-    <description>Recent content on Little Columns</description>
+    <title>Tools on Little Columns</title>
+    <link>http://www.littlecolumns.com/tools/</link>
+    <description>Recent content in Tools on Little Columns</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Fri, 23 Feb 2018 09:05:37 -0500</lastBuildDate>
     
-	<atom:link href="http://www.littlecolumns.com/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://www.littlecolumns.com/tools/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
