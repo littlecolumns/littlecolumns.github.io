@@ -16,8 +16,8 @@ window.pyweb = (function() {
     let row = document.createElement('div')
     row.id = id
     row.classList.add('row')
-    button.classList.add('py-facing-row')
-    button.classList.add('no-gutters')
+    row.classList.add('py-facing-row')
+    row.classList.add('no-gutters')
     row.setAttribute('run', basis.getAttribute('run') == 'true')
     
     let aceCol = document.createElement('div')
