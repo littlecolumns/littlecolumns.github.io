@@ -180,7 +180,10 @@ window.pyweb = (function() {
       })
   }
 
-  function initialize (options = {}) {
+  function initialize (options) {
+    if (!options) {
+      options = {}
+    }
     Promise.all([
       createConsoleElements(options.console, options.base),
       createFacingElements(options.facing, options.base)
