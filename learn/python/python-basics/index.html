@@ -1,0 +1,307 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Python basics - Python's Not For Unicorns</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <h3>Python's Not (Just) For Unicorns</h3>
+    <p>An introduction to Python for human beings &mdash; and whoever else, too</p>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm text-left">
+          <a href="../how-it-works/"><span class="oi oi-arrow-left"></span> How this will work</a>
+          &nbsp;
+        </div>
+        <div class="col-sm text-right">
+          &nbsp;
+          <a href="../simple-text-strings/">Working with text <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 4</em></p>
+        <h1 class="display-4">Python basics</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>We live in the future, but a computer <em>still</em> can’t walk my dog. It’s a little disappointing, but computers only know how to do one thing: <strong>math!</strong> Math this, math that, math <em>everything</em>. It’s all their little robot brains were built to do!</p>
+<p>If we can somehow figure out how to use <em>math</em> to walk a dog, we’d be all set<sup>1</sup>. But for now it’s me and you and Dog and waking up at the crack of dawn every day.</p>
+<p>Since Python is good at math, <strong>we might as well start with that.</strong> We can kick the tires by asking her the age-old question of what <code>2</code> plus <code>2</code> is.</p>
+<pre class="blox" static="true">2+2</pre>
+<p>Amazing! Incredible! <em>Unbelievable!</em></p>
+<p>That’s right, it’s <em>four</em>, and Python knew it <em>immediately</em>. From what I can tell, she’s an A+ <em>genius</em>, and we couldn’t have done it without her.</p>
+<p>And you know what? <strong>I think you have it in you, too.</strong> In fact, I <em>know</em> it. Try the same thing we just did, typing in the box below, to add together <code>2</code> plus <code>2</code>.</p>
+<ul>
+<li>Hint: Click the box below, type <code>2+2</code>, and hit enter</li>
+</ul>
+<pre class="blox" test="4"></pre>
+<p>Let’s push the boundaries, let’s go further, what happens if we use <em>even larger numbers?</em></p>
+<pre class="blox" static="true">170+204</pre>
+<p>Unbelievable! And what if we put some spaces in there instead of squashing everything together?</p>
+<pre class="blox" static="true">170 + 204</pre>
+<p>Works like a charm! This is honestly a dream come true.</p>
+<p>Maybe we can get really crazy now? Try something really big, like <code>9999 + 9999</code>.</p>
+<pre class="blox" test="19998"></pre>
+<ul>
+<li>Hint: Click the box above, type <code>9999 + 9999</code>, and hit enter</li>
+</ul>
+<p>But <strong>hold on for a second</strong>, let’s back up, let’s talk about what we’re seeing. I understand the math, but what is the box we’re typing it in? What’s that blue arrow-ish thing? What’s <em>any of this?</em></p>
+<p>The weird <code>&gt;&gt;&gt;</code> thing isn’t actually Python code. It’s called a <strong>prompt</strong>, and it just means “hey, this is where you’re going to type Python.” So when I ask you to type your own Python, that’s where you’re going to do it.</p>
+<p>For example, the box below really wants you to multiply <code>300</code> and <code>25</code>. See the prompt? It means you can type Python code after that. <strong>Try to multiply together <code>300</code> and <code>25</code>.</strong></p>
+<pre class="blox" test="7500"></pre>
+<ul>
+<li>Hint: You can multiply by using the <code>*</code> symbol</li>
+<li>Hint: Type <code>300 * 25</code> next to the prompt and hit enter</li>
+</ul>
+<p>After you type something next to the prompt and hit enter, Python runs the code immediately and displays the result. <code>7500</code>, in this case! Then it displays <em>another</em> prompt, which means you’re free to type even more Python and hit enter again, if you’d really like to.</p>
+<p>That whole box is called the <strong>console</strong>. It’s just a place where you can type and run code, one line at a time. You can also write whole Python programs and run multiple lines of code, but we’ll save that for later!</p>
+<p>Since we understand multiplication now, how about division? What about three divided by nine? Or nine divided by three? Try them both in the <strong>console</strong> below — you can divide using <code>/</code>.</p>
+<pre class="blox" test="3.0"></pre>
+<p>Some of the consoles have prompts in them — you can type in those! — and some of them are <strong>just for examples</strong>. For example, the console below doesn’t have a prompt, it’s just to show us how parentheses work when doing math.</p>
+<pre class="blox" static="true">5 * (10 - 5)</pre>
+<p>Pretty convenient, right? We’re going to be using the console for the next few lessons, so you’ll want to get comfortable with using it.</p>
+<p>In case you were on fire with curiosity, here are some math things you can do in Python:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Math word</th>
+<th>Symbol</th>
+<th>Example</th>
+<th>Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Addition</td>
+<td><code>+</code></td>
+<td><code>5 + 2</code></td>
+<td><code>7</code></td>
+</tr>
+<tr class="even">
+<td>Subtraction</td>
+<td><code>-</code></td>
+<td><code>5 - 2</code></td>
+<td><code>3</code></td>
+</tr>
+<tr class="odd">
+<td>Multiplication</td>
+<td><code>*</code></td>
+<td><code>5 * 2</code></td>
+<td><code>10</code></td>
+</tr>
+<tr class="even">
+<td>Division</td>
+<td><code>/</code></td>
+<td><code>5 / 2</code></td>
+<td><code>2.5</code></td>
+</tr>
+<tr class="odd">
+<td>Exponent</td>
+<td><code>**</code></td>
+<td><code>5 ** 2</code></td>
+<td><code>25</code></td>
+</tr>
+<tr class="even">
+<td>Modulo (Remainder)</td>
+<td><code>%</code></td>
+<td><code>5 % 2</code></td>
+<td><code>1</code></td>
+</tr>
+</tbody>
+</table>
+<p>So now, a question: <strong>how many seconds are in a day?</strong> I’m too lazy to google it, so let’s just ask Python. Have her multiply it out:</p>
+<ul>
+<li>60 seconds in a minute, times…</li>
+<li>60 minutes in an hour, times…</li>
+<li>24 hours in a day.</li>
+</ul>
+<pre class="blox" test="86400"></pre>
+<ul>
+<li>Hint: You can multiply more than one number at a time by typing something like <code>2 * 3 * 4</code></li>
+<li>Hint: Try to multiply the hours in a day by the minutes in an hour by the seconds in a minute</li>
+<li>Hint: Type <code>60 * 60 * 24</code> and hit enter</li>
+</ul>
+<p><strong>Congratulations!</strong> That math was the very first boring thing you’ll have to do. There are many, many more, but you’re definitely making progress.</p>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned to use the <strong>console</strong> to run Python code, one line at a time. We type our code next to the <strong>prompt</strong>, hit enter, and ta-da! Magic happens, and the answer is printed out. So far we’ve done simple math problems like addition and multiplication.</p>
+<p><sup>[1] Self-driving cars actually work by seeing and steering and driving with math, so a robot to walk a dog isn’t <em>totally</em> impossible!</sup></p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../simple-text-strings/">Next up: Working with text <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing PN4U because bad tutorials make me grumpy. You think it's your fault you can't code? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">Python's not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script src="../common/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    function pywebSetup () {
+      pyweb.initialize({
+        console: '.blox',
+        facing: '.facing',
+        base: '../common/pyweb/'
+      })
+    }
+
+    function tableCleanup () {
+      document.querySelectorAll("table")
+        .forEach(function (d) {
+          d.classList.add("table")
+        })
+    }
+
+    function addHints () {
+      let matches = document.querySelectorAll("p, li");
+
+      Array.prototype.slice.call(matches).filter(function (d) {
+        return d.innerText.trim().indexOf("Hint: ") === 0
+      }).forEach(function(d) {
+        d.classList.add('hint')
+
+        let button = document.createElement('a')
+        button.classList.add('hint-button')
+        button.text = "Show hint"
+        button.addEventListener('click', function() {
+          d.classList.add('is-revealed')
+        })
+
+        let copy = document.createElement('span')
+        copy.innerHTML = d.innerHTML.replace("Hint: ", "")
+        d.innerHTML = ''
+        d.appendChild(button)
+        d.appendChild(copy)
+      })
+    }
+
+    window.addEventListener('load', pywebSetup)
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>
