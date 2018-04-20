@@ -202,12 +202,12 @@ class PyWebConsole:
             if(_type == "success"):
                 console.log("Making MessageEvent from document")
                 try:
-                    event = document.createEvent('MessageEvent')
+                    event = doc.createEvent('MessageEvent')
                 except:
                     console.log(traceback.format_exc())
                 console.log("done?")
             elif(_type == "error"):
-                event = document.createEvent('ErrorEvent')
+                event = doc.createEvent('ErrorEvent')
             console.log("initting it")
             event.initEvent(_type, true, true)
             console.log("done I guess")
