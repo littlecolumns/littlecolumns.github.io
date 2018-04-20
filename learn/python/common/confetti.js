@@ -1,7 +1,6 @@
 'use strict';
 
-if (!Array.from) {
-  Array.from = (function () {
+let from = (function () {
     var toStr = Object.prototype.toString;
     var isCallable = function (fn) {
       return typeof fn === 'function' || toStr.call(fn) === '[object Function]';
@@ -84,7 +83,7 @@ var defaultColors = ['#a864fd', '#29cdff', '#78ff44', '#ff718d', '#fdff6a'];
 var confetti = function () {
     function createElements(root, elementCount, colors) {
       console.log('using polyfill')
-      return Array.from({ length: elementCount }).map(function (_, index) {
+      return from({ length: elementCount }).map(function (_, index) {
         var element = document.createElement('div');
         var color = colors[index % colors.length];
         element.style['background-color'] = color; // eslint-disable-line space-infix-ops
