@@ -1,0 +1,206 @@
+<!doctype html>
+<html>
+<head>
+    <title>Brython interactive mode</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+      .notice-header {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 2em 0em;
+        text-align: center;
+        font-size: 12px;
+      }
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <h3>Intro to Python</h3>
+    <p>this ain't ready yet, pal, keep ur trap shut</p>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm text-left">
+            <a href="../simple-text/"><span class="oi oi-arrow-left"></span> Working with text</a>
+        </div>
+        <div class="col-sm text-right">
+            <a href="../functions-floats/">Functions and floats <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 4</em></p>
+        <h1 class="display-4">Data types and error messages</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>Remember how we can <strong>add numbers together?</strong> Let’s try it real quick.</p>
+<pre class="blox" static="true">2 + 2</pre>
+<p>What do you think happens if you try to <strong>add words together?</strong> Let’s try it: how about adding together <code>hello</code> and <code>world</code>? Remember to use quotes for each of them!</p>
+<pre class="blox" test="helloworld"></pre>
+<ul>
+<li>Hint: You should quote them separately, don’t write <code>&quot;hello world&quot;</code></li>
+<li>Hint: Try to add <code>&quot;hello&quot;</code> and <code>&quot;world&quot;</code> together</li>
+<li>Hint: Type <code>&quot;hello&quot; + &quot;world&quot;</code> and press enter.</li>
+</ul>
+<p>Hm, weird, they’re kind of smushed together. Makes sense if you think about it, I guess, but a space would be nice. Maybe try to add a space in the middle of them, too?</p>
+<pre class="blox" test="hello world"></pre>
+<ul>
+<li>Hint: You can use a space like <code>&quot; &quot;</code>. It looks like nothing is inside, but I promise it’s a space!</li>
+<li>Hint: Add the three pieces together - hello, the space, and world.</li>
+<li>Hint: Type <code>&quot;hello&quot; + &quot; &quot; + &quot;world&quot;</code> and press enter</li>
+<li>Hint: You could also do <code>&quot;hello &quot; + &quot;world&quot;</code>, but that’s not as fun!</li>
+</ul>
+<p>Okay, we’re genius experts now! We’ve done math with numbers, math with words, how about math with… <strong>numbers and words?!</strong></p>
+<p>Try to add together <code>2</code> and <code>&quot;hello&quot;</code>. <strong>(Hint: it ain’t gonna work)</strong></p>
+<pre class="blox"></pre>
+<p>Hooray, an error message! Just what we wanted.</p>
+<p>We’ve already seen a couple error messages, but we didn’t read them very closely. We didn’t care! But this time <strong>let’s look at each part of the error</strong> to see what it might mean.</p>
+<p><strong><code>TypeError: unsupported operand type(s) for +: 'int' and 'str'</code></strong></p>
+<ul>
+<li><code>TypeError</code>: probably means it’s… an error… about… types? This part will become helpful after you’ve been programming for a while, but it’s super mysterious now.</li>
+<li><code>unsupported operand type(s) for +</code>: I don’t know what an “operand type” is, but the ending makes it seem like it’s an error about addition. That makes sense, since we were trying to add something.</li>
+<li><code>'int' and 'str'</code>: Hm, what are we trying to add? It sounds like Python thinks we’re adding <strong>int</strong> and <strong>str</strong>.</li>
+</ul>
+<p>If you paid attention in math class, you’ll know that whole numbers - 0, 1, 2, 3, etc - are called <strong>integers</strong>. That’s what <code>int</code> means - it’s talking about the <code>2</code>! According to Python, <code>2</code> is an <strong>integer</strong>.</p>
+<p>And <code>str</code>? It stands for <strong>string</strong>. <strong>Strings</strong> are what Python calls text, or words, or sentences. Every time we did <code>&quot;hello&quot;</code> or <code>&quot;I hate bread&quot;</code> or any of that, the quotation marks turned our text into a <strong>string</strong> that Python could understand. According to Python, <code>&quot;hello&quot;</code> is a <strong>string</strong>.</p>
+<p>“Integer” and “string” are called <strong>data types</strong>. They’re… types of data. You’ll learn a few more over the next several chapters.</p>
+<p>Now that we know about <strong>data types</strong> like integer and string, if we go back to the error message, it says <code>unsupported operand types for +: 'int' and 'str'</code>. It sounds like it might just mean, “you can’t add together integers and strings!”</p>
+<p>But let’s say I can’t give up. <strong>I really want to combine the 2 with “hello”</strong>. How am I going to do it? How can we solve this problem?</p>
+<p>Well, same way we learn to fix a doorknob or how to make spaghetti: <strong>we’re going to ask a search engine.</strong></p>
+<p>Let’s actually try this like Real Live Programers: go search around online and see if you can figure out how to solve our problem of <strong>adding <code>2</code> and <code>&quot;hello&quot;</code></strong>. Use the console below to try out answers.</p>
+<p>Try to google something on your own, but you can also find suggestions in the hints below. If you can’t get it, no big deal, but at least give it a try!</p>
+<ul>
+<li>Hint: The actual error message, <code>TypeError: unsupported operand type(s) for +: 'int' and 'str'</code></li>
+<li>Hint: What you’d like to do, in Python-y words <code>python add integer and string</code></li>
+<li>Hint: What you’d like to do, in normal words <code>python combine number word</code></li>
+</ul>
+<p>Our mission: <strong>Try to combine <code>2</code> and <code>hello</code></strong></p>
+<pre class="blox" test="2hello"></pre>
+<p>Okay, you’re back. I’m back. We’re both back. It really isn’t important if you solved the problem (we’ll talk about answers later), what I’m interested in is <strong>what did you search for to try to solve the problem?</strong> If you haven’t yet, check the hints above to see some suggestions I thought of - there aren’t any wrong answers, but there are definitely several different approaches.</p>
+<p>Whatever you searched for, you probably ended up reading answers on a site called <strong>StackOverflow</strong>, which is where everyone goes to ask questions about programming, kindly answer questions about programming, meanly answer questions about programming, fight about programming, etc. Just normal life stuff.</p>
+<p>You’ll be on StackOverflow a lot. A <em>lot</em> lot. It’s cheating if you use it in a Computer Science class, but once you’re in real life you’ll probably use it a about ten thousand times a day.</p>
+<p>Yes, there are a lot of answers to every programming question out there, but it’s usually pretty tough to actually <em>use them</em>. Learning to use other peoples’ code and dissect fights about the “right way” to solve a problem is a whole other skill to learn. We’ll talk about it later!</p>
+<p>For now, just know that <strong>error messages are your friends</strong>. And just like it’s helpful to understand your friends, it’s helpful to understand your error messages. It makes life easier. Read your errors, spend time with your errors, understand your errors.</p>
+<p><strong>But back to the problem:</strong> it turns out you can <a href="https://stackoverflow.com/questions/6981495/how-can-i-concatenate-a-string-and-a-number-in-python">turn an integer into a string</a> by doing, for example, <code>str(9)</code>. Then you combine <em>that</em> with the string. According to that link, it looks like this:</p>
+<pre class="blox" static="true">"asd" + str(9)</pre>
+<p>Seems right, ’eh?</p>
+<p>You could also have put quotation marks around the <code>9</code>, turning it from the <em>integer</em> <code>9</code> into the <em>string</em> <code>&quot;9&quot;</code>. Quotes turn it into a string, just like <code>str</code> turns it into a string.</p>
+<pre class="blox" static="true">"asd" + "9"</pre>
+<p><strong>Now it’s your turn:</strong> try to combine <code>2</code> and <code>hello</code> again, this time using that new trick! Remember your quotes, and if you get an error just think hard and try again (or search for a better explanation than mine).</p>
+<pre class="blox" test="2hello"></pre>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned about <strong>data types</strong> like integers and strings, and learned how to search for solutions when we encounter <strong>error messages</strong>. It sounds like we’re going to be reading StackOverflow a lot!</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../functions-floats/">Next up: Functions and floats <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script src="../common/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    function pywebSetup () {
+      pyweb.initialize({
+        console: '.blox',
+        facing: '.facing',
+        base: '../common/pyweb/'
+      })
+    }
+
+    function tableCleanup () {
+      document.querySelectorAll(".content table")
+        .forEach(function (d) {
+          d.classList.add("table")
+        })
+    }
+
+    function addHints () {
+      let matches = document.querySelectorAll("p, li");
+
+      Array.prototype.slice.call(matches).filter(function (d) {
+        return d.innerText.trim().indexOf("Hint: ") === 0
+      }).forEach(function(d) {
+        d.classList.add('hint')
+
+        let button = document.createElement('a')
+        button.classList.add('hint-button')
+        button.text = "Show hint"
+        button.addEventListener('click', function() {
+          d.classList.add('is-revealed')
+        })
+
+        let copy = document.createElement('span')
+        copy.innerHTML = d.innerHTML.replace("Hint: ", "")
+        d.innerHTML = ''
+        d.appendChild(button)
+        d.appendChild(copy)
+      })
+    }
+
+    window.addEventListener('load', pywebSetup)
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>

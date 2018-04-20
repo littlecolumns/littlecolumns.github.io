@@ -1,0 +1,173 @@
+<!doctype html>
+<html>
+<head>
+    <title>Brython interactive mode</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+      .notice-header {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 2em 0em;
+        text-align: center;
+        font-size: 12px;
+      }
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <h3>Intro to Python</h3>
+    <p>this ain't ready yet, pal, keep ur trap shut</p>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm text-left">
+            <a href=""><span class="oi oi-arrow-left"></span> </a>
+        </div>
+        <div class="col-sm text-right">
+            <a href="../basics/">Python basics <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 1</em></p>
+        <h1 class="display-4">Introduction</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>So, we are going to learn to program! Hooray! You’re excited! You’re out of your mind with joy! You’re pumped up and you’re jumping up and down at your computer and it’s incredible and you’re just so excited about this!</p>
+<p>Except, here’s a secret: programing isn’t very fun. It isn’t! I mean, yes, it’s just my opinion, blah blah blah, but I promise you this: learning to program isn’t going to be a good time. It’s going to be kind of tough, the computer is going to be irritating, and every ten or twenty minutes you’ll think about how you’d rather be sitting in a nice comfortable chair in the sunshine eating ice cream.</p>
+<p>But you aren’t sitting in a nice comfortable chair in the sunshine eating ice cream.</p>
+<p>You’re here!</p>
+<p>You’re learning to program!</p>
+<p>Why?</p>
+<p>Here’s another secret: even though programming isn’t exciting, the stuff you can <em>do</em> with programming is awesome and amazing and fantastic and totally the best. That’s why I program. I don’t like the computer yelling at me that I did something wrong, but I love the fact that once I finally get it right - magic happens!</p>
+<p>Programming is a tool like using a saw is a tool. You probably don’t just saw wood when you’re bored, but if you want to build an awesome piece of furniture maybe you’ll go out and saw some boards. Sawing by itself? Not so exciting. Sawing for a reason? Totally awesome.</p>
+<p>To help keep yourself on your programming quest, an important question to ask yourself is <strong>why are you learning to program?</strong></p>
+<p>Back when I was a kid in like 1066 A.D., I learned to program back because I wanted to make games. Later, I learned to program all over again because I wanted to make websites. Then I did it a third time to build fancier, cooler, more exciting websites, and a fourth time to make fancier, cooler, more exciting games. And then again to make data visualizations, and then again to analyze data to find secrets hiding inside. And probably a few more times, too.</p>
+<p>And that’s where I am now! Somewhere in there I wanted to program to make money, so I went to school for it, too.</p>
+<p>But back to you! You probably don’t learn to program because someone said programming is cool. You learn to program beacuse you want to create something.</p>
+<p>And this gives us our third secret, which is kind of an obvious one: <em>learning</em> to program typically isn’t very fun, either. If you’ve tried before, you probably fell asleep after 10 minutes and woke up with your face stuck to your keyboard. You thought about sitting in the sunshine and eating ice cream, and then you got up and… sat in the sunshine and ate ice cream. It wasn’t a hard decision.</p>
+<p>This is because no one who teaches programming thinks about <em>why</em> you’re learning to program. You aren’t learning to program so you can add two numbers, or make a box pop up on the screen that says “Hello world,” or print out all of the prime numbers below 100.</p>
+<p>You’re learning to program to build visualizations! or games! or web sites! So let’s just do that, as soon as possible. Let’s think about it this way: I’m not teaching you to program, I’m teaching you to do the things you want to do, or solve the problems you want to solve.</p>
+<p>We’re going to have the most fun ever in life, I promise.</p>
+<p>…well, yes, I’m also going to have you do plenty of super boring things. Yes, you will probably fall asleep on your keyboard a few times. Yes, you’ll think about sitting in the sunshine eating ice cream. But since I don’t care about you getting a gold star for being Emperor of Computer Science, we’re going to skip a lot of the technical stuff and get right into building projects.</p>
+<h1 id="what-are-we-learning">What are we learning?</h1>
+<p>All kinds of programming share a little bit of the same tools. This includes buzzwords like variables, loops, math, libraries, blah blah blah. Whether you’re doing an analysis of ten million court records or building a driving game, you’re going to come up against these concepts. So we’ll start with those.</p>
+<p>What’s next? Well, the answer is <em>whatever you want</em>, more or less.</p>
+<p>Programming is an almost-infinite amount of different stuff. There are entire realms of programming I’ve never even looked at! That’s no big deal, though, because I know that when I <em>need</em> those things (if I ever do), I can simply go <em>learn</em> them. After you know the basic concepts of programming, building what you want to build just becomes a game of <strong>figuring out what you need to know, and figuring out how to learn it</strong>.</p>
+<p>But how do you learn this mysterious new programming stuff? You’ll spend time searching online, reading other peoples’ questions and answers. You’ll adapt code you find, leaning on people you know - and people you don’t know - for answers and tips. When you start programming it isn’t something you go through alone; the internet and everyone on it becomes your new best friend.</p>
+<p>Here is a promise, 100% guaranteed: whatever problem or question you might have, I’m sure someone else has had that exact same one in the past week, or the past month, or the past year - and they’ve asked for a solution online, and then someone’s helped them. You’ll just need to track it down!</p>
+<h1 id="why-python">Why Python?</h1>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../basics/">Next up: Python basics <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script src="../common/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    function pywebSetup () {
+      pyweb.initialize({
+        console: '.blox',
+        facing: '.facing',
+        base: '../common/pyweb/'
+      })
+    }
+
+    function tableCleanup () {
+      document.querySelectorAll(".content table")
+        .forEach(function (d) {
+          d.classList.add("table")
+        })
+    }
+
+    function addHints () {
+      let matches = document.querySelectorAll("p, li");
+
+      Array.prototype.slice.call(matches).filter(function (d) {
+        return d.innerText.trim().indexOf("Hint: ") === 0
+      }).forEach(function(d) {
+        d.classList.add('hint')
+
+        let button = document.createElement('a')
+        button.classList.add('hint-button')
+        button.text = "Show hint"
+        button.addEventListener('click', function() {
+          d.classList.add('is-revealed')
+        })
+
+        let copy = document.createElement('span')
+        copy.innerHTML = d.innerHTML.replace("Hint: ", "")
+        d.innerHTML = ''
+        d.appendChild(button)
+        d.appendChild(copy)
+      })
+    }
+
+    window.addEventListener('load', pywebSetup)
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>

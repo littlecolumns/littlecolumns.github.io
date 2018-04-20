@@ -1,0 +1,208 @@
+<!doctype html>
+<html>
+<head>
+    <title>Brython interactive mode</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+      .notice-header {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 2em 0em;
+        text-align: center;
+        font-size: 12px;
+      }
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <h3>Intro to Python</h3>
+    <p>this ain't ready yet, pal, keep ur trap shut</p>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm text-left">
+            <a href="../functions-floats/"><span class="oi oi-arrow-left"></span> Functions and floats</a>
+        </div>
+        <div class="col-sm text-right">
+            <a href="../using-variables/">Variables <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 6</em></p>
+        <h1 class="display-4">Lists</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>Let’s say we have a number. Like, say, <code>5</code>.</p>
+<p>And then someone walks up to us and gives us another number. Like, say, <code>25</code>.</p>
+<p>And then they give us <em>ten more numbers!</em> And then <em>ten thousand more numbers!!!</em></p>
+<p>Oof, yeah, that’s a lot of numbers, we’re going to need at least a <strong>small basket.</strong> Let’s make a list of some of the numbers we have:</p>
+<ul>
+<li><code>5</code></li>
+<li><code>25</code></li>
+<li><code>7</code></li>
+<li><code>19</code></li>
+</ul>
+<p>If you make a list of numbers in Python, it’s called… <strong>a list</strong>. That’s seriously the data type, the technical name for it! Every other programming language in all of history calls them arrays, but Python wanted to be special, so it called them <strong>lists</strong>.</p>
+<p>To make a <strong>list</strong>, we’ll use square brackets and commas and make something like this:</p>
+<pre class="blox" static="true">[5, 25, 7, 19]</pre>
+<p>Now it’s your turn. Make a list with three numbers: <code>7</code>, <code>14</code>, and <code>3</code>.</p>
+<pre class="blox" test="[7, 14, 3]"></pre>
+<ul>
+<li>Hint: Square brackets go on the outside of the list <code>[</code> to start and <code>]</code> to end it</li>
+<li>Hint: We’ll use commas to separate the items of our list, like <code>1, 2, 3</code></li>
+<li>Hint: Type <code>[7, 14, 13]</code> and press return</li>
+</ul>
+<p>What can we do with a list? I love big stuff, so I guess I’d want to know what the biggest number is.</p>
+<ul>
+<li>If <code>len</code> gives me the <strong>len</strong>gth of a string…</li>
+<li>…what function do you think gives me the maximum value in a list?</li>
+</ul>
+<p>Hint: Think about it!</p>
+<p>Hint: Think about it!!!</p>
+<p>Hint: Think about it!!!!!</p>
+<p>Yup, you use <code>max</code> to get the <strong>max</strong>imum value in a list. Sometimes programming is predictable! It works just like <code>len(&quot;hello&quot;)</code>, but with <code>max</code> and a list instead.</p>
+<p>Try to use <code>max</code> to find the largest number in <code>[7, 14, 3]</code>. You’ll want to wrap the parentheses that come with <code>max</code> over the whoooole list.</p>
+<pre class="blox" test="14"></pre>
+<ul>
+<li>Hint: Your list should look like <code>[7, 14, 3]</code>. You’ll wrap the function <code>max</code> around it just like you would with something like <code>len(&quot;hello&quot;)</code></li>
+<li>Hint: Type <code>max([7, 14, 3])</code> and press enter</li>
+</ul>
+<p>If you didn’t get it, no big deal — it should look like this:</p>
+<pre class="blox" static="true">max([7, 14, 3])</pre>
+<p><sup>You can also do <code>max(7, 14, 3)</code> without the square brackets, but let’s keep that a secret!</sup></p>
+<p>If <code>max</code> gets the maximum number in a list of numbers, can you guess the name of the function that finds the <strong>minimum number</strong>? Use it below to find the smallest number from <code>7</code>, <code>14</code> and <code>3</code>.</p>
+<pre class="blox" test="3"></pre>
+<ul>
+<li>Hint: If <code>max</code> gets the <strong>max</strong>imum, what gets the <strong>min</strong>imum?</li>
+<li>Hint: It’s <code>min</code>! You’ll use <code>min</code> the same way as <code>max</code></li>
+<li>Hint: Type <code>min([7, 14, 3])</code> and press enter</li>
+</ul>
+<p>Yup, it’s <code>min</code>.</p>
+<p>In the list <code>[abs(-100) * 20, 56 * 100, abs(50 - 100) * round(2.1)]</code>, each math-y section will be converted into a number. Can you tell me what the smallest number it creates is? You’ll probably want to use cut and paste!</p>
+<pre class="blox" test="100"></pre>
+<ul>
+<li>Hint: You can just paste the list first if you’re curious what numbers the formulas turn into</li>
+<li>Hint: Use <code>min</code>, and cut and paste the contents of the list.</li>
+<li>Hint: Don’t forget the parentheses with <code>min</code>!</li>
+<li>Hint: Type <code>min(</code>, paste <code>[abs(-100) * 20, 56 * 100, abs(50 - 100) * round(2.1)]</code>, type <code>)</code>, and then press enter</li>
+</ul>
+<p>There are a few more list-friendly functions I want to talk about, but first <strong>I bet you’re pretty tired of typing <code>[7, 14, 3]</code> again and again and again.</strong> We’ll solve that problem in the next chapter!</p>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned about the data type <strong>list</strong>, which you can use to make, well, lists of things. Every other language seems to call them arrays.</p>
+<p>Have a lot of numbers? You should use a list! We haven’t talked about it yet, but you can also use lists with strings or any other data type.</p>
+<p>We also learned a couple useful functions for lists, like <code>max</code> and <code>min</code>.</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../using-variables/">Next up: Variables <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </section>
+
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script src="../common/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    function pywebSetup () {
+      pyweb.initialize({
+        console: '.blox',
+        facing: '.facing',
+        base: '../common/pyweb/'
+      })
+    }
+
+    function tableCleanup () {
+      document.querySelectorAll(".content table")
+        .forEach(function (d) {
+          d.classList.add("table")
+        })
+    }
+
+    function addHints () {
+      let matches = document.querySelectorAll("p, li");
+
+      Array.prototype.slice.call(matches).filter(function (d) {
+        return d.innerText.trim().indexOf("Hint: ") === 0
+      }).forEach(function(d) {
+        d.classList.add('hint')
+
+        let button = document.createElement('a')
+        button.classList.add('hint-button')
+        button.text = "Show hint"
+        button.addEventListener('click', function() {
+          d.classList.add('is-revealed')
+        })
+
+        let copy = document.createElement('span')
+        copy.innerHTML = d.innerHTML.replace("Hint: ", "")
+        d.innerHTML = ''
+        d.appendChild(button)
+        d.appendChild(copy)
+      })
+    }
+
+    window.addEventListener('load', pywebSetup)
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>

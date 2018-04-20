@@ -1,0 +1,81 @@
+/* Facing */
+
+.ace_editor {
+  width: 100%;
+  margin-bottom: 0;
+}
+
+.py-facing-row {
+  margin-bottom: 1rem;
+}
+
+.ace-holder, .py-facing-row .output {
+  padding: 5px;
+  background: #1e1f21;
+}
+
+.facing-result .output {
+  width: 100%;
+  font-size: 16px;
+  background: #3a474e;
+  color: white;
+  min-height: 70px;
+  border: none;
+  font-family: 'Oxygen Mono', Consolas, 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+  line-height: 1.15;
+}
+
+.codeditorHolder.ace_editor {
+    line-height: 50px;
+}
+
+.ace_gutter-cell {
+  padding-left: 1em !important;
+}
+
+.oi {
+  top: 2px;
+}
+
+.ace_editor::after {
+  padding-bottom: 1rem;
+  display: block;
+  background: #1e1f21;
+}
+
+/* Console */
+
+.py-console {
+  background-color: #37474F;
+  color: #fff;
+  font-family: 'Oxygen Mono', Consolas, 'Liberation Mono', 'DejaVu Sans Mono', monospace;
+  overflow:auto;
+  padding: 10px;
+  -webkit-font-smoothing: auto;
+  position: relative;
+  width: 100%;
+  padding-bottom: 2rem;
+  white-space: pre-wrap;
+  max-height: 600px;
+  font-size: 15px;
+}
+
+.py-console:focus {
+  outline: none;
+}
+
+.py-console span { 
+  color: orange;
+}
+
+.py-console span.prompt { 
+  color: cyan;
+}
+
+.py-console span.prompt-cont {
+  color: cyan;
+}
+
+.py-console.is_static {
+  padding-bottom: 10px;
+}
