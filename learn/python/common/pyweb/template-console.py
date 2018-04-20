@@ -187,6 +187,7 @@ class PyWebConsole:
             pass
 
     def send_event(self, _type, data = {}):
+        console.log("Sending", _type, "event")
         event = None
         try:
             if(_type == "success"):
@@ -208,20 +209,25 @@ class PyWebConsole:
         console.log("trying solution")
         try:
             test = self.element.test.replace("\\n","\n")
+            console.log("test is", test)
 
             if str(self.editor_ns['_']) == test:
                 self.send_event('success')
                 return True
 
+            console.log("failed 1")
             if self.last_output and (test.strip() == self.last_output):
                 self.send_event('success')
                 return True
+
+            console.log("failed 2")
 
             equals = eval(test, self.editor_ns)
 
             if type(equals) == bool and equals:
                 self.send_event('success')
                 return True
+            console.log("failed 3")
         except:
             pass
 
