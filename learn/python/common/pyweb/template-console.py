@@ -209,7 +209,7 @@ class PyWebConsole:
             elif(_type == "error"):
                 event = doc.createEvent('ErrorEvent')
             console.log("initting it")
-            event.initEvent(_type, true, true)
+            event.initEvent(_type, True, True)
             console.log("done I guess")
 
         console.log("dispatching")
