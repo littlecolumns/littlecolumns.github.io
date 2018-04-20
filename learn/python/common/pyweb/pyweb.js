@@ -42,7 +42,7 @@ window.pyweb = (function() {
     resultCol.classList.add('facing-result')
     let result = document.createElement('pre')
     result.classList.add('h-100')
-    button.classList.add('output')
+    result.classList.add('output')
     resultCol.appendChild(result)
 
     row.appendChild(aceCol)
