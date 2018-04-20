@@ -190,6 +190,7 @@ class PyWebConsole:
         console.log("Sending", _type, "event")
         event = None
         try:
+            console.log("trying to send it that one way")
             if(_type == "success"):
                 event = window.MessageEvent.new(_type)
             elif(_type == "error"):
@@ -197,12 +198,17 @@ class PyWebConsole:
             
             self.element.dispatchEvent(event)
         except:
+            console.log("trying to send it that other way")
             if(_type == "success"):
+                console.log("Making MessageEvent")
                 event = document.createEvent('MessageEvent')
             elif(_type == "error"):
                 event = document.createEvent('ErrorEvent')
+            console.log("initting it")
             event.initEvent(_type, true, true)
+            console.log("done I guess")
 
+        console.log("dispatching")
         self.element.dispatchEvent(event)
 
     def test_solution(self):
