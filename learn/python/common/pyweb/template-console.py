@@ -210,6 +210,7 @@ class PyWebConsole:
         try:
             test = self.element.test.replace("\\n","\n")
             console.log("test is", test)
+            console.log("editor thing is", self.editor_ns['_'])
 
             if str(self.editor_ns['_']) == test:
                 self.send_event('success')
