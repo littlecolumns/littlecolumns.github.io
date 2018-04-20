@@ -186,25 +186,41 @@ class PyWebConsole:
         except:
             pass
 
+    def send_event(self, _type, data = {}):
+        event = None
+        try:
+            if(_type == "success"):
+                event = window.MessageEvent.new(_type)
+            elif(_type == "error"):
+                event = window.ErrorEvent.new(_type, data)
+            
+            self.element.dispatchEvent(event)
+        except:
+            if(_type == "success"):
+                event = document.createEvent('MessageEvent')
+            elif(_type == "error"):
+                event = document.createEvent('ErrorEvent')
+            event.initEvent(_type, true, true)
+
+        self.element.dispatchEvent(event)
+
     def test_solution(self):
+        console.log("trying solution")
         try:
             test = self.element.test.replace("\\n","\n")
 
             if str(self.editor_ns['_']) == test:
-                event = window.MessageEvent.new('success')
-                self.element.dispatchEvent(event)
+                self.send_event('success')
                 return True
 
             if self.last_output and (test.strip() == self.last_output):
-                event = window.MessageEvent.new('success')
-                self.element.dispatchEvent(event)
+                self.send_event('success')
                 return True
 
             equals = eval(test, self.editor_ns)
 
             if type(equals) == bool and equals:
-                event = window.MessageEvent.new('success')
-                self.element.dispatchEvent(event)
+                self.send_event('success')
                 return True
         except:
             pass
@@ -226,12 +242,14 @@ class PyWebConsole:
 
         # element.response = repr(response)
 
+
+
     def process_error(self):
-        event = window.ErrorEvent.new('error', {
+        data = {
             'error': sys.exc_info()[1].__class__.__name__,
             'message': str(sys.exc_info()[1])
-        })
-        self.element.dispatchEvent(event)
+        }
+        self.send_event('error', data)
         self.append_to_element(traceback.format_exc())
         # traceback.print_exc()
 
