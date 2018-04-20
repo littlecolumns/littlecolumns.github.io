@@ -1,0 +1,324 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Being lazy with lists - Python's Not For Unicorns</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/for-loops/">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <h3>Python's Not (Just) For Unicorns</h3>
+    <p>An introduction to Python for human beings &mdash; and whoever else, too</p>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 text-left">
+          <a href="../lists-intermediate/"><span class="oi oi-arrow-left"></span> Even more lists</a>
+          &nbsp;
+        </div>
+        <div class="col-sm-2 text-center">
+          <a href="http://littlecolumns.com/learn/python/"><span class="oi oi-home"></span></a>
+        </div>
+        <div class="col-sm-5 text-right">
+          &nbsp;
+          <a href="../comments/">Interlude - Comments <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 11</em></p>
+        <h1 class="display-4">Being lazy with lists</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>But yes, yes, back to lists! If we wanted to say hello to each of our president friends, we might do this:</p>
+<pre class="blox" static="true">
+presidents = ["Washington", "Adams", "Jefferson", "Madison", "Monroe"]
+print("Hello", presidents[0])
+print("Hello", presidents[1])
+print("Hello", presidents[2])
+print("Hello", presidents[3])
+print("Hello", presidents[4])</pre>
+<p>No, wait, sorry, that’s terrible. We keep seeing the prompt again and again and again, it just looks really messy! Let’s change techniques.</p>
+<p>I’ve written some code in the box below. Click the <strong>Run Python code</strong> button to, yes, run the Python code. <strong>You’ll see the results in the other box.</strong></p>
+<pre class="facing" run="false">
+presidents = ["Washington", "Adams", "Jefferson", "Madison", "Monroe"]
+
+print("Hello", presidents[0])
+print("Hello", presidents[1])
+print("Hello", presidents[2])
+print("Hello", presidents[3])
+print("Hello", presidents[4])
+</pre>
+<p>Nice right? Compared to using the console, this style is a little more like writing a full Python program. Let’s call it an <strong>editor!</strong> Starting now, sometimes we’ll use the editor and sometimes we’ll use the console.</p>
+<p>Editors are nice because they let you write multiple lines of code at a time, and look at those fun colors! That’s called <strong>syntax highlighting</strong>, and it helps you keep track of your code. Notice how strings and variables are different colors - things like that will eventually help you spot errors.</p>
+<p>The editor is definitely nice, but there’s still one problem: <strong>this code is too much work.</strong> Just look at it! We use <code>print</code> again and again, and <code>&quot;Hello&quot;</code> again and again, and <code>president</code> + square brackets again and again.</p>
+<p>Remember the first rule of programming: <strong>programmers are lazy!</strong> We don’t want to type the same thing again and again and again. If you were explaining this to Python in real life, you’d say something like, <strong>“say hello to each of the presidents.”</strong></p>
+<p>You can do that in Python, too. Click <strong>Run Python code</strong> to see what happens!</p>
+<pre class="facing">
+presidents = ["Washington", "Adams", "Jefferson", "Madison", "Monroe"]
+
+for president in presidents:
+  print("Hello", president)
+</pre>
+<p>This is called a <strong>for loop</strong>. It’s a way of doing the exact same thing to every single thing in a list. The little indented part is what gets done to every single president.</p>
+<p>We can try it with numbers, too:</p>
+<pre class="facing">
+numbers = [1, 2, 3, 4]
+
+for number in numbers:
+  print("Looking at", number)
+</pre>
+<p>Works great! As long as our code is indented, it gets done to each number individually. You can indent with either two spaces or four spaces, but I like two (four is just SO MANY).</p>
+<p>Before I talk any more, let’s talk about the <strong>most common error</strong> you’re going to run into when writing a for loop:</p>
+<p><strong>THE WRONG WAY:</strong></p>
+<pre><code>for number in numbers
+  print(number)</code></pre>
+<p><strong>THE RIGHT WAY:</strong></p>
+<pre><code>for number in numbers:
+  print(number)</code></pre>
+<p><strong>Can you spot the difference?</strong></p>
+<p>Pay attention to the colon <code>:</code> at the end of the <code>for...</code> line: <strong>you need that colon!</strong> If you don’t have it, Python will cry. Python <em>loves</em> punctuation.</p>
+<p>Try to write a for loop down below that prints each number, <strong>but don’t include the colon!</strong> Yes, write it <strong>the wrong way.</strong> It’s nice for us to see these errors on purpose before we do it accidentally.</p>
+<pre class="facing" test="1\n2\n3\n4\n">
+numbers = [1, 2, 3, 4]
+</pre>
+<p>After you do it wrong, try to do it correctly (with the colon <code>:</code>). Make sure you’re indented for your <code>print(number)</code> line! If you’re lucky, it will do it automatically.</p>
+<p>You’ll also have to hit enter one more time than you think, just to tell Python “yes please run this code.”</p>
+<p>Fun fact: you can run multiple lines of code in the indented part! The code below will run the two <code>print</code> lines <strong>for each number</strong>.</p>
+<pre class="facing">
+numbers = [1, 2, 3, 4]
+
+for number in numbers:
+  print("Looking at", number)
+  print("A bigger version is", number * 100)
+</pre>
+<p>A question everyone always asks is <strong>“how does Python know to call it <code>president</code> or <code>number</code>???”</strong> You <em>think</em> Python is being super smart and knows about singular nouns or whatever, but no, it’s all you. When we write <code>for blahblah in numbers</code>, the <code>blahblah</code> part is what our number is called when inside the loop.</p>
+<p>For example, let’s try something dumb:</p>
+<pre class="facing">
+numbers = [1, 2, 3, 4]
+
+for potato in numbers:
+  print(potato * 10)
+</pre>
+<p>As long as we are inside of the indented part, we’re going to call each number <code>potato</code>. Why? Because we wrote <code>for potato in numbers</code>! Why? Well, I dunno, programming magic. That’s how Python works.</p>
+<p>It might also help if we break it down into the long version, without the loop. I’ve added some spacing to help things visually, and included a step-by-step description below. <strong>This is the exact same thing the loop is doing, but with a billion more lines of code to write.</strong></p>
+<pre class="facing">
+numbers = [1, 2, 3, 4]
+
+potato = numbers[0]
+print(potato * 10)
+
+potato = numbers[1]
+print(potato * 10)
+
+potato = numbers[2]
+print(potato * 10)
+
+potato = numbers[3]
+print(potato * 10)
+</pre>
+<p>That’s the long, step-by-step version:</p>
+<ol type="1">
+<li>We start by building a list of all of the numbers.</li>
+<li>Then we take the <strong>first number</strong>, put it in a variable called <code>potato</code>, and print it times ten.</li>
+<li>Then we take the <strong>second number</strong>, put it in a variable called <code>potato</code>, and print it times ten.</li>
+<li>Then we take the <strong>third number</strong>, put it in a variable called <code>potato</code>, and print it times ten.</li>
+<li>Then we take the <strong>fourth number</strong>, put it in a variable called <code>potato</code>, and print it times ten.</li>
+</ol>
+<p>The alternative is the <strong>for loop</strong>, which has a somewhat shorter description.</p>
+<ol type="1">
+<li>We start by building a list of all of the numbers.</li>
+<li>Then we take <strong>each number</strong>, put it in a variable called <code>potato</code>, and print it times ten.</li>
+</ol>
+<pre class="facing">
+numbers = [1, 2, 3, 4]
+
+for potato in numbers:
+  print(potato * 10)
+</pre>
+<p>So much nicer!</p>
+<p>For loops can be tough to wrap your head around when you first start programming, but it’ll get better as time goes on. Practice, practice, practice.</p>
+<p>(Oh, and are you from some other programming world where for loops look something like <code>for(i=0; i &lt; 10; i++)</code>? Yeah, Python’s are definitely more friendly.)</p>
+<p>For our next step we’re actually going to <strong>put our for loops to work</strong> and learn a little bit about <strong>programmatic thinking</strong>.</p>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned about <strong>for loops</strong>, which are ways of doing the exactly same thing to every item in a list. It’s important to use the correct punctuation and indentation with for loops or else everything breaks!</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../comments/">Next up: Interlude - Comments <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing PN4U because bad tutorials make me grumpy. You think it's your fault you can't code? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">Python's not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script src="../common/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    function pywebSetup () {
+      pyweb.initialize({
+        console: '.blox',
+        facing: '.facing',
+        base: '../common/pyweb/'
+      })
+    }
+
+    function tableCleanup () {
+      document.querySelectorAll("table")
+        .forEach(function (d) {
+          d.classList.add("table")
+        })
+    }
+
+    function addHints () {
+      let matches = document.querySelectorAll("p, li");
+
+      Array.prototype.slice.call(matches).filter(function (d) {
+        return d.innerText.trim().indexOf("Hint: ") === 0
+      }).forEach(function(d) {
+        d.classList.add('hint')
+
+        let button = document.createElement('a')
+        button.classList.add('hint-button')
+        button.text = "Show hint"
+        button.addEventListener('click', function() {
+          d.classList.add('is-revealed')
+        })
+
+        let copy = document.createElement('span')
+        copy.innerHTML = d.innerHTML.replace("Hint: ", "")
+        d.innerHTML = ''
+        d.appendChild(button)
+        d.appendChild(copy)
+      })
+    }
+
+    window.addEventListener('load', pywebSetup)
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,253 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Working with text - Python's Not For Unicorns</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/simple-text-strings/">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <h3>Python's Not (Just) For Unicorns</h3>
+    <p>An introduction to Python for human beings &mdash; and whoever else, too</p>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 text-left">
+          <a href="../python-basics/"><span class="oi oi-arrow-left"></span> Python basics</a>
+          &nbsp;
+        </div>
+        <div class="col-sm-2 text-center">
+          <a href="http://littlecolumns.com/learn/python/"><span class="oi oi-home"></span></a>
+        </div>
+        <div class="col-sm-5 text-right">
+          &nbsp;
+          <a href="../data-types-errors/">Data types and error messages <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 5</em></p>
+        <h1 class="display-4">Working with text</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>Where are our manners?! We’ve been spending a lot of time asking Python intense math questions, but we <strong>never greeted her properly.</strong> Maybe we should say hello?</p>
+<pre class="blox" static="true">Hello</pre>
+<p>Okay, that… doesn’t seem right. We don’t know a lot about programming, but I’m pretty sure that’s some sort of <strong>error message!</strong></p>
+<p>We’ll figure out how to read errors later. For now, just know <strong>we did something wrong.</strong> You’re going to see error messages a lot when you’re learning to code, so it’s important to not be scared of them!</p>
+<p>But why did we get an error? Well, remember how Python only knows about numbers? Words and sentences and stuff like that are special: <strong>when we talk about text with Python, we need to put it in quotes</strong>.</p>
+<pre class="blox" static="true">"Hello"</pre>
+<p>Wow, that’s nice of her to say hello back. Notice how we used <strong>double quotes</strong> but Python responded with <strong>single quotes</strong>?</p>
+<p>Does double or single quotes matter? What if <em>we</em> try to use single quotes? I don’t know, let’s see! Trying things out is healthy: if we’re wrong our computer isn’t going to explode (…probably).</p>
+<pre class="blox" static="true">'Hello'</pre>
+<p>Okay, doesn’t seem to make a difference. You can use whichever kind of quotes you like. <strong>Say Goodbye to Python using either single or double quotes.</strong></p>
+<pre class="blox" test="Goodbye"></pre>
+<ul>
+<li>Hint: Remember to put quotes around it</li>
+<li>Hint: Make sure you’re capitalizing <code>Goodbye</code></li>
+<li>Hint: Type <code>&quot;Goodbye&quot;</code> or <code>'Goodbye'</code> and hit enter</li>
+</ul>
+<p>It looks like we can use either single quotes or double quotes, but can we <strong>mix them?</strong> Maybe start with a <code>'</code> and end with a <code>&quot;</code>?</p>
+<pre class="blox" static="true">'Hello"</pre>
+<p>Oh. Well. Hm. <code>SyntaxError: EOL while scanning string literal</code>? We don’t have a clue what that means, but let’s just guess it’s a very complex way of saying <strong>“no, you can’t mix quotation marks.”</strong></p>
+<p>Error messages try their best, but they aren’t always very understandable. We’ll become friends with them eventually, though.</p>
+<p>If you really like to talk and want to use multiple words, you just put the quotation marks around the <strong>whole thing.</strong></p>
+<pre class="blox" static="true">"I love bread"</pre>
+<p>Because sometimes it’s fun to disagree, use the console below to tell Python that you hate bread.</p>
+<pre class="blox" test="I hate bread"></pre>
+<ul>
+<li>Hint: We want it to say <code>I hate bread</code>. Maybe you tried <code>You hate bread</code>? Sorry!</li>
+<li>Hint: Type <code>&quot;I hate bread&quot;</code> or <code>'I hate bread'</code> and press enter</li>
+</ul>
+<p>Nothing too crazy,right?</p>
+<p><strong>“Wait a second!”</strong> you’re thinking and/or yelling. “We stopped using numbers and Python is still working! You said Python only knows math, and you <em>lied!</em>”</p>
+<p>That’s… only a little bit true. If we want to get technical, inside of her computer brain, Python thinks about words as numbers. We might talk more about that works later, but just know that <strong>Python can understand words whenever we put them in quotation marks</strong>.</p>
+<p>“Just like when you’re quoting people in English?” you ask.</p>
+<p>“Exactly.” I respond.</p>
+<pre class="blox" static="true">"Just like when you're quoting people in English?"
+"Exactly."</pre>
+<p>Now it’s your turn!</p>
+<p>Make Python say <code>Hello, world!</code>, because it’s <a href="https://en.wikipedia.org/wiki/%22Hello,_World!%22_program">basically a mandatory part of learning to code</a>. Make sure you get the comma and the exclamation mark or it won’t count!</p>
+<pre class="blox" test="Hello, world!"></pre>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned that when you do something wrong, Python shows you an <strong>error message.</strong> They don’t usually make sense, but we shouldn’t be scared of them because they’re trying to help.</p>
+<p>We also learned you can <strong>talk about words</strong> with Python by putting them in <strong>quotation marks</strong>, by doing <code>&quot;something like this&quot;</code> or <code>'like this'</code>. Double quotes and single quotes work the same, but you can’t mix them.</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../data-types-errors/">Next up: Data types and error messages <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing PN4U because bad tutorials make me grumpy. You think it's your fault you can't code? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">Python's not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script src="../common/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    function pywebSetup () {
+      pyweb.initialize({
+        console: '.blox',
+        facing: '.facing',
+        base: '../common/pyweb/'
+      })
+    }
+
+    function tableCleanup () {
+      document.querySelectorAll("table")
+        .forEach(function (d) {
+          d.classList.add("table")
+        })
+    }
+
+    function addHints () {
+      let matches = document.querySelectorAll("p, li");
+
+      Array.prototype.slice.call(matches).filter(function (d) {
+        return d.innerText.trim().indexOf("Hint: ") === 0
+      }).forEach(function(d) {
+        d.classList.add('hint')
+
+        let button = document.createElement('a')
+        button.classList.add('hint-button')
+        button.text = "Show hint"
+        button.addEventListener('click', function() {
+          d.classList.add('is-revealed')
+        })
+
+        let copy = document.createElement('span')
+        copy.innerHTML = d.innerHTML.replace("Hint: ", "")
+        d.innerHTML = ''
+        d.appendChild(button)
+        d.appendChild(copy)
+      })
+    }
+
+    window.addEventListener('load', pywebSetup)
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>

@@ -1,0 +1,296 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Variables - Python's Not For Unicorns</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/using-variables/">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <h3>Python's Not (Just) For Unicorns</h3>
+    <p>An introduction to Python for human beings &mdash; and whoever else, too</p>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 text-left">
+          <a href="../list-introduction/"><span class="oi oi-arrow-left"></span> Lists</a>
+          &nbsp;
+        </div>
+        <div class="col-sm-2 text-center">
+          <a href="http://littlecolumns.com/learn/python/"><span class="oi oi-home"></span></a>
+        </div>
+        <div class="col-sm-5 text-right">
+          &nbsp;
+          <a href="../lists-intermediate/">Even more lists <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 9</em></p>
+        <h1 class="display-4">Variables</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>The number one rule of programming is that <strong>programmers are lazy!</strong> There are probably more rules, but I’m <em>too lazy to remember them right now</em>. We spend a lot of time typing, so if there’s any way to not type the same code again and again and again, <em>we love it.</em></p>
+<p><strong>When we’re programming, we can give our data names.</strong> Think of it like names for people. If we know some big guy with a big beard who wears red clothes and brings us presents, we don’t call him “some big guy with a big beard who wears red clothes and brings us presents.” We just give him a name: <strong>Santa!</strong> Easy.</p>
+<p>We can do the same thing with our data. Remember when we calculated the number of seconds in a day, with <code>60 * 60 * 24</code>? We’d get real bored typing that again and again and again, so instead we’re just going to do this magic, and name it <code>seconds</code>:</p>
+<pre class="blox" static="true">seconds = 60 * 60 * 24</pre>
+<p>It looks like nothing happened, but now every time I type <code>seconds</code> it’s just another name for <code>60 * 60 * 24</code>.</p>
+<pre class="blox" static="true">
+seconds = 60 * 60 * 24
+print(seconds)</pre>
+<p>We don’t <em>have</em> to use <code>print</code> here, but we’ll need to use it soon so let’s get some practice in with that, oo.</p>
+<p><strong>How many seconds are in 3 days?</strong></p>
+<pre class="blox" static="true">
+seconds = 60 * 60 * 24
+print(seconds * 3)</pre>
+<p>In a year?</p>
+<pre class="blox" static="true">
+seconds = 60 * 60 * 24
+print(seconds * 365)</pre>
+<p>These names are called <strong>variables</strong>. They’re super helpful, and we’re going to use them every second of the rest of our programming lives.</p>
+<p>Make a variable called <code>minutes</code> that represents the <strong>number of minutes in a week</strong>, then print it out.</p>
+<pre class="blox" test="last_output == '10080' and minutes == 10080"></pre>
+<ul>
+<li>Hint: A week is 7 days, of 24 hours per day, 60 minutes per hour</li>
+<li>Hint: Your math is going to be <code>60 * 24 * 7</code></li>
+<li>Hint: Save your calculation as a variable called <code>minutes</code> by using <code>minutes = 60 * 24 * 7</code></li>
+<li>Hint: Print your new variable with <code>print(minutes)</code></li>
+</ul>
+<p>I think <strong>descriptive variable names are good</strong> - what does <code>minutes</code> really mean? I think <strong>minutes in a year</strong> is a little more useful! We should make <em>that</em> the variable name so people know what we’re talking about.</p>
+<pre class="blox" static="true">
+minutes in a year = 60 * 60 * 24</pre>
+<p>Oops, that’s an error! It turns out <strong>you can’t put spaces in a variable name.</strong> If you want to use spaces, you typically use underscores, like <code>minutes_in_a_year</code>. Some other languages might use <code>minutesInAYear</code> instead, but Python programmers typically use use underscores.</p>
+<pre class="blox" static="true">
+minutes_in_a_year = 60 * 60 * 24
+print(minutes_in_a_year)</pre>
+<p><strong>Exercise:</strong> For every one “normal” year, a dog gets 6 “dog years” older. For example, a 5-year-old dog is 30 dog years old, and a 10-year-old dog is 60. If I have a dog that is <strong>seven years old</strong>, how old is he in <strong>dog years?</strong> Save this in a variable named after “dog years,” then print the variable out.</p>
+<pre class="blox" test="dog_years == 42 and last_output == '42'"></pre>
+<ul>
+<li>Hint: You can’t use spaces in your variable name! Try underscores <code>_</code> instead</li>
+<li>Hint: Your calculation is <code>7</code> years times <code>6</code> dog years.</li>
+<li>Hint: Name your variable <code>dog_years</code></li>
+<li>Hint: Type <code>dog_years = 6 * 7</code> and press enter, then <code>print(dog_years)</code> and press enter</li>
+</ul>
+<p>Yes, that was a pretty dumb exercise, and yes, I’m sorry.</p>
+<p>You can use variables with <strong>any kind of data</strong> (integers! strings! lists! floats! etc!). For example, maybe I’m saying hello to one of my friends:</p>
+<pre class="blox" static="true">
+name = 'Lakshmi'
+print('Hello', name)</pre>
+<p><strong>WAIT A SECOND.</strong> This is confusing. I thought we couldn’t type words without quotation marks?????? Well, kind of. It depends on whether we’re using</p>
+<ul>
+<li>No quotation marks? <strong>Variable name.</strong></li>
+<li>Quotation marks? <strong>String.</strong></li>
+</ul>
+<p>If we type <code>&quot;seconds&quot;</code>, we mean the <strong>string</strong> seconds, the actual text of the word. If we type <code>seconds</code>, we mean the <strong>variable</strong> seconds.</p>
+<pre class="blox" static="true">
+seconds = 60 * 60 * 24
+print(seconds, "is a variable")
+print("seconds", "is a string")</pre>
+<p><strong>It usually takes a while to remember the difference between strings and variables.</strong> If you keep getting mixed up, don’t worry, you’ll get it with practice.</p>
+<p><strong>Mission:</strong> I created a variable called <code>food</code>. Please print out <code>&quot;I love chocolate&quot;</code>, but use the variable, <em>not</em> just <code>print(&quot;I love chocolate&quot;)</code>. That’d be cheating!</p>
+<pre class="blox" test="I love chocolate">
+food = 'chocolate'</pre>
+<ul>
+<li>Hint: To print out multiple things, you separate them with commas, like <code>print(1, 2, &quot;some words&quot;, &quot;blah&quot;, 3)</code></li>
+<li>Hint: Use <code>food</code> without quotation marks to mean the variable instead of the string <code>&quot;food&quot;</code></li>
+<li>Hint: Type <code>print(&quot;i love&quot;, food)</code> and press enter</li>
+</ul>
+<p><strong>Are you ready for a hard one???</strong> Feel free to skip this one if you’d like.</p>
+<p>The formula to convert from Fahrenheit to Celsius is <code>(Fahrenheit - 32) * 5 / 9 = Celsius</code>.</p>
+<p>If it’s 50 degrees Fahrenheit, what’s the temperature in Celsius?</p>
+<ul>
+<li>Create a variable called <code>f_degrees</code> and save <code>50</code> into it</li>
+<li>Calculate the number of degrees in celsius, and save it in a variable called <code>c_degrees</code></li>
+<li>Print out the sentence <code>&quot;___ degrees F is ___ degrees C&quot;</code> (with the blanks filled in)</li>
+</ul>
+<pre class="blox" test="f_degrees == 50 and c_degrees == 10.0 and last_output == '50 degrees F is 10.0 degrees C'">
+</pre>
+<ul>
+<li>Hint: You’ll use <code>f_degrees = 50</code> to start things off</li>
+<li>Hint: I tried to trick you by putting <code>Celsius</code> on the right-hand side of the equation! To save something into a variable, you’ll need to do <code>c_degrees = blah blah</code></li>
+<li>Hint: Your calculation should be <code>(f_degrees - 32) * 5 / 9</code>. You could also use <code>(50 - 32) * 5 / 9</code>, but that’s not as fun. You’ll want to save that into the variable <code>c_degrees</code></li>
+<li>Hint: The print statement is tough! It’s <code>print(f_degrees, &quot;degrees F is&quot;, c_degrees, &quot;degrees C&quot;)</code></li>
+</ul>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned about variables, which is a way to <strong>save and name our data</strong>. We also practiced using <code>print</code> to print out multiple things (variables, text, numbers) on the same line.</p>
+<p>There were a lot of dumb math problems, too.</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../lists-intermediate/">Next up: Even more lists <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing PN4U because bad tutorials make me grumpy. You think it's your fault you can't code? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">Python's not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script src="../common/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    function pywebSetup () {
+      pyweb.initialize({
+        console: '.blox',
+        facing: '.facing',
+        base: '../common/pyweb/'
+      })
+    }
+
+    function tableCleanup () {
+      document.querySelectorAll("table")
+        .forEach(function (d) {
+          d.classList.add("table")
+        })
+    }
+
+    function addHints () {
+      let matches = document.querySelectorAll("p, li");
+
+      Array.prototype.slice.call(matches).filter(function (d) {
+        return d.innerText.trim().indexOf("Hint: ") === 0
+      }).forEach(function(d) {
+        d.classList.add('hint')
+
+        let button = document.createElement('a')
+        button.classList.add('hint-button')
+        button.text = "Show hint"
+        button.addEventListener('click', function() {
+          d.classList.add('is-revealed')
+        })
+
+        let copy = document.createElement('span')
+        copy.innerHTML = d.innerHTML.replace("Hint: ", "")
+        d.innerHTML = ''
+        d.appendChild(button)
+        d.appendChild(copy)
+      })
+    }
+
+    window.addEventListener('load', pywebSetup)
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>
