@@ -302,10 +302,10 @@ for potato in numbers:
     }
 
     function tableCleanup () {
-      document.querySelectorAll("table")
-        .forEach(function (d) {
-          d.classList.add("table")
-        })
+      let elements = document.querySelectorAll("table")
+      for(let i = 0; i < elements.length; i++) {
+        elements[i].classList.add("table")
+      }
     }
 
     function addHints () {

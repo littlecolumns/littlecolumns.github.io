@@ -71,8 +71,10 @@ window.pyweb = (function() {
       .then(function (text) {
         facing_template = text
 
-        document.querySelectorAll(query)
-          .forEach(createFacingElement)
+        let elements = document.querySelectorAll(query)
+        for(let i = 0; i < elements.length; i++) {
+          createConsoleElement(elements[i])
+        }
       })
       .then(function () {
         var insert_line = facing_ids.map(function (id) {
@@ -161,8 +163,10 @@ window.pyweb = (function() {
       .then(function (text) {
         console_template = text
 
-        document.querySelectorAll(query)
-          .forEach(createConsoleElement)
+        let elements = document.querySelectorAll(query)
+        for(let i = 0; i < elements.length; i++) {
+          createConsoleElement(elements[i])
+        }
       })
       .then(function () {
         var insert_line = console_ids.map(function (id) {
