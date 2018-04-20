@@ -4,6 +4,7 @@ window.pyweb = (function() {
   let facing_ids = []
 
   function createFacingElement (basis) {
+    console.log("Creating a facing from", basis)
     let id = "py-facing-" + facing_i
     let editor_id = "py-facing-" + facing_i + "-editor"
     facing_i++
@@ -14,7 +15,9 @@ window.pyweb = (function() {
 
     let row = document.createElement('div')
     row.id = id
-    row.classList += 'row py-facing-row no-gutters'
+    row.classList.add('row')
+    button.classList.add('py-facing-row')
+    button.classList.add('no-gutters')
     row.setAttribute('run', basis.getAttribute('run') == 'true')
     
     let aceCol = document.createElement('div')
@@ -26,14 +29,20 @@ window.pyweb = (function() {
 
     let button = document.createElement('a')
 
-    button.classList += 'btn btn-warning btn-block rounded-0 btn-run'
+    button.classList.add('btn')
+    button.classList.add('btn-warning')
+    button.classList.add('btn-block')
+    button.classList.add('rounded-0')
+    button.classList.add('btn-run')
     button.innerHTML = "<span class='oi oi-play-circle'></span> Run Python code"
     aceCol.appendChild(button)
 
     let resultCol = document.createElement('div')
-    resultCol.classList += 'col-lg facing-result'
+    resultCol.classList.add('col-lg')
+    resultCol.classList.add('facing-result')
     let result = document.createElement('pre')
-    result.classList += 'h-100 output'
+    result.classList.add('h-100')
+    button.classList.add('output')
     resultCol.appendChild(result)
 
     row.appendChild(aceCol)
