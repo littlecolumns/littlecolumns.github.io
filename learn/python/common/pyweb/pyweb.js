@@ -60,7 +60,10 @@ window.pyweb = (function() {
     })
   }
 
-  function createFacingElements (query, base = "") {
+  function createFacingElements (query, base) {
+    if (!base) {     
+      base = ""
+    }
     return fetch(base + 'template-facing.py')
       .then(function (response) {
         return response.text()
@@ -147,7 +150,10 @@ window.pyweb = (function() {
   // that looks for doc['code'], we'll eventually
   // do a find-and-replace on that pointing to
   // different specific IDs
-  function createConsoleElements (query, base = "") {
+  function createConsoleElements (query, base) {
+    if (!base) {
+      base = ""
+    }
     return fetch(base + 'template-console.py')
       .then(function (response) {
         return response.text()
