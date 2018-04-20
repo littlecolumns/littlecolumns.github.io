@@ -74,7 +74,6 @@ let from = (function () {
       return A;
     };
   }());
-}
 
 // Converted from https://github.com/daniel-lundin/dom-confetti
 
