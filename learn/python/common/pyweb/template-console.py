@@ -187,10 +187,9 @@ class PyWebConsole:
             pass
 
     def send_event(self, _type, data = {}):
-        console.log("Sending", _type, "event")
         event = None
         try:
-            console.log("trying to send it that one way")
+            # non-IE
             if(_type == "success"):
                 event = window.MessageEvent.new(_type)
             elif(_type == "error"):
@@ -198,47 +197,31 @@ class PyWebConsole:
             
             self.element.dispatchEvent(event)
         except:
-            console.log("trying to send it that other way")
+            # IE
             if(_type == "success"):
-                console.log("Making MessageEvent from document")
-                try:
-                    event = doc.createEvent('MessageEvent')
-                except:
-                    console.log(traceback.format_exc())
-                console.log("done?")
+                event = doc.createEvent('MessageEvent')
             elif(_type == "error"):
                 event = doc.createEvent('ErrorEvent')
-            console.log("initting it")
             event.initEvent(_type, True, True)
-            console.log("done I guess")
 
-        console.log("dispatching")
         self.element.dispatchEvent(event)
 
     def test_solution(self):
-        console.log("trying solution")
         try:
             test = self.element.test.replace("\\n","\n")
-            console.log("test is", test)
-            console.log("editor thing is", self.editor_ns['_'])
 
             if str(self.editor_ns['_']) == test:
                 self.send_event('success')
                 return True
 
-            console.log("failed 1")
             if self.last_output and (test.strip() == self.last_output):
                 self.send_event('success')
                 return True
 
-            console.log("failed 2")
-
             equals = eval(test, self.editor_ns)
-
             if type(equals) == bool and equals:
                 self.send_event('success')
                 return True
-            console.log("failed 3")
         except:
             pass
 

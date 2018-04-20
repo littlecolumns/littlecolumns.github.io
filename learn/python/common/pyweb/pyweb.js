@@ -4,6 +4,7 @@ window.pyweb = (function() {
   let facing_ids = []
 
   function createFacingElement (basis) {
+    console.log("Creating a facing from", basis)
     let id = "py-facing-" + facing_i
     let editor_id = "py-facing-" + facing_i + "-editor"
     facing_i++
@@ -73,7 +74,7 @@ window.pyweb = (function() {
 
         let elements = document.querySelectorAll(query)
         for(let i = 0; i < elements.length; i++) {
-          createConsoleElement(elements[i])
+          createFacingElement(elements[i])
         }
       })
       .then(function () {
