@@ -181,28 +181,28 @@ if 4 < 10:
 <li>An <code>if</code> at the beginning of the line</li>
 <li>A comparison</li>
 <li>A <code>:</code> at the end of the first line</li>
-<li>An indent piece of code</li>
+<li>An indented piece of code</li>
 </ol>
-<p>The indented code only runs if the comparison - the <strong>conditional</strong> - is correct. If we change it to ask if 10 is less than 4…</p>
+<p>The indented code only runs if the comparison - the <strong>conditional</strong>, in this case <code>4 &lt; 10</code> - is correct. For example, if we change it to ask if 10 is less than 4…</p>
 <pre class="blox" static="true">
 if 10 < 4:
   print("You're dreaming!")
 </pre>
 <p>Since ten is <strong>not</strong> less than four, nothing ever gets printed!</p>
 <p>Try to write your own <strong>if statement</strong> below. Check to see <strong>if <code>100</code> if greater than <code>33</code></strong>. If it is, print out <code>&quot;Correct!&quot;</code>.</p>
-<p>After your indented part, you’ll need to hit enter <em>twice</em> for your code to run. (You’ll see what I mean!)</p>
+<p>Remember to put a <code>:</code> at the end of your <strong>if statement</strong>. And after your indented part, <strong>you’ll need to hit enter <em>twice</em> for your code to run.</strong></p>
 <pre class="blox" test="Correct!">
 </pre>
-<p>All three of those were both pretty boring if statements, let’s be honest. <code>4</code> is always less than <code>10</code>, and <code>100</code> is always going to be more than <code>33</code>! Let’s try something more fun — instead of comparing two numbers, let’s compare a <strong>number and a variable</strong>.</p>
-<p>In the US, the voting age is eighteen. I’ve saved a variable with a number as <code>age</code>. <strong>Let’s write an if statement that compares <code>age</code> to a number, and prints “You can vote!” if we’re 18 or older.</strong></p>
-<p><sup>Remember to hit enter twice to make it run!</sup></p>
+<p>All three of those were both pretty boring if statements, let’s be honest. <code>4</code> is always less than <code>10</code>, and <code>100</code> is always going to be more than <code>33</code>. Let’s try something more fun — instead of comparing two numbers, let’s compare a <strong>number and a variable</strong>.</p>
+<p>In the US, the voting age is eighteen. I’ve saved a variable with a number as <code>age</code>. <strong>Let’s write an if statement that looks at <code>age</code> and prints “You can vote!” if we’re 18 or older.</strong></p>
+<p><sup>Remember to hit enter twice to make it run! And if you get an error feel free to just Try again, no big deal. </sup></p>
 <pre class="blox" test="You can vote!">
 age = 22</pre>
 <ul>
 <li>Hint: “18 or older” can also be phrased as “older than 17”</li>
 <li>Hint: You can use <code>age</code> just like we used <code>4</code> or <code>10</code> in the first example</li>
-<li>Hint: Your comparison should be <code>age &gt; 17</code></li>
-<li>Hint: Remember the <code>if</code> at the beginning of the line, the <code>:</code> at the end</li>
+<li>Hint: Your comparison can be <code>age &gt; 17</code>, “if age is more than 17”</li>
+<li>Hint: Remember the <code>if</code> at the beginning of your if statement <strong>and</strong> the <code>:</code> at the end</li>
 <li>Hint: Be sure to indent your <code>print</code> line. It can either be two or four spaces.</li>
 <li>Hint: The full code should be <be><code>if age &gt; 17:</code><br>  <code>print(&quot;You can vote!&quot;)</code></li>
 </ul>
@@ -229,24 +229,32 @@ if sound == 'woof woof':
 <li>Hint: Make sure you include a <code>:</code> at the end of your <code>if</code> line</li>
 <li>Hint: Your final two lines should be <code>if sound == 'meow meow':</code><br>  <code>print(&quot;It's a cat!&quot;)</code></li>
 </ul>
-<p>Sigh, sorry, this isn’t any fun to type. The indenting is weird and we have to hit enter twice and we can’t go back and edit and it just looks kind of messy! Let’s change techniques.</p>
+<p>Sigh, sorry, this isn’t any fun to type. The indenting is weird and we have to hit enter <em>twice</em> and we can’t go back and <em>edit</em> and it just looks <em>messy!</em> Let’s change techniques.</p>
 <p>I’ve written some code in the box below. Click the <strong>Run Python code</strong> button to, yes, run the Python code. <strong>You’ll see the results in the other box.</strong></p>
 <pre class="facing">
 sound = 'meow meow'
+
 if sound == 'meow meow':
   print("It's a cat!")
 </pre>
-<p>Hooray! Beautiful magic!</p>
+<p>Hooray! Beautiful magic! Nice right? Compared to using the console, this style is a little more like writing a full Python program. Let’s call it an <strong>editor!</strong> Starting now, sometimes we’ll use the editor and sometimes we’ll use the console.</p>
+<p>Editors are nice because they let you write multiple lines of code at a time, add spacing, and look at those fun colors! That’s called <strong>syntax highlighting</strong>, and it helps you keep track of your code. Notice how strings and variables are different colors - tricks like that will eventually help you spot errors.</p>
 <p>We can use this new style to illustrate <strong>how important identation is.</strong> Feel free to play around with the <code>sound</code> in the next example and see what is and is not printed out.</p>
 <pre class="facing">
 sound = 'meow meow'
+
 if sound == 'meow meow':
   print("It's a cat!")
   print("She's too cute!")
   print("Can we keep her?")
 print("Take that animal back outside!")
 </pre>
-<p><em>As long as the line is indented after the <strong>if statement</strong>, it only runs when the if statement is true.</em> We like to use two spaces, but other people use four instead! Either one is fine as long as you always use the same number.</p>
+<p>This teaches us an important lessons about indentation:</p>
+<ul>
+<li>If the conditional is true, <strong>every indented line gets run.</strong></li>
+<li>If the conditional is false, <strong>every indented line gets skipped.</strong></li>
+</ul>
+<p>Indentation is super important in Python (unlike some other languages), and people have personal opinions about whether you should use <strong>two spaces</strong> or <strong>four spaces</strong>. We like to use two spaces, but if four looks nicer to you that’s fine, too! Both work as fine as long as you always use the same number.</p>
 <p>It’s pretty boring talking about the same animal sounds again and again, so hopefully we’ll be able to mix things up with <code>sound</code> soon!</p>
 <h3 id="chapter-summary">Chapter summary</h3>
 <p>We learned about <strong>conditionals</strong> and <strong>if statements</strong>, which run code (or don’t run code) based on a yes/no question. If statements always end with a <code>:</code>, and the special “yes” code is always indented by 2 or 4 spaces.</p>
