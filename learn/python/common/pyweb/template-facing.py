@@ -44,6 +44,7 @@ class PyWebFacing:
             exec(src, ns)
             self.write(context.getvalue())
         except Exception as exc:
+            self.write(context.getvalue())
             self.write(traceback.format_exc())
 
         sys.stdout = _stdout

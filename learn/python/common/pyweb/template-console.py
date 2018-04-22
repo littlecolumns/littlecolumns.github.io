@@ -136,7 +136,7 @@ class PyWebConsole:
 
     def append_to_element(self, text):
         self.set_element_value(self.element.html + text)
-
+        
     def cursorToEnd(self, event=None):
         _range = doc.createRange()
         _range.selectNodeContents(self.element)
@@ -167,7 +167,7 @@ class PyWebConsole:
             # Faux type the lines in
             for line in lines:
                 if self.element_value()[-2:] == TAB:
-                    self.set_element_value(element.html[:-2])
+                    self.set_element_value(self.element.html[:-2])
                 self.append_to_element(line)
                 self.myKeyPress(None)
 
@@ -224,7 +224,7 @@ class PyWebConsole:
                 return True
         except:
             pass
-
+        
     def log_response(self, response=None):
         if response is not None:
             escaped = repr(response).replace("<","&lt;")
@@ -342,7 +342,7 @@ class PyWebConsole:
                     self.process_error()
                 self.append_to_element(PROMPT)
             else:
-                append_to_element(PROMPT_CONT)
+                self.append_to_element(PROMPT_CONT)
 
             self.cursorToEnd()
             self.prevent(event)

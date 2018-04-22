@@ -21,7 +21,7 @@ window.pyweb = (function() {
     row.setAttribute('run', basis.getAttribute('run') == 'true')
     
     let aceCol = document.createElement('div')
-    aceCol.classList.add('col-lg')
+    aceCol.classList.add('col-lg-7')
     let aceHolder = document.createElement('div')
     aceHolder.classList.add('ace-holder')
     aceHolder.appendChild(editor)
@@ -38,7 +38,7 @@ window.pyweb = (function() {
     aceCol.appendChild(button)
 
     let resultCol = document.createElement('div')
-    resultCol.classList.add('col-lg')
+    resultCol.classList.add('col-lg-5')
     resultCol.classList.add('facing-result')
     let result = document.createElement('pre')
     result.classList.add('h-100')

@@ -1,0 +1,358 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Intro to debugging - Python's Not (Just) For Unicorns</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/manifest.json">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
+    <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/intro-to-debugging/">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+        background: #37474F;
+        color: white;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .logo {
+        text-align: center;
+      }
+
+      @media only screen and (min-width: 768px) {
+        text-align: right;
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3 logo">
+          <img src="../common/snekicorn.png" height="150" title="snekicorn">
+        </div>
+        <div class="col-sm-9 text-left">
+          <h3 class="mt-5">Python's Not (Just) For Unicorns</h3>
+          <p>An interactive introduction to programming in Python, for human beings and whoever else</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 text-left">
+          <a href="../conditionals/"><span class="oi oi-arrow-left"></span> If this then that</a>
+          &nbsp;
+        </div>
+        <div class="col-sm-2 text-center">
+          <a href="http://littlecolumns.com/learn/python/"><span class="oi oi-home"></span></a>
+        </div>
+        <div class="col-sm-5 text-right">
+          &nbsp;
+          <a href="../lists-intermediate/">Even more lists <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 11</em></p>
+        <h1 class="display-4">Intro to debugging</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>Now that we know about <strong>conditionals</strong>, we can start to party a little bit harder. Last time we ended up with this piece of art, that tells you what kind of animal you’re listening to:</p>
+<pre class="facing">
+sound = input("What sound does the animal make?")
+
+if sound == 'meow meow':
+  print("It's a cat!")
+elif sound == 'woof woof':
+  print("It's a dog!")
+else:
+  print("I don't know what animal it is.")
+</pre>
+<p>Let’s try to do the same sort of thing, but with numbers this time.</p>
+<ul>
+<li>We’ll ask the user for a number</li>
+<li>Did they guess <code>7</code>? They’re right!</li>
+<li>If their guess was less than <code>7</code>, print that they were too low</li>
+<li>If their guess was greater than <code>7</code>, print that they were too high.</li>
+</ul>
+<p>I wrote the code out for us already, give it a run and see if it works <em>(Hint: it won’t!)</em>. <strong>Type in <code>5</code> as your guess.</strong></p>
+<pre class="facing">
+guess = input("Please guess a number between 1 and 10")
+
+if guess == 7:
+  print("You got it!")
+elif guess < 7: 
+  print("You guessed too low")
+elif guess > 7:
+  print("You guessed too high")
+</pre>
+<p>Oh no! An error! Our code has a bug! Let’s start crying, <em>immediately!</em> We can’t handle it!</p>
+<p><strong>But we must handle it.</strong> We must… <em>debug!</em></p>
+<p>Once our eyes are finally dry, let’s take a moment to <strong>read the error message.</strong> This is an important step every time you see an error! The message is <code>TypeError: unorderable types: 'str' &lt; int()</code>, but to make it easier we can look at it piece by piece.</p>
+<ul>
+<li><code>TypeError</code> is probably something about <strong>data types</strong>, like strings and floats and lists and stuff.</li>
+<li><code>unorderable types</code> is about.. I dunno, we can’t put something in order?</li>
+<li><code>'str' &lt; int()</code> seems like the error we got a million years ago about adding an string and an integer, except this one seems to be about <strong>comparing a string and an integer</strong></li>
+</ul>
+<p>If we go up a little further in the long long lines of error message, Python actually <strong>shows us the line that gives the error</strong>:</p>
+<pre><code>Traceback (most recent call last):
+  module __main__2 line 53
+    self.run()
+  module __main__2 line 47
+    self.write(traceback.format_exc())
+  module &lt;module&gt; line 5
+    elif guess &lt; 7: 
+TypeError: unorderable types: &#39;str&#39; &lt; int()</code></pre>
+<p>See? <strong>The second to last line shows us our maybe-bad code.</strong> Looks like it’s <code>elif guess &lt; 7:</code> — How useful!</p>
+<p>…but also how <em>weird</em>, because our error seems to be “you’re can’t compare a string and an integer.” But <strong>how can that make sense?</strong> I’m pretty sure we’re comparing two integers, right?</p>
+<p>When we asked for a number, we typed in <code>5</code>. That’s an integer, obviously. And we saved that into a variable, so <code>guess</code> must be an integer, too. But when we ask if <code>guess &lt; 7</code>, Python starts yelling that <code>guess</code> is a string (because <code>7</code> is definitely an integer!).</p>
+<p><strong>I refuse to belive that <code>guess</code> is a string!</strong> I totally super promise that <code>guess</code> is an integer! Right? <em>Right??</em> To confirm that <code>guess</code> is an integer and Python has gone crazy, let’s <strong>print out the data type of <code>guess</code> right after we save it.</strong> If it’s an integer, it should say <code>int</code>.</p>
+<pre class="facing">
+guess = input("Please guess a number between 1 and 10")
+
+print(type(guess))
+
+if guess == 7:
+  print("You got it!")
+elif guess < 7: 
+  print("You guessed too low")
+elif guess > 7:
+  print("You guessed too high")
+</pre>
+<p>We still get an error, but see the very first output line? It’s when we printed out the data type of <code>guess</code>, and it says…. <code>&lt;class 'str'&gt;</code>. Wait, what? The <code>guess</code> variable <strong>is</strong> a string!</p>
+<p><strong>Here’s a secret:</strong> Every time you use <code>input</code> to get something from the user, no matter what is typed in, <em>Python always saves it as a string!</em> So instead of the <strong>number</strong> <code>5</code>, which is what we <em>think</em> we typed, Python’s using <code>&quot;5&quot;</code> instead, which <em>looks exactly the same</em> but is a <strong>string</strong>, not an integer! So when we compare it with the number <code>7</code>, Python freaks out.</p>
+<p>Okay, now that we know our problem, let’s try to fix it.</p>
+<p>To make the comparison without Python yelling at us, <strong>we need to convert our <code>guess</code> variable into a number</strong>. To do that, we’re going to use <code>int</code> — remember a million years ago when we used <code>str(2)</code> to convert the integer <code>2</code> into the string <code>&quot;2&quot;</code>? It’s just like that, but the total opposite.</p>
+<p>See how we use it below.</p>
+<pre class="facing">
+guess = input("Please guess a number between 1 and 10")
+
+if int(guess) == 7:
+  print("You got it!")
+elif int(guess) < 7: 
+  print("You guessed too low")
+elif int(guess) > 7:
+  print("You guessed too high")
+</pre>
+<p>We could use <code>float</code> the same way, but since it doesn’t have decimals we’re okay with <code>int</code>.</p>
+<p>But let’s be honest — it looks kind of silly converting <code>guess</code> again and again and again. We’re too lazy to type all that! Maybe instead we can <strong>convert it once and permanently change its data type?</strong></p>
+<p>To do that, we need one more change to our code — right after we read in the guess, we’re going to say “let’s convert <code>guess</code> into an integer, then save it right back on top of the old <code>guess</code> variable.” The old string version of <code>guess</code> is replaced with the new <code>int</code> version.</p>
+<p>Run the changed code, then read the output.</p>
+<pre class="facing">
+guess = input("Please guess a number between 1 and 10")
+
+guess = int(guess)
+
+if guess == 7:
+  print("You got it!")
+elif guess < 7: 
+  print("You guessed too low")
+elif guess > 7:
+  print("You guessed too high")
+</pre>
+<p><strong>What an adventure!</strong></p>
+<p>It took a while, but we eventually tracked down and solved our problem. <strong>This process is called debugging</strong>, and it’s a very very important part of programming.</p>
+<p>If you can write code that’s always perfect… you aren’t real. Sorry! For the rest of us, we’re going to have bugs and errors popping up all of the time, and figuring out how to fix them (without crying too much) is going to make our lives much much easier.</p>
+<p>Let’s think about how we used <strong>debugging</strong> to solve this problem:</p>
+<ul>
+<li><p><strong>First, we read our error message closely.</strong> We didn’t understand all of it, but some of it made sense, and we’d seen similar error messages before.</p></li>
+<li><p><strong>Then, we looked at the line it said had the error.</strong> Your error isn’t <em>always</em> on the line Python says, but it’s a good start. It will usually help you understand the error message better and give you an idea of what to change.</p></li>
+<li><p><strong>Then, we printed things out to confirm what was happening.</strong> A lot of time when you’re coding, you <em>think</em> you know what’s happening, but you can’t always be sure unless you <code>print</code> and <code>print</code> and <code>print</code>. We thought our number was an integer, but to make sure we printed out its data type.</p></li>
+<li><p><strong>Then, we made a small change and ran our code again.</strong> We were lucky that it worked on the first try. If it didn’t, we’d need to go back to reading our error message and seeing what else we might have done wrong.</p></li>
+</ul>
+<p>It takes a long time to remind yourself to slow down and check each one of these steps every time you run into an error (especially the <code>print</code> part!). It’s common to <a href="https://en.wikipedia.org/wiki/Shotgun_debugging">randomly change code</a>, hoping it will work, instead of taking a few seconds to calm down and focus your energy. I promise that reading error messages, trying to understand them, and debugging step-by-step is going to be super helpful (and super common!) in our coding journey.</p>
+<p>But hey, even if it’s impossible, we can <em>hope</em> we’ll never see bugs again, right?</p>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We practiced tracking down and solving errors, and in the process learned that using <code>input</code> to get data from the user always saves as a string.</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../lists-intermediate/">Next up: Even more lists <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing PN4U because bad tutorials make me grumpy. You think it's your fault you can't code? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">Python's not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/bluebird.js"></script>
+  <script type="text/javascript" src="../common/fetch-polyfill.js"></script>
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script src="../common/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+
+  <script>
+    function pywebSetup () {
+      window.pyweb.initialize({
+        console: '.blox',
+        facing: '.facing',
+        base: '../common/pyweb/'
+      })
+    }
+
+    function tableCleanup () {
+      let elements = document.querySelectorAll("table")
+      for(let i = 0; i < elements.length; i++) {
+        elements[i].classList.add("table")
+      }
+    }
+
+    function addHints () {
+      let matches = document.querySelectorAll("p, li");
+
+      Array.prototype.slice.call(matches).filter(function (d) {
+        return d.innerText.trim().indexOf("Hint: ") === 0
+      }).forEach(function(d) {
+        d.classList.add('hint')
+
+        let button = document.createElement('a')
+        button.classList.add('hint-button')
+        button.text = "Show hint"
+        button.addEventListener('click', function() {
+          d.classList.add('is-revealed')
+        })
+
+        let copy = document.createElement('span')
+        copy.innerHTML = d.innerHTML.replace("Hint: ", "")
+        d.innerHTML = ''
+        d.appendChild(button)
+        d.appendChild(copy)
+      })
+    }
+
+    window.addEventListener('load', pywebSetup)
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>
