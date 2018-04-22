@@ -4,7 +4,6 @@ window.pyweb = (function() {
   let facing_ids = []
 
   function createFacingElement (basis) {
-    console.log("Creating a facing from", basis)
     let id = "py-facing-" + facing_i
     let editor_id = "py-facing-" + facing_i + "-editor"
     facing_i++
@@ -15,6 +14,7 @@ window.pyweb = (function() {
 
     let row = document.createElement('div')
     row.id = id
+    row.test = basis.getAttribute('test')
     row.classList.add('row')
     row.classList.add('py-facing-row')
     row.classList.add('no-gutters')
@@ -50,6 +50,18 @@ window.pyweb = (function() {
 
     basis.parentNode.insertBefore(row, basis.nextSibling)
     basis.parentNode.removeChild(basis)
+
+    row.addEventListener('success', function(event) {
+      row.classList.add('is-success')
+
+      confetti(button.querySelector(".oi"), {
+        angle: 60,
+        spread: 50,
+        startVelocity: 80,
+        elementCount: 100,
+        decay: 0.8
+      })
+    })
 
     ace.edit(editor, {
       theme: "ace/theme/tomorrow_night",

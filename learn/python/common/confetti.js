@@ -88,6 +88,7 @@ var confetti = function () {
         element.style.width = '10px';
         element.style.height = '10px';
         element.style.position = 'absolute';
+        element.style.zIndex = '900';
         root.appendChild(element);
         return element;
       });
