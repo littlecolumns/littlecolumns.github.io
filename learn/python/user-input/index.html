@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Okay then - Python's Not (Just) For Unicorns</title>
+    <title>Asking questions - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/under-construction/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/user-input/">
 
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -141,7 +141,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../comments/"><span class="oi oi-arrow-left"></span> Interlude - Comments</a>
+          <a href="../conditionals/"><span class="oi oi-arrow-left"></span> If this then that</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -149,7 +149,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href=""> <span class="oi oi-arrow-right"></span></a>
+          <a href="../else-elsif/">When conditions fail <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -157,33 +157,42 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 17</em></p>
-        <h1 class="display-4">Okay then</h1>
+        <p class="subtitle mb-0"><em>Chapter 11</em></p>
+        <h1 class="display-4">Asking questions</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>Oof, it looks like you’ve reached the end of what I’ve written so far! <strong>Bummer.</strong></p>
-<p>I prrromise there’s going to be more, though. But how will you know? <strong>MAILING LIST.</strong> You’ll sign up for it, and you’ll get an email, and that email very well may say “hello, there is some new stuff just for you!”</p>
-<div id="mc_embed_signup">
-<form action="https://littlecolumns.us12.list-manage.com/subscribe/post?u=ecdebf156be0b7e068fac7c25&amp;id=16537e7c90" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-<div id="mc_embed_signup_scroll">
-<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
-<div style="position: absolute; left: -5000px;" data-aria-hidden="true">
-<input type="text" name="b_ecdebf156be0b7e068fac7c25_16537e7c90" tabindex="-1" value="">
-</div>
-<div class="clear">
-<input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
-</div>
-</div>
-</form>
-</div>
-<p>As I said in the beginning, <strong>I’d love to hear what you think</strong>. Love letters, hate mail, electricity bills, and musings on whether time as we know it existed before the Big Bang can be sent to me at <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a>, <a href="https://twitter.com/dangerscarf"><span class="citation" data-cites="dangerscarf">@dangerscarf</span></a>, or <a href="https://www.reddit.com/user/blunderbit">/u/blunderbit</a>.</p>
+<p>I’d like to experience new and amazing kinds of animal sounds, so let’s learn a new function called <code>input</code>. Click run to see what happens!</p>
+<pre class="facing">
+sound = input("What sound does the animal make?")
+if sound == 'meow meow':
+  print("It's a cat!")
+</pre>
+<p>We can use <code>input</code> to ask the user questions, and the part in quotes is what your prompt is. Then you get to save the answer into a variable!</p>
+<p>Try running the code several times, answering with different animal sounds. If you say <code>meow meow</code> Python will tell you it’s a cat, but if you say anything else she won’t!</p>
+<p>Let’s practice with <code>input</code> a little bit. <strong>The mission:</strong></p>
+<ul>
+<li>Ask for the user’s name, save it as <code>name</code></li>
+<li>Say hello to them, for example “Hello Sam”</li>
+</ul>
+<pre class="facing">
+</pre>
+<ul>
+<li>Hint: No <code>if</code> statement for this one, it’s just practice for <code>input</code>!</li>
+<li>Hint: You’ll use <code>input</code> with “What’s your name?”</li>
+<li>Hint: Be sure to save it into a variable called <code>name</code></li>
+<li>Hint: You can use <code>print</code> with multiple things by using commas, like <code>print(&quot;I ate&quot;, 55, &quot;bananas&quot;)</code></li>
+<li>Hint: <code>print(&quot;Hello&quot;, name)</code></li>
+</ul>
+<p>Okay, we proved that we’re friendly, so let’s get on to the next chapter and put <code>input</code> to use!</p>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned to ask for input from the user by using <code>input</code>.</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="">Next up:  <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../else-elsif/">Next up: When conditions fail <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>
