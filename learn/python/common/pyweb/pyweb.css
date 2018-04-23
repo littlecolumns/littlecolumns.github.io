@@ -67,7 +67,7 @@
 }
 
 .console-holder:hover .console-refresh {
-  opacity: 0.75;
+  opacity: 1;
 }
 
 .py-console {
