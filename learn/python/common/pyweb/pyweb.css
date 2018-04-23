@@ -46,6 +46,30 @@
 
 /* Console */
 
+.console-holder {
+  position: relative;
+}
+
+.is-static .console-refresh {
+  display: none;
+}
+
+.console-refresh {
+  position: absolute;
+  top: 0;
+  right: 0;
+  cursor: pointer;
+  z-index: 900;
+  padding: 3px 7px;
+  background: #f49f48;
+  font-size: 14px;
+  opacity: 0;
+}
+
+.console-holder:hover .console-refresh {
+  opacity: 0.75;
+}
+
 .py-console {
   background-color: #37474F;
   color: #fff;

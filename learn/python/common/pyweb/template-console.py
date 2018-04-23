@@ -63,7 +63,8 @@ class PyWebConsole:
     def __init__(self, _id):
         self._id = _id
         self.element = doc[_id]
-
+        self.refresh_button = self.element.parentNode.parentNode.select(".console-refresh")[0]
+        self.original_html = self.element.html
 
         self.history = []
         self.is_static = False
@@ -75,24 +76,29 @@ class PyWebConsole:
         except:
             pass
 
-        self.current = 0
-        self.last_output = None
-        self.queue = ""
-        self._status = "main" # or "block" if typing inside a block
-
         # execution namespace
+
+        self.attach_events()
+
+        self.refresh()
+
+        # timer.set_interval(self.process_queue, 200)
+
+
+    def refresh(self, event = None):
+        if event:
+            self.element.html = self.original_html
+
         self.editor_ns = {
-            # 'credits': credits,
-            # 'copyright': copyright,
-            # 'license': license,
             '__name__': '__main__',
             '_': None,
             'last_output': None
         }
 
-        self.attach_events()
-
-        timer.set_interval(self.process_queue, 200)
+        self.current = 0
+        self.last_output = None
+        self.queue = ""
+        self._status = "main"
 
         if self.run_initial():
             pass
@@ -430,6 +436,7 @@ class PyWebConsole:
             self.set_element_value(PROMPT)
 
     def attach_events(self):
+        self.refresh_button.bind('click', self.refresh)
         self.element.bind('keypress', self.myKeyPress)
         self.element.bind('keydown', self.myKeyDown)
         self.element.bind('click', self.cursorToEnd)

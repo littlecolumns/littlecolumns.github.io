@@ -119,10 +119,24 @@ window.pyweb = (function() {
 
   function createConsoleElement (basis) {
 
-    let element = basis.cloneNode(true)
-    basis.parentNode.insertBefore(element, basis.nextSibling)
-    basis.parentNode.removeChild(basis)
+    let holder = document.createElement('div')
+    holder.classList.add('console-holder')
+    if(basis.getAttribute('static') === "true") {
+      holder.classList.add('is-static')
+    }
     
+    let refresh_button = document.createElement('a')
+    refresh_button.classList.add('console-refresh')
+    refresh_button.innerHTML = "<span class='oi oi-loop-circular'></span> Restart"
+    holder.appendChild(refresh_button)
+
+
+    let element = basis.cloneNode(true)
+    holder.appendChild(element)
+
+    basis.parentNode.insertBefore(holder, basis.nextSibling)
+    basis.parentNode.removeChild(basis)
+
     let id = "brython-" + console_i
     let brython = document.createElement('div')
     brython.id = id
