@@ -200,7 +200,7 @@ type(2)</pre>
 <li>What’s the data type of 10000?</li>
 <li>What’s the data type of 3.14?</li>
 </ul>
-<pre class="blox" test="3.14"></pre>
+<pre class="blox" test="<class 'float'>"></pre>
 <ul>
 <li>Hint: Remember to put quotes around <code>submarine</code>, or Python won’t know it’s a string and will get confused/panic</li>
 <li>Hint: Run <code>type(&quot;submarine&quot;)</code> to get the data type of <code>&quot;submarine&quot;</code></li>
@@ -210,12 +210,12 @@ type(2)</pre>
 </ul>
 <p>Wait, <code>3.14</code> is a <strong>float?</strong> What in the world is a float?</p>
 <p>A <strong>float</strong> is like an integer, but it has a <em>decimal</em>. It isn’t called a <code>decimal</code> because, well, that would be too easy! And because, technically speaking, it’s something called a “floating point number”. You can read the <a href="https://en.wikipedia.org/wiki/Floating-point_arithmetic">Wikipedia page</a> if you want to know more.</p>
-<p>What’s a <strong>floating point number?</strong> I dunno, math stuff, not important. But here’s somethat that <em>is</em> important: if you want to feel smarter than a computer, ask it to add together <code>0.1</code> and <code>0.2</code>.</p>
+<p>What’s a <strong>floating point number?</strong> I dunno, math stuff, not important. But here’s something that <em>is</em> important: if you want to feel smarter than a computer, ask it to add together <code>0.1</code> and <code>0.2</code>.</p>
 <pre class="blox" test="0.30000000000000004"></pre>
 <p>Weird, right?!</p>
 <p>Mostly you can trust computers to do math for you, <strong>except for this one time</strong>. Oh, and that time <a href="https://en.wikipedia.org/wiki/Pentium_FDIV_bug">Intel screwed up floats bigtime in 1994</a>. But mostly, yes, trust your computer. This is just a fun trick to use at really boring parties.</p>
 <p>If you’re curious about why Python can’t add those two numbers together, you can read a whole web page about it at <a href="https://0.30000000000000004.com/">0.30000000000000004.com</a> (the explanation is in the small text up at the top).</p>
-<p>Besides <code>type</code>, the other most important function ever is called <code>print</code>, and it… prints stuff out (yes, on your screen, not on printer).</p>
+<p>Besides <code>type</code>, the other most important function ever is called <code>print</code>, and it… prints stuff out (yes, on your screen, not on a printer).</p>
 <pre class="blox" static="true">print(0.1 + 0.2)</pre>
 <p>It seems pretty boring and not any different than what we’ve done already, but we can actually <strong>print multiple things on the same line</strong>. Are you excited yet?!</p>
 <pre class="blox" static="true">
@@ -236,8 +236,8 @@ print("Hello", "world!")</pre>
 <li>Hint: Type <code>print(&quot;I ate&quot;, 55, &quot;bananas&quot;)</code> and press return</li>
 </ul>
 <p>Is your mind blown yet?</p>
-<p><code>print</code> also becomes useful when we stop using the <strong>console</strong> and start using the <strong>editor</strong>. We aren’t going to do that for a little while, but just so you know, try running the editor below.</p>
-<pre class="facing">
+<p><code>print</code> also becomes useful when we stop using the <strong>console</strong> and start using the <strong>editor</strong>, which is a tool that allows us to edit multiple lines of code at once. We aren’t going to do that for a little while, but just so you know, try clicking run on the editor below.</p>
+<pre class="facing" test="This gets displayed">
 "This doesn't get displayed"
 print("This gets displayed")
 </pre>
