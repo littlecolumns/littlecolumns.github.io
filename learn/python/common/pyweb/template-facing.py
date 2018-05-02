@@ -2,12 +2,128 @@ import sys
 import time
 import traceback
 import dis
+import json
 from io import StringIO
 
 from browser import document as doc, window, alert, console
 
 def to_str(xx):
     return str(xx)
+
+class PyTest:
+
+    def __init__(self, data, namespace, root):
+        self.desc = data['desc']
+        self.assertions = data['assertions']
+
+        if 'variables' in data:
+            self.variables = data['variables']
+        elif 'variables' in root:
+            self.variables = root['variables']
+        else:
+            self.variables = {}
+
+        if 'basis' in data:
+            self.basis = data['basis']
+        if 'basis' in root:
+            self.basis = root['basis']
+        else:
+            self.basis = ''
+
+        if 'input' in data:
+            self.input = data['input']
+        elif 'input' in root:
+            self.input = root['input']
+        else:
+            self.input = ''
+
+        if 'seed' in data:
+            self.seed = data['seed']
+        elif 'seed' in root:
+            self.seed = root['seed']
+        else:
+            self.seed = 1
+
+        self.result = None
+        self.ns = namespace
+
+    def code(self):
+        _code = """
+            import random
+            random.seed({seed})
+
+            input = lambda prompt: '{input}'
+
+            exec(injected_src)""".format(seed=self.seed, input=self.input).replace("            ","")
+        return _code
+
+
+    def check(self, assertion):
+        assertion_type = assertion[0]
+        data = assertion[1]
+        if assertion_type == "match" :
+            return data in self.result
+        elif assertion_type == "no_match":
+            return data not in self.result
+        else:
+            console.log("Don't know assertion type", assertion_type)
+        return False
+
+    def inject_src(self):
+        pieces = self.ns['src'].split("\n")
+        for name, value in self.variables.items():
+            for i, piece in enumerate(pieces):
+                if "{} =".format(name) in piece:
+                    pieces[i] = "{} = {}".format(name, value)
+        self.ns['injected_src'] = "\n".join(pieces)
+
+    def passes(self):
+        if self.result is None:
+            self.run()
+
+        passes = False
+        self.failures = [assertion for assertion in self.assertions if not self.check(assertion)]
+        return len(self.failures) == 0
+
+    def test_basis(self):
+        if self.basis is not None:
+            return self.basis.format(input=self.input) + ""
+        else:
+            return ''
+
+    def error_message(self, failure):
+        assertion_type = failure[0]
+        data = failure[1]
+
+        if assertion_type == "match":
+            return "Expected to see **{expected}**, but didn't see it".format(input=self.input, expected=data)
+        elif assertion_type == "no_match":
+            return "Saw **{expected}** when it wasn't expected".format(input=self.input, expected=data)
+        else:
+            console.log("Don't know test type", assertion_type)
+
+    def error_messages(self):
+        return [self.error_message(failure) for failure in self.failures]
+
+    def run(self):
+        try:
+            self.inject_src()
+            console.log(self.ns['injected_src'])
+            context = StringIO()
+            _stdout = sys.stdout
+            _stderr = sys.stderr
+            sys.stdout = context
+            sys.stderr = context
+
+            exec(self.code(), self.ns)
+
+        except:
+            self.result = context.getvalue()
+            console.log("Error occurred inside test", traceback.format_exc())
+        finally:
+            self.result = context.getvalue()
+            sys.stdout = _stdout
+            sys.stderr = _stderr
 
 class PyWebFacing:
 
@@ -29,20 +145,26 @@ class PyWebFacing:
             pass
 
     def send_event(self, _type, data = {}):
-        console.log("sending event", _type)
+        console.log("[event]", _type, data)
         event = None
         try:
             # non-IE
             if(_type == "success"):
                 event = window.MessageEvent.new(_type)
+            elif(_type == "testingstart"):
+                event = window.CustomEvent.new(_type)
+            elif(_type == "testresult"):
+                event = window.CustomEvent.new(_type, { 'detail': data })
             elif(_type == "error"):
                 event = window.ErrorEvent.new(_type, data)
-            
-            self.element.dispatchEvent(event)
         except:
             # IE
             if(_type == "success"):
                 event = doc.createEvent('MessageEvent')
+            elif(_type == "testingstart"):
+                event = doc.createEvent('CustomEvent')
+            elif(_type == "testresult"):
+                event = doc.createEvent('CustomEvent')
             elif(_type == "error"):
                 event = doc.createEvent('ErrorEvent')
             event.initEvent(_type, True, True)
@@ -55,22 +177,63 @@ class PyWebFacing:
             test = self.element.test.replace("\\n","\n")
             self.editor_ns['test'] = test.strip()
 
-            console.log("Comparing", self.last_output, "to", test.strip())
             if self.last_output and (test.strip() == self.last_output):
                 self.send_event('success')
                 return True
+        except:
+            console.log("Failed out of comparing last value")
+            pass
 
-            # if eval("test == last_output", self.editor_ns):
-            #     self.send_event('success')
-            #     return True
-
+        # if eval("test == last_output", self.editor_ns):
+        #     self.send_event('success')
+        #     return True
+        try:
             equals = eval(test, self.editor_ns)
             if type(equals) == bool and equals:
                 self.send_event('success')
                 return True
         except:
-            console.log("exception", traceback.format_exc())
+            console.log("eval gave exception")
             pass
+
+        try:
+            equals = eval(test, self.editor_ns)
+            if type(equals) == bool and equals:
+                self.send_event('success')
+                return True
+        except:
+            console.log("eval gave exception")
+            pass
+
+        try:
+            success = True
+            console.log("Loading tests")
+            test_data = json.loads(test)
+
+            self.send_event('testingstart')
+
+            for i, test in enumerate(test_data['tests']):
+                py_test = PyTest(test, self.editor_ns, root=test_data)
+                if py_test.passes():
+                    self.send_event('testresult', {
+                        'success': True,
+                        'basis': py_test.test_basis(),
+                        'desc': py_test.desc
+                    })
+                else:
+                    self.send_event('testresult', {
+                        'success': False,
+                        'desc': py_test.desc,
+                        'basis': py_test.test_basis(),
+                        'errors': py_test.error_messages()
+                    })
+                    success = False
+            if success:
+                self.send_event('success')
+        except:
+            console.log("Error occurred outside test", traceback.format_exc())
+        finally:
+            return success
 
     def write(self, data):
         self.output.text += str(data)

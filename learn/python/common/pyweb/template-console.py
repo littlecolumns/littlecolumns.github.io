@@ -2,56 +2,9 @@ import sys
 import traceback
 import json
 from io import StringIO
-import contextlib
 
 from browser import document as doc
 from browser import window, alert, console, timer
-
-_credits = """    Thanks to CWI, CNRI, BeOpen.com, Zope Corporation and a cast of thousands
-    for supporting Python development.  See www.python.org for more information."""
-
-_copyright = """Copyright (c) 2012, Pierre Quentel pierre.quentel@gmail.com
-All Rights Reserved.
-
-Copyright (c) 2001-2013 Python Software Foundation.
-All Rights Reserved.
-
-Copyright (c) 2000 BeOpen.com.
-All Rights Reserved.
-
-Copyright (c) 1995-2001 Corporation for National Research Initiatives.
-All Rights Reserved.
-
-Copyright (c) 1991-1995 Stichting Mathematisch Centrum, Amsterdam.
-All Rights Reserved."""
-
-_license = """Copyright (c) 2012, Pierre Quentel pierre.quentel@gmail.com
-All rights reserved.
-
-Redistribution and use in source and binary forms, with or without
-modification, are permitted provided that the following conditions are met:
-
-Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimer. Redistributions in binary
-form must reproduce the above copyright notice, this list of conditions and
-the following disclaimer in the documentation and/or other materials provided
-with the distribution.
-Neither the name of the <ORGANIZATION> nor the names of its contributors may
-be used to endorse or promote products derived from this software without
-specific prior written permission.
-
-THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
-AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
-IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
-LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
-CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
-SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
-INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
-CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
-ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-POSSIBILITY OF SUCH DAMAGE.
-"""
 
 INTRO_MSG = '<span class="intro">Type your Python code below, then hit enter to run it.</span>'
 TAB = '  '
@@ -104,18 +57,6 @@ class PyWebConsole:
             pass
         else:
             self.intro_and_prompt()
-
-    # def credits():
-    #     print(_credits)
-    # credits.__repr__ = lambda:_credits
-
-    # def copyright():
-    #     print(_copyright)
-    # copyright.__repr__ = lambda:_copyright
-
-    # def license():
-    #     print(_license)
-    # license.__repr__ = lambda:_license
 
     def write(self, data):
         self.append_to_element(str(data))
@@ -197,7 +138,7 @@ class PyWebConsole:
         try:
             # non-IE
             if(_type == "success"):
-                event = window.MessageEvent.new(_type)
+                event = window.MessageEvent.new(_type, data)
             elif(_type == "error"):
                 event = window.ErrorEvent.new(_type, data)
             
@@ -449,9 +390,3 @@ class PyWebConsole:
 console_ids = []
 # __ID_APPEND__
 web_consoles = [PyWebConsole(_id) for _id in console_ids]
-
-# v = sys.implementation.version
-# element_value = "Brython %s.%s.%s on %s %s\n>>> " % (
-#     v[0], v[1], v[2], window.navigator.appName, window.navigator.appVersion)
-# element.focus()
-# cursorToEnd()

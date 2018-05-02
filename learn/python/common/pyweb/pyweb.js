@@ -3,25 +3,40 @@ window.pyweb = (function() {
   let facing_i = 0
   let facing_ids = []
 
+  function buildMarkdownItem (tagName, text) {
+      let element = document.createElement(tagName)
+      element.innerHTML = text
+        .replace(/`(.*?)`/g,"<code>$1</code>")
+        .replace(/\*\*(.*?)\*\*/g,"<strong>$1</strong>")
+      return element
+  }
   function createFacingElement (basis) {
     let id = "py-facing-" + facing_i
     let editor_id = "py-facing-" + facing_i + "-editor"
     facing_i++
     facing_ids.push(id)
     
+    let nextElement = basis.nextElementSibling
+    if (nextElement && nextElement.tagName.toLowerCase() === 'script' && nextElement.getAttribute('type') === 'text/solution') {
+      basis.setAttribute('test', nextElement.innerHTML)
+      nextElement.parentNode.removeChild(nextElement)
+    }
+
     let editor = basis.cloneNode(true)
     editor.id = editor_id
 
+    let container = document.createElement('div')
+    container.id = id
+    container.test = basis.getAttribute('test')
+    container.setAttribute('run', basis.getAttribute('run') == 'true')
+
     let row = document.createElement('div')
-    row.id = id
-    row.test = basis.getAttribute('test')
+    row.classList.add('no-gutters')
     row.classList.add('row')
     row.classList.add('py-facing-row')
-    row.classList.add('no-gutters')
-    row.setAttribute('run', basis.getAttribute('run') == 'true')
     
     let aceCol = document.createElement('div')
-    aceCol.classList.add('col-lg-7')
+    aceCol.classList.add('col-lg-8')
     let aceHolder = document.createElement('div')
     aceHolder.classList.add('ace-holder')
     aceHolder.appendChild(editor)
@@ -38,7 +53,7 @@ window.pyweb = (function() {
     aceCol.appendChild(button)
 
     let resultCol = document.createElement('div')
-    resultCol.classList.add('col-lg-5')
+    resultCol.classList.add('col-lg-4')
     resultCol.classList.add('facing-result')
     let result = document.createElement('pre')
     result.classList.add('h-100')
@@ -48,11 +63,54 @@ window.pyweb = (function() {
     row.appendChild(aceCol)
     row.appendChild(resultCol)
 
-    basis.parentNode.insertBefore(row, basis.nextSibling)
+    let checklist = document.createElement('div')
+
+    container.appendChild(row)
+    container.appendChild(checklist)
+
+    basis.parentNode.insertBefore(container, basis.nextSibling)
     basis.parentNode.removeChild(basis)
 
-    row.addEventListener('success', function(event) {
-      row.classList.add('is-success')
+    container.addEventListener('testingstart', function(event) {
+      container.classList.remove('is-success')
+      checklist.innerHTML = "<div class='alert checklist'><ul></ul></div>"
+    })
+
+    console.log('adding an event listener for test results')
+
+    container.addEventListener('testresult', function(event) {
+      let element = buildMarkdownItem('li', event.detail.desc)
+      element.classList.add(event.detail.success ? 'pass' : 'fail')
+
+      let testDetails = document.createElement('ul')
+      testDetails.classList.add('test-details')
+
+      element.addEventListener('click', function() {
+        if(element.classList.contains('expanded')) {
+          element.classList.remove('expanded')
+        } else {
+          element.classList.add('expanded')
+        }
+      })
+
+      let basisElement = buildMarkdownItem('li', event.detail.basis)
+      testDetails.appendChild(basisElement)
+
+      if(event.detail.errors) {
+        element.classList.add('has-errors')
+
+        for(var i=0; i < event.detail.errors.length; i++) {
+            let element = buildMarkdownItem('li', event.detail.errors[i])
+            testDetails.appendChild(element)
+        }
+        element.appendChild(testDetails)
+      }
+
+      checklist.querySelector("ul").appendChild(element)
+    })
+
+    container.addEventListener('success', function(event) {
+      container.classList.add('is-success')
 
       confetti(button.querySelector(".oi"), {
         angle: 60,
