@@ -108,7 +108,7 @@ class PyTest:
     def run(self):
         try:
             self.inject_src()
-            console.log(self.ns['injected_src'])
+            
             context = StringIO()
             _stdout = sys.stdout
             _stderr = sys.stderr
@@ -149,23 +149,8 @@ class PyWebFacing:
         event = None
         try:
             event = window.CustomEvent.new(_type, { 'detail': data })
-            # # non-IE
-            # if(_type == "success"):
-            #     event = window.MessageEvent.new(_type)
-            # elif(_type == "testingstart"):
-            #     event = window.CustomEvent.new(_type)
-            # elif(_type == "testresult"):
-            # elif(_type == "error"):
-            #     event = window.ErrorEvent.new(_type, { 'detail': data })
         except:
             # IE
-            # if(_type == "success"):
-            #     event = doc.createEvent('MessageEvent')
-            # elif(_type == "testingstart"):
-            #     event = doc.createEvent('CustomEvent')
-            # elif(_type == "testresult"):
-            #     event = doc.createEvent('CustomEvent')
-            # elif(_type == "error"):
             event = doc.createEvent('CustomEvent')
             event.initCustomEvent(_type, True, True, data)
 
@@ -180,7 +165,7 @@ class PyWebFacing:
                 self.send_event('success')
                 return True
         except:
-            console.log("Failed out of comparing last value")
+            # console.log("Failed out of comparing last value")
             pass
 
         # if eval("test == last_output", self.editor_ns):
@@ -192,7 +177,7 @@ class PyWebFacing:
                 self.send_event('success')
                 return True
         except:
-            console.log("eval gave exception")
+            # console.log("eval gave exception")
             pass
 
         try:
@@ -201,12 +186,12 @@ class PyWebFacing:
                 self.send_event('success')
                 return True
         except:
-            console.log("eval gave exception")
+            # console.log("eval gave exception")
             pass
 
         try:
             success = True
-            console.log("Loading tests")
+            # console.log("Loading tests")
             test_data = json.loads(test)
 
             self.send_event('testingstart')
@@ -230,7 +215,8 @@ class PyWebFacing:
             if success:
                 self.send_event('success')
         except:
-            console.log("Error occurred outside test", traceback.format_exc())
+            pass
+            # console.log("Error occurred outside test", traceback.format_exc())
         finally:
             return success
 

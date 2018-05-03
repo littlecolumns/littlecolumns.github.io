@@ -76,10 +76,7 @@ window.pyweb = (function() {
       checklist.innerHTML = "<div class='alert checklist'><ul></ul></div>"
     })
 
-    console.log('adding an event listener for test results')
-
     container.addEventListener('testresult', function(event) {
-      console.log(event)
       let element = buildMarkdownItem('li', event.detail.desc)
       element.classList.add(event.detail.success ? 'pass' : 'fail')
 
