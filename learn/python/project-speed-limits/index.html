@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../intro-to-debugging/"><span class="oi oi-arrow-left"></span> Intro to debugging</a>
+          <a href="../else-elif/"><span class="oi oi-arrow-left"></span> When conditions fail</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -314,8 +314,11 @@ print("The speed limit is", speed_limit)
 </script>
 <ul>
 <li>Hint: Use <code>input</code> to ask how fast the user is going</li>
+<li>Hint: <code>speed = input(&quot;How fast were you going?&quot;)</code> will save the user’s input to a variable called <code>speed</code></li>
 <li>Hint: <code>input</code> always gives you a string, so you’ll need to use <code>int()</code> to convert the user’s input to an integer. If we don’t, you can’t compare it to other numbers! That’ll probably give you an <code>unorderable types</code> error about <code>str</code> and <code>int</code>.</li>
-<li>Hint: If you’re using <code>elif</code>, the order that you check might be important.</li>
+<li>Hint: You can convert <code>speed</code> to an integer every time you compare - like <code>int(speed) &gt; speed_limit</code> - or you can convert just once and overwrite the original value, like <code>speed = int(speed)</code></li>
+<li>Hint: You’ll probably want to use <code>elif</code> when checking the speed.</li>
+<li>Hint: Once Python finds an <code>if</code> or <code>elif</code> that works, <em>it doesn’t run any of the other options</em>. The order that you check in will probably be important!</li>
 </ul>
       </div>
     </div>

@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Interlude - Comments - Python's Not (Just) For Unicorns</title>
+    <title>When conditions fail - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/comments/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/else-elif/">
 
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../for-loops/"><span class="oi oi-arrow-left"></span> Being lazy with lists</a>
+          <a href="../intro-to-debugging/"><span class="oi oi-arrow-left"></span> Intro to debugging</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href="../under-construction/">Okay then <span class="oi oi-arrow-right"></span></a>
+          <a href="../project-speed-limits/">Project - Speeding robot <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,43 +233,82 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 17</em></p>
-        <h1 class="display-4">Interlude - Comments</h1>
+        <p class="subtitle mb-0"><em>Chapter 13</em></p>
+        <h1 class="display-4">When conditions fail</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>Last time we built a for loop, I did a little explaining about each step. Here’s the description we saw before:</p>
-<ol type="1">
-<li>We start by building a list of all of the numbers.</li>
-<li>Then we take <strong>each number</strong>, put it in a variable called <code>potato</code>, and print it times ten.</li>
-</ol>
-<p>And the code looked like this:</p>
+<p>When we last were talking about meowing cats, our code looked like this.</p>
 <pre class="facing">
-numbers = [1, 2, 3, 4]
-
-for potato in numbers:
-  print(potato * 10)
+sound = input("What sound does the animal make?")
+if sound == 'meow meow':
+  print("It's a cat!")
 </pre>
-<p>Sometimes it’s difficult to look back and forth between notes about code and the code itself. Luckily, Python lets you take notes <strong>inside the code!</strong> Instead of having a long description and then a chunk of code, we can actually write out code like this:</p>
+<p>If we answered the prompt with <code>meow meow</code>, Python says it’s a cat, but if we say <code>woof woof</code> she doesn’t say <em>anything</em>. Did she even hear us??? I don’t like to be ignored, so let’s make a little tweak! I also want to run some code <strong>when the sound is <em>not</em> <code>meow meow</code>.</strong></p>
 <pre class="facing">
-# Build a list of numbers
-numbers = [1, 2, 3, 4]
+sound = input("What sound does the animal make?")
 
-# Take each number, call it 'potato'
-# And print out that number times ten
-for potato in numbers:
-  print(potato * 10)
+if sound == 'meow meow':
+  print("It's a cat!")
+else:
+  print("It's not a cat.")
 </pre>
-<p>When you run it, Python ignores every line that starts with <code>#</code>. Try it!</p>
-<p>These <code>#</code> lines are called <strong>comments</strong>, and they’re a really really useful way to keep notes to yourself. You can put anything in comments, and Python won’t ever try to run it as code! From now on, if we need to explain something step-by-step, we might use comments.</p>
-<p>Even though <strong>comments</strong> can be helpful, I think they can sometimes make code <em>seem</em> more complicated than it is — so many extra lines! If you’re feeling anxious about understanding long blocks of code, sometimes it’s actually useful to <em>remove</em> the comments and then try to read it again.</p>
-<p>So when you see what looks like <code>#hashtags</code> floating all over the place, you’ll know whats happening: they’re just hopefully-helpful <strong>comments</strong> trying to explain complex pieces of code.</p>
+<p>Try to run it and answer it with both <code>meow meow</code> and <code>woof woof</code>.</p>
+<p>When you’re writing an <strong>if statement</strong>, you can also add an <code>else</code> onto it. If the condition <em>isn’t</em> true — in this case, if <code>sound</code> is <em>not</em> <code>'meow meow'</code> — Python skips down to the <code>else</code> part and runs the indented code there. Notice that <code>else</code> has a <code>:</code> after it, and the next line is indented, just like we did with <code>if</code>.</p>
+<p>Python only runs the <code>else</code> part if the sound is <strong>not</strong> <code>meow meow</code>.</p>
+<p>Right now we only check to see if the sound is a cat. Add to the code below to <strong>also check if the animal is a dog</strong>.</p>
+<ul>
+<li>If it’s a dog, pring <code>&quot;It's a dog!&quot;</code></li>
+<li>It if’s not, print <code>&quot;It's not a dog.&quot;</code></li>
+</ul>
+<p>Be sure you’re <em>only adding extra code</em> - it should still check for a cat, too.</p>
+<pre class="facing" test="It's not a cat.\nIt's a dog!">
+sound = input("What sound does the animal make?")
+
+if sound == 'meow meow':
+  print("It's a cat!")
+else:
+  print("It's not a cat.")
+</pre>
+<ul>
+<li>Hint: Be sure it’s checking for both cats and dogs</li>
+<li>Hint: If you type <code>woof woof</code>, it should print <br><code>It's not a cat.</code><br><code>It's a dog!</code></li>
+<li>Hint: Put your new code on the lines AFTER <code>print(&quot;It's not a cat&quot;)</code></li>
+<li>Hint: Don’t ask for another animal sound, only use <code>input</code> once</li>
+<li>Hint: Use the same indenting as we did with the cat check</li>
+</ul>
+<p>That’s better, I guess! But I mean, <em>obviously</em> a cat isn’t a dog, it seems silly to print both <code>&quot;It's not a cat&quot;</code> <em>and</em> <code>&quot;It's a a dog!&quot;</code>, right?</p>
+<p>I think it would make sense to <strong>only check if the animal is a dog if we know it is <em>not</em> a cat.</strong> So one final adjustment:</p>
+<pre class="facing">
+sound = input("What sound does the animal make?")
+
+if sound == 'meow meow':
+  print("It's a cat!")
+elif sound == 'woof woof':
+  print("It's a dog!")
+else:
+  print("I don't know what animal it is.")
+</pre>
+<p>Try to run it, testing what happens if you type <code>meow meow</code>, <code>woof woof</code>, or anything else.</p>
+<p><code>elif</code> stands for <code>else if</code>, which is like an <code>else</code> (run if things are false) plus an <code>if</code> statement (check if something is true). In this example…</p>
+<ul>
+<li>Python starts by checking to see if it’s a cat.</li>
+<li>If it is, Python says <code>&quot;It's a cat!&quot;</code> and stops.</li>
+<li>If it isn’t, Python will check to see if it’s a dog.</li>
+<li>If it is, Python says <code>&quot;It's a dog!&quot;</code> and stops.</li>
+<li>If it isn’t, Python will say <code>&quot;I don't know what animal it is.&quot;</code></li>
+</ul>
+<p>If we wanted to, we could put <strong>dozens of <code>elif</code> statements in row</strong>, one for each kind of animal we can think of! It might get boring to type it all out, but it’s definitely possible.</p>
+<p>Whew, okay. Let’s just practice this for a million years until we get it down.</p>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned about a few other types of <strong>if statements</strong>, like how to use <code>elif</code> and <code>else</code> to only run certain pieces of code when the <code>if</code> gets a “no” answer.</p>
+<p>I thought we were doing enough already, but if you’d like yet another vocabulary word, this is also called <strong>flow control.</strong></p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="../under-construction/">Next up: Okay then <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../project-speed-limits/">Next up: Project - Speeding robot <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>
