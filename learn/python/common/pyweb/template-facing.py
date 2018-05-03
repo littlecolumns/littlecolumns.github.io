@@ -7,8 +7,10 @@ from io import StringIO
 
 from browser import document as doc, window, alert, console
 
+
 def to_str(xx):
     return str(xx)
+
 
 class PyTest:
 
@@ -54,14 +56,16 @@ class PyTest:
 
             input = lambda prompt: '{input}'
 
-            exec(injected_src)""".format(seed=self.seed, input=self.input).replace("            ","")
+            exec(injected_src)""".format(
+                seed=self.seed,
+                input=self.input
+            ).replace("            ", "")
         return _code
-
 
     def check(self, assertion):
         assertion_type = assertion[0]
         data = assertion[1]
-        if assertion_type == "match" :
+        if assertion_type == "match":
             return data in self.result
         elif assertion_type == "no_match":
             return data not in self.result
@@ -82,7 +86,7 @@ class PyTest:
             self.run()
 
         passes = False
-        self.failures = [assertion for assertion in self.assertions if not self.check(assertion)]
+        self.failures = [a for a in self.assertions if not self.check(a)]
         return len(self.failures) == 0
 
     def test_basis(self):
@@ -96,9 +100,11 @@ class PyTest:
         data = failure[1]
 
         if assertion_type == "match":
-            return "Expected to see **{expected}**, but didn't see it".format(input=self.input, expected=data)
+            text = "Expected to see **{expected}**, but didn't see it"
+            return text.format(input=self.input, expected=data)
         elif assertion_type == "no_match":
-            return "Saw **{expected}** when it wasn't expected".format(input=self.input, expected=data)
+            text = "Saw **{expected}** when it wasn't expected"
+            return text.format(input=self.input, expected=data)
         else:
             console.log("Don't know test type", assertion_type)
 
@@ -108,7 +114,7 @@ class PyTest:
     def run(self):
         try:
             self.inject_src()
-            
+
             context = StringIO()
             _stdout = sys.stdout
             _stderr = sys.stderr
@@ -125,6 +131,7 @@ class PyTest:
             sys.stdout = _stdout
             sys.stderr = _stderr
 
+
 class PyWebFacing:
 
     def __init__(self, _id):
@@ -133,7 +140,7 @@ class PyWebFacing:
         self.editor_ns = {}
         self.output = self.element.select(".output")[0]
         self.button = self.element.select(".btn")[0]
-        self.button.bind('click', self.run_click) 
+        self.button.bind('click', self.run_click)
         self.src = ""
         self.last_output = ""
         self.error_msg = ""
@@ -144,11 +151,11 @@ class PyWebFacing:
         except:
             pass
 
-    def send_event(self, _type, data = {}):
+    def send_event(self, _type, data={}):
         # console.log("[event]", _type, data)
         event = None
         try:
-            event = window.CustomEvent.new(_type, { 'detail': data })
+            event = window.CustomEvent.new(_type, {'detail': data})
         except:
             # IE
             event = doc.createEvent('CustomEvent')
@@ -158,7 +165,7 @@ class PyWebFacing:
 
     def test_solution(self):
         try:
-            test = self.element.test.replace("\\n","\n")
+            test = self.element.test.replace("\\n", "\n")
             self.editor_ns['test'] = test.strip()
 
             if self.last_output and (test.strip() == self.last_output):
@@ -216,7 +223,7 @@ class PyWebFacing:
                 self.send_event('success')
         except:
             pass
-            # console.log("Error occurred outside test", traceback.format_exc())
+            # console.log("Error outside test", traceback.format_exc())
         finally:
             return success
 
@@ -249,7 +256,7 @@ class PyWebFacing:
             'last_output': self.last_output,
             '_': self.last_output,
             'src': self.src,
-            'error_msg': self.error_msg 
+            'error_msg': self.error_msg
         }
         sys.stdout = _stdout
         sys.stderr = _stderr

@@ -6,17 +6,23 @@ from io import StringIO
 from browser import document as doc
 from browser import window, alert, console, timer
 
-INTRO_MSG = '<span class="intro">Type your Python code below, then hit enter to run it.</span>'
+INTRO_MSG = """<span class="intro">Type your Python code below,
+then hit enter to run it.</span>"""
 TAB = '  '
 PROMPT = '<span class="prompt">&gt;&gt;&gt;</span> '
 PROMPT_CONT = '<span class="prompt-cont">...</span> '
+
+ERR_INVALID_SYNTAX = 'invalid syntax : triple string end not found'
+ERR_EVAL_EXPRESSION = 'eval() argument must be an expression'
+
 
 class PyWebConsole:
 
     def __init__(self, _id):
         self._id = _id
         self.element = doc[_id]
-        self.refresh_button = self.element.parentNode.parentNode.select(".console-refresh")[0]
+        parent = self.element.parentNode
+        self.refresh_button = parent.parentNode.select(".console-refresh")[0]
         self.original_html = self.element.html
 
         self.history = []
@@ -25,20 +31,15 @@ class PyWebConsole:
         try:
             self.is_static = self.element.static == 'true'
             if self.is_static:
-                self.element.class_name = self.element.class_name + " is_static"
+                self.element.class_name = self.element.class_name + " is_static"  # noqa
         except:
             pass
 
-        # execution namespace
-
         self.attach_events()
-
         self.refresh()
-
         # timer.set_interval(self.process_queue, 200)
 
-
-    def refresh(self, event = None):
+    def refresh(self, event=None):
         if event:
             self.element.html = self.original_html
 
@@ -83,7 +84,7 @@ class PyWebConsole:
 
     def append_to_element(self, text):
         self.set_element_value(self.element.html + text)
-        
+
     def cursorToEnd(self, event=None):
         _range = doc.createRange()
         _range.selectNodeContents(self.element)
@@ -133,7 +134,7 @@ class PyWebConsole:
         except:
             pass
 
-    def send_event(self, _type, data = {}):
+    def send_event(self, _type, data={}):
         event = None
         try:
             # non-IE
@@ -141,7 +142,6 @@ class PyWebConsole:
                 event = window.MessageEvent.new(_type, data)
             elif(_type == "error"):
                 event = window.ErrorEvent.new(_type, data)
-            
             self.element.dispatchEvent(event)
         except:
             # IE
@@ -155,7 +155,7 @@ class PyWebConsole:
 
     def test_solution(self):
         try:
-            test = self.element.test.replace("\\n","\n")
+            test = self.element.test.replace("\\n", "\n")
 
             if str(self.editor_ns['_']) == test:
                 self.send_event('success')
@@ -171,25 +171,13 @@ class PyWebConsole:
                 return True
         except:
             pass
-        
+
     def log_response(self, response=None):
         if response is not None:
-            escaped = repr(response).replace("<","&lt;")
+            escaped = repr(response).replace("<", "&lt;")
             self.append_to_element(escaped + '\n')
 
         self.test_solution()
-        # try:
-        #     # TODO can't serialize type?
-        #     event = window.MessageEvent.new('message', {
-        #         'data': json.dumps(response)
-        #     })
-        #     element.dispatchEvent(event)
-        # except:
-        #     pass
-
-        # element.response = repr(response)
-
-
 
     def process_error(self):
         data = {
@@ -198,7 +186,6 @@ class PyWebConsole:
         }
         self.send_event('error', data)
         self.append_to_element(traceback.format_exc())
-        # traceback.print_exc()
 
     def myKeyPress(self, event):
         _stdout = sys.stdout
@@ -206,8 +193,6 @@ class PyWebConsole:
         context = StringIO()
         sys.stdout = context
         sys.stderr = context
-
-        # global _status, current, is_static, last_output
 
         # When we trigger return manually we just don't send event
         run_code = not event or event.keyCode == 13
@@ -237,7 +222,7 @@ class PyWebConsole:
             if self._status == "main" or self._status == "3string":
                 try:
                     _ = self.editor_ns['_'] = eval(currentLine, self.editor_ns)
-                    self.last_output = self.editor_ns['last_output'] = context.getvalue().strip()
+                    self.last_output = self.editor_ns['last_output'] = context.getvalue().strip()  # noqa
                     self.write(context.getvalue())
                     self.log_response(_)
                     self.append_to_element(PROMPT)
@@ -246,17 +231,16 @@ class PyWebConsole:
                     if(self._status == "main"):
                         self.append_to_element(PROMPT_CONT + TAB)
                     else:
-                        self.append_to_element(PROMPT_CONT)                    
+                        self.append_to_element(PROMPT_CONT)
                     self._status = "block"
                 except SyntaxError as msg:
-                    if str(msg) == 'invalid syntax : triple string end not found' or \
-                        str(msg).startswith('Unbalanced bracket'):
+                    if str(msg) == ERR_INVALID_SYNTAX or str(msg).startswith('Unbalanced bracket'):  # noqa
                         self.append_to_element(PROMPT_CONT)
                         self._status = "3string"
-                    elif str(msg) == 'eval() argument must be an expression':
+                    elif str(msg) == ERR_EVAL_EXPRESSION:
                         try:
                             exec(currentLine, self.editor_ns)
-                            self.last_output = self.editor_ns['last_output'] = context.getvalue().strip()
+                            self.last_output = self.editor_ns['last_output'] = context.getvalue().strip()  # noqa
                             self.write(context.getvalue())
                             self.log_response()
                         except:
@@ -282,7 +266,7 @@ class PyWebConsole:
                 self._status = "main"
                 try:
                     exec(block_src, self.editor_ns)
-                    self.last_output = self.editor_ns['last_output'] = context.getvalue().strip()
+                    self.last_output = self.editor_ns['last_output'] = context.getvalue().strip()  # noqa
                     self.write(context.getvalue())
                     self.log_response()
                 except:
@@ -343,7 +327,7 @@ class PyWebConsole:
             doc.selection.createRange().text = text
         except:
             pass
-        
+
         self.cursorToEnd()
 
     # http://jsfiddle.net/marinagon/1v63t05q/
