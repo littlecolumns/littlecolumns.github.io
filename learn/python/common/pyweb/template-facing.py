@@ -145,34 +145,33 @@ class PyWebFacing:
             pass
 
     def send_event(self, _type, data = {}):
-        console.log("[event]", _type, data)
+        # console.log("[event]", _type, data)
         event = None
         try:
-            # non-IE
-            if(_type == "success"):
-                event = window.MessageEvent.new(_type)
-            elif(_type == "testingstart"):
-                event = window.CustomEvent.new(_type)
-            elif(_type == "testresult"):
-                event = window.CustomEvent.new(_type, { 'detail': data })
-            elif(_type == "error"):
-                event = window.ErrorEvent.new(_type, data)
+            event = window.CustomEvent.new(_type, { 'detail': data })
+            # # non-IE
+            # if(_type == "success"):
+            #     event = window.MessageEvent.new(_type)
+            # elif(_type == "testingstart"):
+            #     event = window.CustomEvent.new(_type)
+            # elif(_type == "testresult"):
+            # elif(_type == "error"):
+            #     event = window.ErrorEvent.new(_type, { 'detail': data })
         except:
             # IE
-            if(_type == "success"):
-                event = doc.createEvent('MessageEvent')
-            elif(_type == "testingstart"):
-                event = doc.createEvent('CustomEvent')
-            elif(_type == "testresult"):
-                event = doc.createEvent('CustomEvent')
-            elif(_type == "error"):
-                event = doc.createEvent('ErrorEvent')
-            event.initEvent(_type, True, True)
+            # if(_type == "success"):
+            #     event = doc.createEvent('MessageEvent')
+            # elif(_type == "testingstart"):
+            #     event = doc.createEvent('CustomEvent')
+            # elif(_type == "testresult"):
+            #     event = doc.createEvent('CustomEvent')
+            # elif(_type == "error"):
+            event = doc.createEvent('CustomEvent')
+            event.initEvent(_type, True, True, { 'detail': data })
 
         self.element.dispatchEvent(event)
 
     def test_solution(self):
-        console.log("testing solution")
         try:
             test = self.element.test.replace("\\n","\n")
             self.editor_ns['test'] = test.strip()
