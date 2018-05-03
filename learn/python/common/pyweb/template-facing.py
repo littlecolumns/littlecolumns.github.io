@@ -167,8 +167,7 @@ class PyWebFacing:
             #     event = doc.createEvent('CustomEvent')
             # elif(_type == "error"):
             event = doc.createEvent('CustomEvent')
-            event.initEvent(_type, True, True)
-            event.detail = data
+            event.initCustomEvent(_type, True, True, data)
 
         self.element.dispatchEvent(event)
 
