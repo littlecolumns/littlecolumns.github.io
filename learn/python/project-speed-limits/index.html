@@ -248,10 +248,10 @@
 <li>Going more than 5mph under the speed limit? <code>Too slow</code></li>
 <li>Everything else? <code>Just right</code></li>
 </ul>
-<p><strong>Note:</strong> You cannot be charged with both reckless driving <em>and</em> speeding, only one of them.</p>
+<p><strong>Note:</strong> You cannot be charged with both reckless driving <em>and</em> speeding. If you’re going fast enough to be reckless, it’s just reckless driving.</p>
 <p>The code I’ve given you randomly picks a speed limit<sup>1</sup> and prints it to the screen. After that, it’s all up to you! Start by <strong>asking the user how fast they’re going.</strong></p>
 <p><sup>[1] <em>Technically</em> the code imports some <em>other</em> code that lets you use random numbers, then picks a number between 15 and 65, going in steps of 5 (15, 20, 25, 30…)</sup></p>
-<pre class="facing">
+<pre class="facing" run="true">
 import random
 random.seed(6779)
 speed_limit = random.randrange(15, 66, 5)
