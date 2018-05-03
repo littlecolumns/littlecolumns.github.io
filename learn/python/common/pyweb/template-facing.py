@@ -201,26 +201,27 @@ class PyWebFacing:
             # console.log("Loading tests")
             test_data = json.loads(test)
 
-            self.send_event('testingstart')
+            if len(test_data['tests']) > 0:
+                self.send_event('testingstart')
 
-            for i, test in enumerate(test_data['tests']):
-                py_test = PyTest(test, self.editor_ns, root=test_data)
-                if py_test.passes():
-                    self.send_event('testresult', {
-                        'success': True,
-                        'basis': py_test.test_basis(),
-                        'desc': py_test.desc
-                    })
-                else:
-                    self.send_event('testresult', {
-                        'success': False,
-                        'desc': py_test.desc,
-                        'basis': py_test.test_basis(),
-                        'errors': py_test.error_messages()
-                    })
-                    success = False
-            if success:
-                self.send_event('success')
+                for i, test in enumerate(test_data['tests']):
+                    py_test = PyTest(test, self.editor_ns, root=test_data)
+                    if py_test.passes():
+                        self.send_event('testresult', {
+                            'success': True,
+                            'basis': py_test.test_basis(),
+                            'desc': py_test.desc
+                        })
+                    else:
+                        self.send_event('testresult', {
+                            'success': False,
+                            'desc': py_test.desc,
+                            'basis': py_test.test_basis(),
+                            'errors': py_test.error_messages()
+                        })
+                        success = False
+                if success:
+                    self.send_event('success')
         except:
             pass
             # console.log("Error outside test", traceback.format_exc())

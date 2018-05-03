@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Okay then - Python's Not (Just) For Unicorns</title>
+    <title>Putting loops to work - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/under-construction/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/putting-loops-to-work/">
 
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../putting-loops-to-work/"><span class="oi oi-arrow-left"></span> Putting loops to work</a>
+          <a href="../counting-with-loops/"><span class="oi oi-arrow-left"></span> Counting with loops</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href=""> <span class="oi oi-arrow-right"></span></a>
+          <a href="../under-construction/">Okay then <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,33 +233,101 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 21</em></p>
-        <h1 class="display-4">Okay then</h1>
+        <p class="subtitle mb-0"><em>Chapter 20</em></p>
+        <h1 class="display-4">Putting loops to work</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>Oof, it looks like you’ve reached the end of what I’ve written so far! <strong>Bummer.</strong></p>
-<p>I prrromise there’s going to be more, though. But how will you know? <strong>MAILING LIST.</strong> You’ll sign up for it, and you’ll get an email, and that email very well may say “hello, there is some new stuff just for you!”</p>
-<div id="mc_embed_signup">
-<form action="https://littlecolumns.us12.list-manage.com/subscribe/post?u=ecdebf156be0b7e068fac7c25&amp;id=16537e7c90" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank" novalidate>
-<div id="mc_embed_signup_scroll">
-<input type="email" value="" name="EMAIL" class="email" id="mce-EMAIL" placeholder="email address" required>
-<div style="position: absolute; left: -5000px;" data-aria-hidden="true">
-<input type="text" name="b_ecdebf156be0b7e068fac7c25_16537e7c90" tabindex="-1" value="">
-</div>
-<div class="clear">
-<input type="submit" value="Subscribe" name="subscribe" id="mc-embedded-subscribe" class="button">
-</div>
-</div>
-</form>
-</div>
-<p>As I said in the beginning, <strong>I’d love to hear what you think</strong>. Love letters, hate mail, electricity bills, and musings on whether time as we know it existed before the Big Bang can be sent to me at <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a>, <a href="https://twitter.com/dangerscarf"><span class="citation" data-cites="dangerscarf">@dangerscarf</span></a>, or <a href="https://www.reddit.com/user/blunderbit">/u/blunderbit</a>.</p>
+<p>I’ll admit it: the assignment you ended last chapter with was kind of dumb. Really dumb, honestly.</p>
+<p>I haaaaate Computer Science homework because it’s always like “write some code to sort this list of numbers,” when honestly someone much smarter than any of us <em>already wrote that code</em> and we can use it ourselves. If anyone ever tells you to sort numbers in Python, just huff loudly and point them to this:</p>
+<pre class="facing", test="[2, 4, 5, 6, 7]">
+numbers = [5, 2, 4, 7, 6]
+numbers = sorted(numbers)
+print(numbers)
+</pre>
+<p>So yes, counting ducks was <em>dumb</em>, because you can use <code>len(ducks)</code> until the day you die! Maybe even afterward, depending on how advanced computers are at that point.</p>
+<p>But so our hard work doesn’t go to waste, let’s improve on what we did. But first: <strong>run the code below</strong> to see that yes, <code>&quot;Leonard&quot;</code> does start with L. Then <strong>change the name to <code>&quot;Stewart&quot;</code> and try it again!</strong></p>
+<pre class="facing" test="Stewart does not start with Leo">
+name = "Leonard"
+
+if name.startswith("Leo"):
+  print(name, "starts with Leo")
+else:
+  print(name, "does not start with Leo")
+</pre>
+<p>Now you know about <code>.startswith</code>.</p>
+<p>It seems dumb, but I promise it mostly isn’t! <strong>Conditionals</strong> (<code>if</code> statements) become super useful when we’re counting things in for loops. <strong>Sometimes you don’t want to count everything, you only want to count things that meet a certain condition.</strong></p>
+<p>Right now, the loop below counts <strong>every duck</strong>. Use our new friend <code>.startswith</code> and an <code>if</code> statement to make it <strong>only count the ducks whose names start with <code>Leo</code></strong>.</p>
+<pre class="facing" test="We found 2 ducks">
+ducks = ["Leonard", "Starburst", "Leopold", "Lackluster"]
+
+# Initial state: ZERO ducks
+count = 0
+
+for duck in ducks:
+  print("Looking at", duck)
+  count = count + 1
+
+# Answer: How many ducks?
+print("We found", count, "ducks")
+</pre>
+<script type="text/solution">
+Looking at Leonard
+Looking at Starburst
+Looking at Leopold
+Looking at Lackluster
+We found 2 ducks
+</script>
+<ul>
+<li>Hint: Let’s print the duck’s name even if it doesn’t start with <code>Leo</code>.</li>
+<li>Hint: We’ll need to add an <code>if</code> statement asking if the duck’s name starts with <code>Leo</code></li>
+<li>Hint: Add the <code>if</code> statement <strong>inside of the loop</strong> (indent it!)</li>
+<li>Hint: If you’re cutting and pasting from the first example, note that the variable name is <code>duck</code>, not <code>name</code></li>
+<li>Hint: Be sure to put a <code>:</code> at the end of the <code>if</code> statement</li>
+<li>Hint: Use <code>if duck.startswith(&quot;Leo&quot;):</code> as your conditional</li>
+<li>Hint: We don’t need to use an <code>else</code> here.</li>
+<li>Hint: We’re going to need <strong>two levels of indenting!</strong> One for the <code>for</code>, and another for the <code>if</code>. <code>count = count + 1</code> will be indented the most.</li>
+<li>Hint: The next line after the <code>if</code> will be <code>count = count + 1</code>, but indented <em>twice</em>, so it’s inside of the <code>if</code></li>
+</ul>
+<p>Let’s try again, this time from scratch! How many students have grades that are <code>85</code> or higher?</p>
+<pre class="facing" test="7">
+grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
+</pre>
+<ul>
+<li>Hint: Be sure to set up your <strong>initial state</strong>. Before we’ve counted grades, how many grades <code>85</code> or higher have we seen?</li>
+<li>Hint: Since we haven’t looked at <em>any</em> grades, we start from zero. We’ll want to start with <code>count = 0</code></li>
+<li>Hint: Be sure to print out the final count when you’re done!</li>
+<li>Hint: Add a for loop to go through each grade.</li>
+<li>Hint: It’s the same as the problem up above, with the <code>for</code> loop and the <code>if</code> inside of the loop, but this time we’re checking if the number is <code>85</code> or above</li>
+<li>Hint: We can use <code>grade &gt; 84</code> or <code>grade &gt;= 85</code></li>
+<li>Hint: Make sure you put a <code>:</code> at the end of your <code>if</code> statement, and indent the <code>count</code> line!</li>
+<li>Hint: We’ll use <code>for grade in grades:</code> and <code>if grade &gt;= 85:</code>.</li>
+<li>Hint: And, of course, <code>count = count + 1</code></li>
+</ul>
+<p>Cut and paste your answer down here, and get a little fancier. <strong>What percentage of the class got <code>85</code> or higher?</strong></p>
+<pre class="facing" test="0.4666666666666667">
+grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
+</pre>
+<ul>
+<li>Hint: We’ll want to divide your answer from above by the total number of grades</li>
+<li>Hint: How can you easily count the total number of grades?</li>
+<li>Hint: We can use <code>len(grades)</code>, we don’t have to count them the hard way!</li>
+<li>Hint: If we want to make it a normal-looking percentage, we can multiply the decimal version by 100, then round it with <code>round()</code></li>
+</ul>
+<h3 id="lets-take-a-breather.">Let’s take a breather.</h3>
+<p>If this is starting to seem tough, I’m with you! These problems are one of the <strong>gatekeepers</strong> of learning to program - figuring out for loops and how to use them is one of the big parts where people get frustrated, shrug and walk away.</p>
+<p><strong>That doesn’t need to be you!</strong> And if it <em>is</em> you, I’m going to cry and cry and cry. So please, let’s not let that happen.</p>
+<p>Lops and lists can be tough to think and reason through, so here’s my suggestion: if you found this part tough <em>at all</em> (which is probably most of you!), skip back to <a href="../list-introduction/">the beginning of talking about lists</a>. Go through it again. <strong>Repeat the lists/loops section three times.</strong></p>
+<p>Yes, that’s super boring! I won’t pretend it isn’t! It might even seem like a <em>dumb idea</em>, but I promise it’s not <em>that</em> much of your time, and by the time you’re done you’ll feel a lot more comfortable with them. Even if you just mindlessly type answers again and again it helps you absorb the materials.</p>
+<p>Once you feel a little bit comfortable, you can continue on to tackle an <em>almost-interesting</em> project.</p>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We got a little more practice at <strong>programming thinking</strong>, especially using <strong>conditionals</strong> inside of <strong>for loops</strong>. This allows us to only count <em>some</em> of our data points.</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="">Next up:  <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../under-construction/">Next up: Okay then <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>

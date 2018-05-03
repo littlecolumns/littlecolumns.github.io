@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Python's Not (Just) For Unicorns</title>
+    <title>Counting with loops - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,10 +34,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/counting-with-loops/">
 
-    <link rel="stylesheet" href="common/bootstrap.min.css">
-    <link href="common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
     <style>
       .hint-button {
@@ -196,7 +196,7 @@
         padding: 0.5rem 0.75rem;
       }
     </style>
-  <link rel="stylesheet" href="common/pyweb/pyweb.css">
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
 </head>
 
 <body>
@@ -204,7 +204,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-3 logo">
-          <img src="common/snekicorn.png" height="150" title="snekicorn">
+          <img src="../common/snekicorn.png" height="150" title="snekicorn">
         </div>
         <div class="col-sm-9 text-left">
           <h3 class="mt-5">Python's Not (Just) For Unicorns</h3>
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-
+          <a href="../updating-variables/"><span class="oi oi-arrow-left"></span> Updating variables</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-
+          <a href="../putting-loops-to-work/">Putting loops to work <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,42 +233,98 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-
-        <h1 class="display-4">Table of Contents</h1>
+        <p class="subtitle mb-0"><em>Chapter 19</em></p>
+        <h1 class="display-4">Counting with loops</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p><strong>Hey there!</strong> Welcome to <strong>Python's Not (Just) For Unicorns</strong>, an interactive introduction to programming in Python.</p><p>I'm <strong>Soma</strong>, and I'm building PNJ4U because I wanted to give some of my irl students a head start on my class, but every Python intro I could find just seemed suuuper booooring. I still have a lot to add to this one, but hey, that's life. Enjoy!</p><p><strong>Table of Contents</strong></p><ol>
-<li><a href='introduction/'>Introduction</a></li>
-<li><a href='what-we-are-learning/'>What are we learning?</a></li>
-<li><a href='how-it-works/'>How this will work</a></li>
-<li><a href='python-basics/'>Python basics</a></li>
-<li><a href='simple-text-strings/'>Working with text</a></li>
-<li><a href='data-types-errors/'>Data types and error messages</a></li>
-<li><a href='functions-floats/'>Functions and floats</a></li>
-<li><a href='using-variables/'>Variables</a></li>
-<li><a href='intro-to-projects/'>Introduction to projects</a></li>
-<li><a href='project-moon-measurer/'>Project - Moon Measurer</a></li>
-<li><a href='conditionals/'>If this then that</a></li>
-<li><a href='user-input/'>Asking questions</a></li>
-<li><a href='else-elif/'>When conditions fail</a></li>
-<li><a href='intro-to-debugging/'>Intro to debugging</a></li>
-<li><a href='project-speed-limits/'>Project - Speeding robot</a></li>
-<li><a href='list-introduction/'>Lists</a></li>
-<li><a href='lists-intermediate/'>Even more lists</a></li>
-<li><a href='for-loops/'>Being lazy with lists</a></li>
-<li><a href='comments/'>Interlude - Comments</a></li>
-<li><a href='updating-variables/'>Updating variables</a></li>
-<li><a href='counting-with-loops/'>Counting with loops</a></li>
-<li><a href='putting-loops-to-work/'>Putting loops to work</a></li>
-<li><a href='under-construction/'>Okay then</a></li>
+<p>For loops are really really really useful, but it can take a little work to start thinking about them in the “right” way. So I figure we can spend some time learning <strong>programmatic thinking</strong> while working with them - the process of converting a <em>human</em> idea into something a <em>computer</em> can understand. Just because you know what you want the computer to do, it doesn’t always mean you know how to <em>tell the computer to do it!</em></p>
+<p>For example: let’s say I have a bunch of ducks. <strong>How many ducks?</strong> I don’t know, we should count them! When I ask you <em>how</em> to do that, it seems like a pretty dumb question. You just, I don’t know, count them, right? But how do you get a computer to do it?</p>
+<p><sup>Honestly we would just use <code>len(ducks)</code>, but let’s pretend that <code>len</code> doesn’t exist.</sup></p>
+<p>If we combine loops with the whole <strong>incrementing variables</strong> thing we learned last chapter, we can try to see how many times we’ve gone through the loop.</p>
+<pre class="facing">
+numbers = [10, 20, 30, 40, 50, 60]
+
+count = 0
+print("Count starts off at", count)
+
+for number in numbers:
+  print("----")
+  count = count + 1
+
+print("Count finishes at", count)
+</pre>
+<script type="text/solution">
+Count starts off at 0
+----
+10
+1
+----
+20
+2
+----
+30
+3
+----
+40
+4
+----
+50
+5
+----
+60
+6
+Count finishes at 6
+</script>
+<p>We see that it <em>seems to work</em>, but it might not be clear <em>how</em> it works. Inside the loop it does two things - it prints out <code>----</code> to let us know it went through the loop, and adds <code>1</code> to <code>count</code>. Each time it goes through the loop, <code>count</code> gets one bigger. Six numbers, six times through the loop, six times incrementing <code>count</code>, so <code>count</code> ends up as <code>6</code>.</p>
+<p>But to help us see it happen, add <strong>two new lines inside the loop</strong> - first, one to print out the current <code>number</code> you’re looking at, and then another to print the current value of <code>count</code>.</p>
+<ul>
+<li>Hint: Print <code>count</code> out <strong>after</strong> you add one to it</li>
+<li>Hint: Remember, this should be <strong>inside the loop</strong> - you want this to happen each time you’re looking at a different number. You’ll need to <strong>indent</strong>!</li>
+<li>Hint: You can use <code>print(number)</code> to print out the current number</li>
+<li>Hint: You can use <code>print(count)</code> to print out the current value of <code>count</code></li>
+<li>Hint: Both of those <code>print</code> statements need to be indented to the same level as <code>count = count + 1</code></li>
+<li>Hint: Remember to print <code>count</code> <strong>after</strong> you add one to it, otherwise you won’t get confetti!</li>
+</ul>
+<p>If we want to talk about this as <strong>programmatic thinking</strong>, we can break it down into a few steps:</p>
+<ol type="1">
+<li><strong>Stage One: Initial value</strong>. Before we start, how many numbers have we counted? Zero! So <code>count = 0</code>.</li>
+<li><strong>Stage Two: Increment</strong>. This is a fancy word for saying “make something one bigger.” In this case, we <strong>increment</strong> every time we go through the loop by using <code>count = count + 1</code></li>
+<li><strong>Stage Three: Answer.</strong> That’s just <code>count</code>! We print it out and we’re done.</li>
 </ol>
+<p>Okay, let’s get back to those ducks. Remember how we wanted to count them without using <code>len</code>? Give it a try. You’re only responsible for <strong>stage two</strong> here.</p>
+<pre class="facing">
+ducks = ["Leonard", "Starburst", "Leopold", "Lackluster"]
+
+# Initial state: ZERO ducks
+count = 0
+
+for duck in ducks:
+  print("Looking at", duck)
+
+# Answer: How many ducks?
+print("We found", count, "ducks")
+</pre>
+<script type="text/solution">
+Looking at Leonard
+Looking at Starburst
+Looking at Leopold
+Looking at Lackluster
+We found 4 ducks
+</script>
+<ul>
+<li>Hint: Pay attention to indenting!</li>
+<li>Hint: You’ll use <code>count = count + 1</code> to make <code>count</code> one bigger each time you look at a duck</li>
+<li>Hint: Add <code>count = count + 1</code> right after you print the duck’s name.</li>
+</ul>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We started to learn about <strong>programming thinking</strong>, where we break down ideas into steps we can tell Python about. We also learned the word <strong>increment</strong>, which means to make someting one bigger.</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-
+        <p><a href="../putting-loops-to-work/">Next up: Putting loops to work <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>
@@ -289,60 +345,60 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="common/bluebird.js"></script>
-  <script type="text/javascript" src="common/fetch-polyfill.js"></script>
-  <script type="text/javascript" src="common/startswith-polyfill.js"></script>
+  <script type="text/javascript" src="../common/bluebird.js"></script>
+  <script type="text/javascript" src="../common/fetch-polyfill.js"></script>
+  <script type="text/javascript" src="../common/startswith-polyfill.js"></script>
 
 
   <!--
-  <script type="text/javascript" src="common/brython.js"></script>
-  <script type="text/javascript" src="common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
   -->
 
-  <script src="common/brython/brython_builtins.js"></script>
-  <script src="common/brython/version_info.js"></script>
-  <script src="common/brython/py2js.js"></script>
-  <script src="common/brython/py_object.js"></script>
-  <script src="common/brython/py_type.js"></script>
-  <script src="common/brython/py_utils.js"></script>
-  <script src="common/brython/py_sort.js"></script>
-  <script src="common/brython/py_builtin_functions.js"></script>
-  <script src="common/brython/py_exceptions.js"></script>
-  <script src="common/brython/py_range_slice.js"></script>
-  <script src="common/brython/py_bytes.js"></script>
-  <script src="common/brython/py_set.js"></script>
-  <script src="common/brython/js_objects.js"></script>
-  <script src="common/brython/stdlib_paths.js"></script>
-  <script src="common/brython/py_import.js"></script>
-  <script src="common/brython/unicode.min.js"></script>
-  <script src="common/brython/py_string.js"></script>
-  <script src="common/brython/py_int.js"></script>
-  <script src="common/brython/py_long_int.js"></script>
-  <script src="common/brython/py_float.js"></script>
-  <script src="common/brython/py_complex.js"></script>
-  <script src="common/brython/py_dict.js"></script>
-  <script src="common/brython/py_list.js"></script>
-  <script src="common/brython/py_generator.js"></script>
-  <script src="common/brython/py_dom.js"></script>
-  <script src="common/brython/builtin_modules.js"></script>
-  <script src="common/brython/py_import_hooks.js"></script>
-  <script src="common/brython/async.js"></script>
+  <script src="../common/brython/brython_builtins.js"></script>
+  <script src="../common/brython/version_info.js"></script>
+  <script src="../common/brython/py2js.js"></script>
+  <script src="../common/brython/py_object.js"></script>
+  <script src="../common/brython/py_type.js"></script>
+  <script src="../common/brython/py_utils.js"></script>
+  <script src="../common/brython/py_sort.js"></script>
+  <script src="../common/brython/py_builtin_functions.js"></script>
+  <script src="../common/brython/py_exceptions.js"></script>
+  <script src="../common/brython/py_range_slice.js"></script>
+  <script src="../common/brython/py_bytes.js"></script>
+  <script src="../common/brython/py_set.js"></script>
+  <script src="../common/brython/js_objects.js"></script>
+  <script src="../common/brython/stdlib_paths.js"></script>
+  <script src="../common/brython/py_import.js"></script>
+  <script src="../common/brython/unicode.min.js"></script>
+  <script src="../common/brython/py_string.js"></script>
+  <script src="../common/brython/py_int.js"></script>
+  <script src="../common/brython/py_long_int.js"></script>
+  <script src="../common/brython/py_float.js"></script>
+  <script src="../common/brython/py_complex.js"></script>
+  <script src="../common/brython/py_dict.js"></script>
+  <script src="../common/brython/py_list.js"></script>
+  <script src="../common/brython/py_generator.js"></script>
+  <script src="../common/brython/py_dom.js"></script>
+  <script src="../common/brython/builtin_modules.js"></script>
+  <script src="../common/brython/py_import_hooks.js"></script>
+  <script src="../common/brython/async.js"></script>
 
 
-  <script type="text/javascript" src="common/pyweb/pyweb.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
   <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
-  <script src="common/confetti.js" type="text/javascript"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
 
-  <script src="common/brython-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../common/brython-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 
   <script>
     function pywebSetup () {
       window.pyweb.initialize({
         console: '.blox',
         facing: '.facing',
-        base: 'common/pyweb/'
+        base: '../common/pyweb/'
       })
     }
 

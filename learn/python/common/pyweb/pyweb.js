@@ -127,6 +127,7 @@ window.pyweb = (function() {
       showLineNumbers: true,
       wrap: true,
       useSoftTabs: true,
+      tabSize: 2,
       scrollPastEnd: 2,
       autoScrollEditorIntoView: true,
       // readOnly: !!editor.getAttribute('static'),
