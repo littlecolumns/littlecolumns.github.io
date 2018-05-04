@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Putting loops to work - Python's Not (Just) For Unicorns</title>
+    <title>Intro to Dictionaries - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/putting-loops-to-work/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/dictionaries-introduction/">
 
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../counting-with-loops/"><span class="oi oi-arrow-left"></span> Counting with loops</a>
+          <a href="../project-fizzbuzz/"><span class="oi oi-arrow-left"></span> Project - FizzBuzz</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href="../project-fizzbuzz/">Project - FizzBuzz <span class="oi oi-arrow-right"></span></a>
+          <a href="../under-construction/">Okay then <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,108 +233,248 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 20</em></p>
-        <h1 class="display-4">Putting loops to work</h1>
+        <p class="subtitle mb-0"><em>Chapter 21</em></p>
+        <h1 class="display-4">Intro to Dictionaries</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>I’ll admit it: the assignment you ended last chapter with was kind of dumb. Really dumb, honestly.</p>
-<p>I haaaaate Computer Science homework because it’s always like “write some code to sort this list of numbers,” when honestly someone much smarter than any of us <em>already wrote that code</em> and we can use it ourselves. If anyone ever tells you to sort numbers in Python, just huff loudly and point them to this:</p>
-<pre class="facing", test="[2, 4, 5, 6, 7]">
-numbers = [5, 2, 4, 7, 6]
-numbers = sorted(numbers)
-print(numbers)
+<p>This is a long chapter, so <em>go grab a snack</em>.</p>
+<p>In the real world, <strong>dictionaries are things you use to look up words.</strong> Same kind of thing in Python, more or less. Let’s take a look!</p>
+<p>Say we have a friend, and we know some stuff about her.</p>
+<pre class="facing">
+name = "Annie"
+age = 83
+town = "Cleveland"
+
+print(name, "is", age, "and is from", town)
 </pre>
-<p>So yes, counting ducks was <em>dumb</em>, because you can use <code>len(ducks)</code> until the day you die! Maybe even afterward, depending on how advanced computers are at that point.</p>
-<p>But so our hard work doesn’t go to waste, let’s improve on what we did. But first: <strong>run the code below</strong> to see that yes, <code>&quot;Leonard&quot;</code> does start with <code>Leo</code>. Then <strong>change the name to <code>&quot;Stewart&quot;</code> and try it again!</strong></p>
-<pre class="facing" test="Stewart does not start with Leo">
-name = "Leonard"
+<p>Nothing new, nothing crazy, totally normal.</p>
+<p>Now, say we’re the most popular person on the planet, and we have <em>two</em> friends, Annie and Roberto. If we didn’t know better (which we don’t right now), we might do this:</p>
+<pre class="facing">
+# Annie's info
+name = "Annie"
+age = 83
+town = "Cleveland"
 
-if name.startswith("Leo"):
-  print(name, "starts with Leo")
-else:
-  print(name, "does not start with Leo")
+# Roberto's info
+name2 = "Roberto"
+age2 = 103
+town2 = "Reno"
+
+# Print it all out
+print(name, "is", age, "and is from", town)
+print(name2, "is", age2, "and is from", town2)
 </pre>
-<p>Now you know about <code>.startswith</code>.</p>
-<p>It seems dumb, but I promise it mostly isn’t! Conditionals - <code>if</code> statements - become super useful when we’re counting things in for loops. <strong>Sometimes you don’t want to count everything, you only want to count things that meet a certain condition.</strong></p>
-<p>Instead of incrementing <em>every single time</em> we go through our loop, we might stop and say hey, do we care about this one? Do wewant to count it? And then either count it or not. Let’s try to put that concept to work:</p>
-<p>The loop below counts <strong>every duck</strong>. Use our new friend <code>.startswith</code> and an <code>if</code> statement to make it <strong>only count the ducks whose names start with <code>Leo</code></strong>.</p>
-<pre class="facing" test="We found 2 ducks like Leo">
-ducks = ["Leonard", "Starburst", "Leopold", "Lackluster"]
+<p>It’s not the best thing I’ve ever seen, I’ll be honest. <code>name</code> seems like a fine variable name, but <code>name2</code> and <code>age2</code> and <code>town2</code> just seem… tacky. Maybe I don’t like them because they aren’t very descriptive?</p>
+<p>Now imagine if we were even <em>more</em> popular and had even <em>more</em> friends! If we had <strong>dozens of friends</strong> and kept naming variables the same way, we’d be stuck with variable names like <code>name33</code> and <code>age33</code> and <code>town33</code> - it’d be terrible!</p>
+<p><strong>“A-ah!”</strong> you exclaim, ready to use your new programming knowledge. “What about <strong>lists?</strong> They’re great for storing lots of information!”</p>
+<p>Yeah, that’s true, and it definitely makes sense. But let’s see what happens if we try to use lists:</p>
+<pre class="facing">
+names = ["Annie", "Roberto"]
+ages = [83, 103]
+town = ["Cleveland", "Reno"]
 
-# Initial state: ZERO ducks
-count = 0
+# Print out Annie's info
+print(names[0], "is", ages[0], "and is from", town[0])
+# Print out Roberto's info
+print(names[1], "is", ages[1], "and is from", town[1])
+</pre>
+<p>It seems a <em>little</em> better, but it seems like a lot of work to use three different lists! It’s tough because <strong>a person is a single thing</strong>, but we also want to know <strong>multiple pieces of information about each of them</strong>. What we just did separates our names and ages into different variables - it splits them by <em>topic</em> instead of by <em>person</em>.</p>
+<p>It seems like <strong>one single thing should be one single variable, yeah?</strong> In a perfect world each person could get a variable to themselves - the person has a name and an age and a town, and all of that info could live together in a single variable.</p>
+<p>Maybe we could give <strong>each person a separate list</strong> so their stuff stays together?</p>
+<pre class="facing">
+annie = ["Annie", 83, "Cleveland"]
+roberto = ["Roberto", 103, "Reno"]
 
-for duck in ducks:
-  print("Looking at", duck)
-  count = count + 1
+print(annie[0], "is", annie[1], "and is from", annie[2])
+print(roberto[0], "is", roberto[1], "and is from", roberto[2])
+</pre>
+<p>The problem now is we don’t know what makes <code>annie[0]</code> different than <code>annie[1]</code>. Which one was her name and which one was her age? I forget! At least when we used variables like <code>names</code> and <code>ages</code> we could be sure that one had names and one had ages.</p>
+<p>If we could combine the two approaches our live swould be a lot easier. What we seem to need is <strong>one variable with multiple <em>named</em> things inside</strong>. Oh hey, it turns out Python can do that!</p>
+<pre class="facing">
+annie = {'name': 'Annie', 'age': 83, 'town': 'Cleveland'}
 
-# Answer: How many ducks?
-print("We found", count, "ducks like Leo")
+print(annie['name'])
+print(annie['age'])
+print(annie['town'])
+print(annie['name'], "is", annie['age'], "and is from", annie['town'])
+</pre>
+<p>Hooray! Life is perfect now. Our friend annie has <strong>one variable that has information about her, organized by topic.</strong></p>
+<p>This data type is called a <strong>dictionary</strong>. Dictionaries are a single variable, but they can have all sorts of labeled information inside. A name can be stored as <code>['name']</code> and an age can be stored as <code>['age']</code>, instead of using <code>[0]</code> and <code>[1]</code> like we had to do with lists.</p>
+<p>They might look a little like lists, but they have a few major differences:</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Dictionary</th>
+<th>List</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Wrapped by</td>
+<td>Uses <code>{</code> and <code>}</code></td>
+<td>Uses <code>[</code> and <code>]</code></td>
+</tr>
+<tr class="even">
+<td>Inside Punctuation</td>
+<td>Has commas</td>
+<td>Has commas</td>
+</tr>
+<tr class="odd">
+<td>Names?</td>
+<td>Yes</td>
+<td>No (numbers instead)</td>
+</tr>
+<tr class="even">
+<td>Creation</td>
+<td><code>{'name': 'Annie', 'age': 83}</code></td>
+<td><code>['Annie', 'Roberto']</code></td>
+</tr>
+<tr class="odd">
+<td>Usage</td>
+<td><code>annie['name']</code></td>
+<td><code>friends[0]</code></td>
+</tr>
+</tbody>
+</table>
+<p>Since creating a dictionary on one line looks a little messy, you can also use multiple lines multiple lines. Just pay attention to the commas!</p>
+<pre class="facing">
+roberto = {
+  'name': 'Roberto',
+  'age': 103,
+  'town': 'Reno'
+}
+print(roberto['name'], "is", roberto['age'], "and is from", roberto['town'])
+</pre>
+<p>Python dictionaries are pretty similar to a <strong>real dictionaries</strong> - if have a dictionary named <code>roberto</code> and want to look up his name, I open up to the <code>'name'</code> page. If I want to learn about his age, I find the definition under <code>'age'</code>. With Python, it just becomes <code>roberto['name']</code> and <code>roberto['age']</code></p>
+<p>For no reason whatsoever, let’s talk about a house! <strong>Create a dictionary below named <code>house</code> with the following information in it.</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>key</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>address</td>
+<td>99 Main Street</td>
+</tr>
+<tr class="even">
+<td>price</td>
+<td>50000</td>
+</tr>
+<tr class="odd">
+<td>year</td>
+<td>1980</td>
+</tr>
+</tbody>
+</table>
+<pre class="facing">
 </pre>
 <script type="text/test">
-Looking at Leonard
-Looking at Starburst
-Looking at Leopold
-Looking at Lackluster
-We found 2 ducks
+house and house['address'] == '99 Main Street' and house['price'] = 50000 and house['year'] == 1980
 </script>
 <ul>
-<li>Hint: Let’s print the duck’s name even if it doesn’t start with <code>Leo</code>.</li>
-<li>Hint: We’ll need to add an <code>if</code> statement asking if the duck’s name starts with <code>Leo</code></li>
-<li>Hint: Add the <code>if</code> statement <strong>inside of the loop</strong> (indent it!)</li>
-<li>Hint: If you’re cutting and pasting from the first example, note that the variable name is <code>duck</code>, not <code>name</code></li>
-<li>Hint: Be sure to put a <code>:</code> at the end of the <code>if</code> statement</li>
-<li>Hint: Use <code>if duck.startswith(&quot;Leo&quot;):</code> as your conditional</li>
-<li>Hint: We don’t need to use an <code>else</code> here.</li>
-<li>Hint: We’re going to need <strong>two levels of indenting!</strong> One for the <code>for</code>, and another for the <code>if</code>. <code>count = count + 1</code> will be indented the most.</li>
-<li>Hint: The next line after the <code>if</code> will be <code>count = count + 1</code>, but indented <em>twice</em>, so it’s inside of the <code>if</code></li>
+<li>Hint: Use curly braces - <code>{</code> and <code>}</code> - to wrap the dictionary</li>
+<li>Hint: If we’re creating it across multiple lines, make sure to put a comma <code>,</code> at the end of (almost) every line (see <code>roberto</code> up above)</li>
 </ul>
-<p>Should we have looked at a complete example first? <em>Maybe!</em> Are we both still alive, even though we dove right in ? <em>Yes!</em></p>
-<p>Let’s push our luck and try again, this time starting with even less! Given the grades in the list below, <strong>how many students scored 85 or higher?</strong></p>
-<pre class="facing" test="7">
-grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
+<p>Cool, ’eh? Now let’s practice taking information out of them. This is a part we’ll probably mess up here and there, so we’re going to mess it up <em>on purpose</em> first so we can recognize the error when we see it.</p>
+<p><strong>It’s important to use strings when asking for information from dictionaries.</strong> Run the code below and see the error that happens if we use <code>roberto[name]</code> instead of <code>roberto['name']</code>.</p>
+<pre class="facing" test="Roberto">
+roberto = {
+  'name': "Roberto",
+  'age': 103,
+  'town': "Reno"
+}
+print(roberto[name])
+</pre>
+<p>Pay attention to that error message, we’re certain to see it again! <strong>Now change the <code>print</code> line to use <code>'name'</code> instead of <code>name</code></strong> and see if it works.</p>
+<p>We’re on a dictionary roll: let’s try another one. Create a dictionary named <code>musician</code>, and then print out <code>Earl Scruggs played banjo</code> using the new dictionary.</p>
+<table>
+<thead>
+<tr class="header">
+<th>key</th>
+<th>value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>name</td>
+<td>Earl Scruggs</td>
+</tr>
+<tr class="even">
+<td>instrument</td>
+<td>banjo</td>
+</tr>
+<tr class="odd">
+<td>birth</td>
+<td>1924</td>
+</tr>
+<tr class="even">
+<td>city</td>
+<td>North Carolina</td>
+</tr>
+<tr class="odd">
+<td>genre</td>
+<td>bluegrass</td>
+</tr>
+</tbody>
+</table>
+<pre class="facing">
+</pre>
+<script type="text/test">
+musician and musician['name'] == 'Earl Scruggs' and musician['birth'] = 1924 and musician['city'] == "Flint Hill, North Carolina" and musician['genre'] == "bluegrass" and last_output == "Earl Scruggs played banjo"
+</script>
+<ul>
+<li>Hint: Use curly braces - <code>{</code> and <code>}</code> - to wrap the dictionary</li>
+<li>Hint: If we’re creating it across multiple lines, make sure to put a comma <code>,</code> at the end of each line (see <code>roberto</code> up above)</li>
+<li>Hint: Wrap the city as <code>&quot;Flint Hill, North Carolina&quot;</code> - don’t let that comma escape!</li>
+<li>Hint: Use <code>print</code> with commas to print multiple things out</li>
+<li>Hint: You can use <code>print(musician['name'], &quot;played&quot;, musician['instrument'])</code></li>
+</ul>
+<p>We’ve been using dictionaries to hold <strong>multiple pieces of information about the same thing</strong>, but we can also use them for <strong>the same piece of information about multiple things</strong><sup>1</sup>.</p>
+<pre class="facing">
+population = {
+  'Santiago': 7.2,
+  'San Diego': 1.407,
+  'Nara': 1.401,
+  'Moscow': 12.19
+}
+print("The population of Moscow is", population['Moscow'])
+</pre>
+<p>I find it’s a lot more convenient than a list, because</p>
+<ul>
+<li>You get to store everything in one variable, and</li>
+<li>You get to name each of your data points</li>
+</ul>
+<p>The one difference between Python dictionaries and real dictionaries is <strong>you can’t have duplicates in a Python dictionary.</strong> Only one definition for Moscow! Only one definition for Nara! But we’ll be okay.</p>
+<p><strong>Mini mission:</strong> New York City is made up of <a href="https://en.wikipedia.org/wiki/Boroughs_of_New_York_City">five boroughs</a>. I’ve stored the population of each in a dictionary below. <strong>Print out the total population of New York City</strong>.</p>
+<pre class="facing" test="8.55">
+pop = {
+  'Brooklyn': 2.637,
+  'Staten Island': 0.474,
+  'Manhattan': 1.645,
+  'Queens': 2.339,
+  'Bronx': 1.455
+}
 </pre>
 <ul>
-<li>Hint: Be sure to set up your <strong>initial state</strong>. Before we’ve counted grades, how many grades <code>85</code> or higher have we seen?</li>
-<li>Hint: Since we haven’t looked at <em>any</em> grades, we start from zero. We’ll want to start with <code>count = 0</code></li>
-<li>Hint: Be sure to print out the final count when you’re done!</li>
-<li>Hint: Add a for loop to go through each grade.</li>
-<li>Hint: It’s the same as the problem up above, with the <code>for</code> loop and the <code>if</code> inside of the loop, but this time we’re checking if the number is <code>85</code> or above</li>
-<li>Hint: We can use <code>grade &gt; 84</code> or <code>grade &gt;= 85</code></li>
-<li>Hint: Make sure you put a <code>:</code> at the end of your <code>if</code> statement, and indent the <code>count</code> line!</li>
-<li>Hint: We’ll use <code>for grade in grades:</code> and <code>if grade &gt;= 85:</code>.</li>
-<li>Hint: And, of course, <code>count = count + 1</code></li>
+<li>Hint: If we had separate variables like <code>pop_bk</code> and <code>pop_si</code> and <code>pop_mn</code>, you could add them like <code>pop_bk + pop_si + pop_mn</code></li>
+<li>Hint: We can’t do <code>pop['Brooklyn' + 'Manhattan']</code>, because the strings get combined first. It would be like typing <code>pop['BrooklynManhattan']</code></li>
+<li>Hint: Use each separately, <code>population['Brooklyn']</code>, <code>population['Manhattan']</code>, <code>population['Bronx']</code>, etc.</li>
+<li>Hint: <code>population['Brooklyn'] + population['Staten Island'] + population['Manhattan'] + population['Queens'] + population['Bronx']</code></li>
+<li>Hint: Remember to use <code>print</code> to display the answer!</li>
 </ul>
-<p>Excellent work! Those are both pretty typical ways of using for loops and counters, and we’ll see this pattern (and variations) again and again. For example, sometimes you don’t care about the <em>number</em> you counted, you care about the <em>percentage</em> instead.</p>
-<p>Using the completed code from above as a starting point, <strong>what percentage of the class received an 85 or higher?</strong> We’ll only need to change one line!</p>
-<pre class="facing" test="0.4666666666666667">
-grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
-</pre>
-<ul>
-<li>Hint: You can re-use your code from above to count the number of grades 85 or higher</li>
-<li>Hint: To get the percentage, we’ll want to divide the number we counted by the total number of grades</li>
-<li>Hint: We counted the <code>&gt;= 85</code> grades already, but how can we easily count the total number of grades?</li>
-<li>Hint: We can use <code>len(grades)</code>, we don’t have to count them the hard way!</li>
-<li>Hint: <code>count / len(grades)</code> will divide the number we counted by the total number of grades</li>
-<li>Hint: The confetti comes out for the decimal version, but if we want to make it a normal-looking percentage, we can multiply the decimal version by 100, then round it with <code>round()</code></li>
-</ul>
-<h3 id="allll-right-lets-take-a-breather.">Allll right, let’s take a breather.</h3>
-<p>If this is starting to seem tough, I’m with you! These kinds of problems are one of the <strong>gatekeepers</strong> of learning to program - figuring out for loops and how to use them is one of the big parts where people get frustrated, shrug and walk away.</p>
-<p><strong>That doesn’t need to be you!</strong> Programming is tough stuff that doesn’t really make sense a lot of the time, and it isn’t going to be easy for <em>anyone</em> (except maybe unicorns).</p>
-<p>If it makes you feel any better, you’re like 75% of the way to knowing <em>absolutely everything important about programming</em><sup>1</sup>. Let’s take deep breaths and relax and keep on going. - I believe in you! Python believes in you! Unicorns believe in you!</p>
-<p>Loops and lists can be tough to think and reason through, especially early on, so here’s my suggestion: if you found this part tough <em>at all</em> (which is probably most of you!), skip back to <a href="../list-introduction/">the beginning of talking about lists</a>. Go through it again. <strong>Repeat the lists/loops section three times.</strong></p>
-<p>Yes, I know, it sounds super boring. I won’t pretend it isn’t! It might seem like a silly idea, but I promise it’s not <em>that</em> much of your time, and by the time you’re done you’ll feel a lot more comfortable with these concepts. Even mindlessly typing answers again and again will help you absorb the materials!</p>
-<p>Once you’re ready, let’s hop on.</p>
-<p><sup>[1] My patented list of The Only Important Things in Programming is: variables, functions/methods, loops, dictionaries. Everything else is just putting those things together in various arcane ways. That means you only have <em>one more thing to learn!</em></sup></p>
 <h3 id="chapter-summary">Chapter summary</h3>
-<p>We got a little more practice at <strong>programming thinking</strong>, especially using <strong>conditionals</strong> inside of <strong>for loops</strong>. This allows us to only count <em>some</em> of our data points.</p>
+<p>We learned about <strong>dictionaries</strong>, which are ways of storing multiple (named) pieces of information in one variable. Once we get good at them, we’ve learned 100% of the Important Elements Of Programming!</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="../project-fizzbuzz/">Next up: Project - FizzBuzz <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../under-construction/">Next up: Okay then <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>

@@ -254,7 +254,7 @@ print("The number is up to", num)
 num = num + 20
 print("The number ends at", num)
 </pre>
-<script type="text/solution">
+<script type="text/test">
 The number is 0
 The number is now 1
 The number is up to 2
@@ -285,23 +285,25 @@ The number ends at 22
 <li>Now <code>num</code> is <code>22</code>!</li>
 </ul></li>
 </ul>
-<p>It might feel weird to see the same variable on both sides of the equals sign, but I promise you’ll get used to it! Just know that you’re <strong>overwriting the old <code>num</code> every time you do <code>num = ...</code></strong>. It disappears into dust, and you’ll never be able to get it back! (Not that you’d want to)</p>
-<p>Two common reasons to update a variable are <strong>counting</strong> things, or if you’re too lazy to have separate variable names.</p>
-<pre class="facing" test="You got 2 answers right">
-correct = 0
+<p>It might feel weird to see the same variable on both sides of the equals sign, but I promise you’ll get used to it! Just know that you’re <strong>overwriting the old <code>num</code> every time you do <code>num = ...</code></strong> - the old <code>num</code> disappears into dust, and you’ll never be able to get it back! (Not that you’d want to)</p>
+<p>Two common reasons to update a variable are <strong>counting</strong> things, or if you’re too lazy to have separate variable names. Try the following quiz!</p>
+<pre class="facing" test="You got 2 points">
+points = 0
 
+# Ask about New York, answer is 'Albany'
 answer = input("What's the capital of New York?")
 if answer == "Albany":
-  correct = correct + 1
+  points = points + 1
 
+# Ask whether it's boring, answer is 'yes'
 answer = input("Is this boring?")
 if answer == "yes":
-  correct = correct + 1
+  points = points + 1
 
-print("You got", correct, "answers right")
+print("You got", points, "answers right")
 </pre>
-<p>Every time I ask a question I check the answer - if they got it right, I make <code>correct</code> one larger. Making something one larger is called <strong>incrementing</strong> (or even more than one larger, sometimes!). When you have a variable you’re using for counting you’ll often <strong>increment</strong> it for one reason or another.</p>
-<p>Also, notice that I used the variable name <code>answer</code> twice. The second time, when I ask <code>Is this boring?</code>, I save into <code>answer</code> and the computer totally forgets the old <code>answer</code>. Since I won’t need the first answer ever again, that’s okay.</p>
+<p>Every time I ask a question I check the answer - if they got it right, I make <code>points</code> one larger. Making something one larger is called <strong>incrementing</strong><sup>1</sup>. When you have a variable you’re using for counting you’ll often <strong>increment</strong> it for one reason or another. I <strong>increment</strong> <code>points</code> once for each correct answer.</p>
+<p>Also, notice that I used the variable name <code>answer</code> twice. The second time, when I ask <code>Is this boring?</code>, I save the response into <code>answer</code> and the computer totally forgets the previous <code>answer</code>. Since I won’t need the first response ever again, that’s okay!</p>
 <p>Actually, you know what? <strong>I want you to make a quiz like that.</strong> And I want it to be about these questions:</p>
 <table>
 <thead>
@@ -327,18 +329,19 @@ print("You got", correct, "answers right")
 </table>
 <p><sup>And these might be a little trickier than you think!</sup></p>
 <pre class="facing" test="You got 3 answers right">
-correct = 0
+points = 0
 
-print("You got", correct, "answers right")
+print("You got", points, "points")
 </pre>
 <ul>
-<li>Hint: You can use the <code>if</code>/<code>count</code> code from up above as a template. Cutting and pasting similar, working code is going to be your best friend when programming!</li>
+<li>Hint: You can use the <code>if</code>/<code>points</code> code from up above as a template. Cutting and pasting similar, working code is going to be your best friend when programming!</li>
 <li>Hint: Make sure you put <code>:</code> at the end of all of your <code>if</code> statements.</li>
 <li>Hint: Putting quotes in quotes can make Python confused about where the string actually ends. You can either use the opposite quotes for the outer quotes - like <code>'My name is &quot;Charles&quot;'</code> - or “escape” them by using backslashes <code>&quot;My name is \&quot;Charles\&quot;&quot;</code>. Opposite quotes is probably easiest, and we’ll talk more about escaping in the future.</li>
 <li>Hint: Remember how the result of <code>input</code> is a string? Asking if <code>answer == 4</code> isn’t going to work because one is a string and one is an integer!</li>
 </ul>
+<p><sup>[1] Incrementing doesn’t <em>have</em> to be one larger, it can be any amount! But it’s normally one larger.</sup></p>
 <h3 id="chapter-summary">Chapter summary</h3>
-<p>We thought for a hot second about how to <strong>update variables based on themselves</strong>, learned that increasing the value of a variable is called <strong>incrementing</strong>, and gained the knowledge that Missouri’s capital is Jefferson City. That’s probably an important life lesson.</p>
+<p>We talked about how to <strong>update variables based on themselves</strong>, learned that increasing the value of a variable is called <strong>incrementing</strong>, and gained the knowledge that Missouri’s capital is Jefferson City. That last one is an especially important life lesson!</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">

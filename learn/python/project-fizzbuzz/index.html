@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Putting loops to work - Python's Not (Just) For Unicorns</title>
+    <title>Project - FizzBuzz - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/putting-loops-to-work/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/project-fizzbuzz/">
 
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../counting-with-loops/"><span class="oi oi-arrow-left"></span> Counting with loops</a>
+          <a href="../putting-loops-to-work/"><span class="oi oi-arrow-left"></span> Putting loops to work</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href="../project-fizzbuzz/">Project - FizzBuzz <span class="oi oi-arrow-right"></span></a>
+          <a href="../dictionaries-introduction/">Intro to Dictionaries <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,108 +233,72 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 20</em></p>
-        <h1 class="display-4">Putting loops to work</h1>
+        <p class="subtitle mb-0"><em>Project </em></p>
+        <h1 class="display-4">Project - FizzBuzz</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>I’ll admit it: the assignment you ended last chapter with was kind of dumb. Really dumb, honestly.</p>
-<p>I haaaaate Computer Science homework because it’s always like “write some code to sort this list of numbers,” when honestly someone much smarter than any of us <em>already wrote that code</em> and we can use it ourselves. If anyone ever tells you to sort numbers in Python, just huff loudly and point them to this:</p>
-<pre class="facing", test="[2, 4, 5, 6, 7]">
-numbers = [5, 2, 4, 7, 6]
-numbers = sorted(numbers)
-print(numbers)
-</pre>
-<p>So yes, counting ducks was <em>dumb</em>, because you can use <code>len(ducks)</code> until the day you die! Maybe even afterward, depending on how advanced computers are at that point.</p>
-<p>But so our hard work doesn’t go to waste, let’s improve on what we did. But first: <strong>run the code below</strong> to see that yes, <code>&quot;Leonard&quot;</code> does start with <code>Leo</code>. Then <strong>change the name to <code>&quot;Stewart&quot;</code> and try it again!</strong></p>
-<pre class="facing" test="Stewart does not start with Leo">
-name = "Leonard"
-
-if name.startswith("Leo"):
-  print(name, "starts with Leo")
-else:
-  print(name, "does not start with Leo")
-</pre>
-<p>Now you know about <code>.startswith</code>.</p>
-<p>It seems dumb, but I promise it mostly isn’t! Conditionals - <code>if</code> statements - become super useful when we’re counting things in for loops. <strong>Sometimes you don’t want to count everything, you only want to count things that meet a certain condition.</strong></p>
-<p>Instead of incrementing <em>every single time</em> we go through our loop, we might stop and say hey, do we care about this one? Do wewant to count it? And then either count it or not. Let’s try to put that concept to work:</p>
-<p>The loop below counts <strong>every duck</strong>. Use our new friend <code>.startswith</code> and an <code>if</code> statement to make it <strong>only count the ducks whose names start with <code>Leo</code></strong>.</p>
-<pre class="facing" test="We found 2 ducks like Leo">
-ducks = ["Leonard", "Starburst", "Leopold", "Lackluster"]
-
-# Initial state: ZERO ducks
-count = 0
-
-for duck in ducks:
-  print("Looking at", duck)
-  count = count + 1
-
-# Answer: How many ducks?
-print("We found", count, "ducks like Leo")
-</pre>
+<p>So, there’s this <em>programming thing</em> out there called FizzBuzz. When you’re applying for a programming job, they might ask you to do it to prove that you aren’t completely incapable of programming. It’s totally stupid and dumb, but it’s totally a Thing out in the world, so we’re going to do it right this second.</p>
+<blockquote>
+<p>Write a program that prints the numbers from 1 to 20. But for multiples of three print “Fizz” instead of the number and for the multiples of five print “Buzz”. For numbers which are multiples of both three and five print “FizzBuzz”.</p>
+</blockquote>
+<p>“Multiple of xxx” means “Can be divided cleanly by xxx without any extra bits left over.” For example, <code>9 / 3</code> = <code>3</code>, so 9 is a multiple of 3. But <code>10 / 3</code> = <code>3.333</code>, making 10 not a multiple of 3.</p>
+<p>Instead of <code>/</code> and looking at the part after the decimal, we can also use <em>modulo</em>, <code>%</code>. Programmers love modulo more than anything.</p>
+<div class="box" data-static="true">
+<p>print(9 % 3) print(10 % 3) if 9 % 3 == 0: print(“9 is a multiple of 3”) if 10 % 3 == 0: print(“10 is a multiple of 3”)</p>
+</div>
+<p><strong>All right, let’s make FizzBuzz!</strong> I’ve written some code below that gives you the numbers 1 to 20 in a list, it’s your job to use that to print out the correct fizzes and buzzes and fizzbuzzes. As a hint, the first seven should look like this:</p>
+<pre><code>1
+2
+Fizz
+4
+Buzz
+Fizz
+7</code></pre>
+<div class="facing">
+numbers = list(range(1,21))
+</div>
 <script type="text/test">
-Looking at Leonard
-Looking at Starburst
-Looking at Leopold
-Looking at Lackluster
-We found 2 ducks
+1
+2
+Fizz
+4
+Buzz
+Fizz
+7
+8
+Fizz
+Buzz
+11
+Fizz
+13
+14
+FizzBuzz
+16
+17
+Fizz
+19
+Buzz
 </script>
 <ul>
-<li>Hint: Let’s print the duck’s name even if it doesn’t start with <code>Leo</code>.</li>
-<li>Hint: We’ll need to add an <code>if</code> statement asking if the duck’s name starts with <code>Leo</code></li>
-<li>Hint: Add the <code>if</code> statement <strong>inside of the loop</strong> (indent it!)</li>
-<li>Hint: If you’re cutting and pasting from the first example, note that the variable name is <code>duck</code>, not <code>name</code></li>
-<li>Hint: Be sure to put a <code>:</code> at the end of the <code>if</code> statement</li>
-<li>Hint: Use <code>if duck.startswith(&quot;Leo&quot;):</code> as your conditional</li>
-<li>Hint: We don’t need to use an <code>else</code> here.</li>
-<li>Hint: We’re going to need <strong>two levels of indenting!</strong> One for the <code>for</code>, and another for the <code>if</code>. <code>count = count + 1</code> will be indented the most.</li>
-<li>Hint: The next line after the <code>if</code> will be <code>count = count + 1</code>, but indented <em>twice</em>, so it’s inside of the <code>if</code></li>
+<li>Hint: If <code>numbers</code> is a list, how do you go through every number in the list?</li>
+<li>Hint: We’ll want to use a <strong>for loop</strong> to go through each number</li>
+<li>Hint: We’ll need some <strong>conditionals</strong></li>
+<li>Hint: To check if a number is a multiple of some other number, use modulo</li>
+<li>Hint: We’ll need to use <code>if</code> <em>and</em> <code>elif</code> <em>and</em> <code>else</code>, too.</li>
+<li>Hint: To check for <strong>multiple conditions</strong>, we can use <code>and</code>. For example, <code>if a &gt; 10 and a &lt; 400:</code></li>
+<li>Hint: If we print <code>FizzBuzz</code> we should <strong>not</strong> be printing <code>Fizz</code> or <code>Buzz</code></li>
+<li>Hint: The order of our checking/printing is important!</li>
+<li>Hint: If we’re using multiple <code>elif</code>, the first “true” conditional is the one that is run. Everything else gets skipped!</li>
+<li>Hint: We’ll want to check <em>first</em> if it’s a multiple of three AND five, <em>then</em> three, <em>then</em> five.</li>
+<li>Hint: Use <code>if num % 3 == 0 and num % 5 == 0:</code></li>
 </ul>
-<p>Should we have looked at a complete example first? <em>Maybe!</em> Are we both still alive, even though we dove right in ? <em>Yes!</em></p>
-<p>Let’s push our luck and try again, this time starting with even less! Given the grades in the list below, <strong>how many students scored 85 or higher?</strong></p>
-<pre class="facing" test="7">
-grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
-</pre>
-<ul>
-<li>Hint: Be sure to set up your <strong>initial state</strong>. Before we’ve counted grades, how many grades <code>85</code> or higher have we seen?</li>
-<li>Hint: Since we haven’t looked at <em>any</em> grades, we start from zero. We’ll want to start with <code>count = 0</code></li>
-<li>Hint: Be sure to print out the final count when you’re done!</li>
-<li>Hint: Add a for loop to go through each grade.</li>
-<li>Hint: It’s the same as the problem up above, with the <code>for</code> loop and the <code>if</code> inside of the loop, but this time we’re checking if the number is <code>85</code> or above</li>
-<li>Hint: We can use <code>grade &gt; 84</code> or <code>grade &gt;= 85</code></li>
-<li>Hint: Make sure you put a <code>:</code> at the end of your <code>if</code> statement, and indent the <code>count</code> line!</li>
-<li>Hint: We’ll use <code>for grade in grades:</code> and <code>if grade &gt;= 85:</code>.</li>
-<li>Hint: And, of course, <code>count = count + 1</code></li>
-</ul>
-<p>Excellent work! Those are both pretty typical ways of using for loops and counters, and we’ll see this pattern (and variations) again and again. For example, sometimes you don’t care about the <em>number</em> you counted, you care about the <em>percentage</em> instead.</p>
-<p>Using the completed code from above as a starting point, <strong>what percentage of the class received an 85 or higher?</strong> We’ll only need to change one line!</p>
-<pre class="facing" test="0.4666666666666667">
-grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
-</pre>
-<ul>
-<li>Hint: You can re-use your code from above to count the number of grades 85 or higher</li>
-<li>Hint: To get the percentage, we’ll want to divide the number we counted by the total number of grades</li>
-<li>Hint: We counted the <code>&gt;= 85</code> grades already, but how can we easily count the total number of grades?</li>
-<li>Hint: We can use <code>len(grades)</code>, we don’t have to count them the hard way!</li>
-<li>Hint: <code>count / len(grades)</code> will divide the number we counted by the total number of grades</li>
-<li>Hint: The confetti comes out for the decimal version, but if we want to make it a normal-looking percentage, we can multiply the decimal version by 100, then round it with <code>round()</code></li>
-</ul>
-<h3 id="allll-right-lets-take-a-breather.">Allll right, let’s take a breather.</h3>
-<p>If this is starting to seem tough, I’m with you! These kinds of problems are one of the <strong>gatekeepers</strong> of learning to program - figuring out for loops and how to use them is one of the big parts where people get frustrated, shrug and walk away.</p>
-<p><strong>That doesn’t need to be you!</strong> Programming is tough stuff that doesn’t really make sense a lot of the time, and it isn’t going to be easy for <em>anyone</em> (except maybe unicorns).</p>
-<p>If it makes you feel any better, you’re like 75% of the way to knowing <em>absolutely everything important about programming</em><sup>1</sup>. Let’s take deep breaths and relax and keep on going. - I believe in you! Python believes in you! Unicorns believe in you!</p>
-<p>Loops and lists can be tough to think and reason through, especially early on, so here’s my suggestion: if you found this part tough <em>at all</em> (which is probably most of you!), skip back to <a href="../list-introduction/">the beginning of talking about lists</a>. Go through it again. <strong>Repeat the lists/loops section three times.</strong></p>
-<p>Yes, I know, it sounds super boring. I won’t pretend it isn’t! It might seem like a silly idea, but I promise it’s not <em>that</em> much of your time, and by the time you’re done you’ll feel a lot more comfortable with these concepts. Even mindlessly typing answers again and again will help you absorb the materials!</p>
-<p>Once you’re ready, let’s hop on.</p>
-<p><sup>[1] My patented list of The Only Important Things in Programming is: variables, functions/methods, loops, dictionaries. Everything else is just putting those things together in various arcane ways. That means you only have <em>one more thing to learn!</em></sup></p>
-<h3 id="chapter-summary">Chapter summary</h3>
-<p>We got a little more practice at <strong>programming thinking</strong>, especially using <strong>conditionals</strong> inside of <strong>for loops</strong>. This allows us to only count <em>some</em> of our data points.</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="../project-fizzbuzz/">Next up: Project - FizzBuzz <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../dictionaries-introduction/">Next up: Intro to Dictionaries <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>

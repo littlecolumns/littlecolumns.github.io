@@ -17,7 +17,7 @@ window.pyweb = (function() {
     facing_ids.push(id)
     
     let nextElement = basis.nextElementSibling
-    if (nextElement && nextElement.tagName.toLowerCase() === 'script' && nextElement.getAttribute('type') === 'text/solution') {
+    if (nextElement && nextElement.tagName.toLowerCase() === 'script' && nextElement.getAttribute('type') === 'text/test') {
       basis.setAttribute('test', nextElement.innerHTML)
       nextElement.parentNode.removeChild(nextElement)
     }

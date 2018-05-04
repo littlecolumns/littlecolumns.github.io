@@ -244,8 +244,10 @@
 <p><sup>Honestly we would just use <code>len(ducks)</code>, but let’s pretend that <code>len</code> doesn’t exist.</sup></p>
 <p>If we combine loops with the whole <strong>incrementing variables</strong> thing we learned last chapter, we can try to see how many times we’ve gone through the loop.</p>
 <pre class="facing">
+# We have a handful of numbers
 numbers = [10, 20, 30, 40, 50, 60]
 
+# Start from zero
 count = 0
 print("Count starts off at", count)
 
@@ -253,9 +255,10 @@ for number in numbers:
   print("----")
   count = count + 1
 
+# Display the final count
 print("Count finishes at", count)
 </pre>
-<script type="text/solution">
+<script type="text/test">
 Count starts off at 0
 ----
 10
@@ -277,7 +280,9 @@ Count starts off at 0
 6
 Count finishes at 6
 </script>
-<p>We see that it <em>seems to work</em>, but it might not be clear <em>how</em> it works. Inside the loop it does two things - it prints out <code>----</code> to let us know it went through the loop, and adds <code>1</code> to <code>count</code>. Each time it goes through the loop, <code>count</code> gets one bigger. Six numbers, six times through the loop, six times incrementing <code>count</code>, so <code>count</code> ends up as <code>6</code>.</p>
+<p>We see that it <em>seems to work</em>, but it might not be clear <em>how</em> it works.</p>
+<p>Inside the loop Python does two things: she prints out <code>----</code> and adds <code>1</code> to <code>count</code>. Each time she goes through the loop, she prints out <code>---</code> and <code>count</code> gets one bigger.</p>
+<p>Six numbers means <strong>six times through the loop</strong>. This means six times incrementing <code>count</code>, so <code>count</code> ends up as <code>6</code>.</p>
 <p>But to help us see it happen, add <strong>two new lines inside the loop</strong> - first, one to print out the current <code>number</code> you’re looking at, and then another to print the current value of <code>count</code>.</p>
 <ul>
 <li>Hint: Print <code>count</code> out <strong>after</strong> you add one to it</li>
@@ -287,7 +292,20 @@ Count finishes at 6
 <li>Hint: Both of those <code>print</code> statements need to be indented to the same level as <code>count = count + 1</code></li>
 <li>Hint: Remember to print <code>count</code> <strong>after</strong> you add one to it, otherwise you won’t get confetti!</li>
 </ul>
-<p>If we want to talk about this as <strong>programmatic thinking</strong>, we can break it down into a few steps:</p>
+<p>Indenting is <em>very very important</em> when dealing with loops. Why? Well, <strong>run the code below</strong> and see that it counts up to 6 correctly.</p>
+<pre class="facing" test="Count finishes at 1">
+numbers = [10, 20, 30, 40, 50, 60]
+count = 0
+for number in numbers:
+  print("Looking at", number)
+  count = count + 1
+
+print("Count finishes at", count)
+</pre>
+<p>Now, <strong>remove the indent before <code>count = count + 1</code></strong>. How does the output change?</p>
+<p>When you remove the indenting, you’re no longer incrementing every time you’re inside of the loop. Instead, it doesn’t increment until the loop is <strong>totally done</strong>. Yes, even though it’s right below the loop, <strong>only the indented parts are run as part of the loop</strong>. When we remove the indenting, we take <code>count = count + 1</code> out of the loop, so it only gets run once (after the loop is done). That’s why <code>count</code> is only <code>1</code> when you run the edited code!</p>
+<p>Python loves punctuation, and Python loves indenting. Using the wrong punctuation usually makes the program yell at you and not run, but using the wrong indenting usually just makes you get the wrong result. It’s tricky!</p>
+<p>But back to counting in loops: if we want to talk about what we’re doing as <strong>programmatic thinking</strong>, we can break it down into a few steps.</p>
 <ol type="1">
 <li><strong>Stage One: Initial value</strong>. Before we start, how many numbers have we counted? Zero! So <code>count = 0</code>.</li>
 <li><strong>Stage Two: Increment</strong>. This is a fancy word for saying “make something one bigger.” In this case, we <strong>increment</strong> every time we go through the loop by using <code>count = count + 1</code></li>
@@ -306,7 +324,7 @@ for duck in ducks:
 # Answer: How many ducks?
 print("We found", count, "ducks")
 </pre>
-<script type="text/solution">
+<script type="text/test">
 Looking at Leonard
 Looking at Starburst
 Looking at Leopold
@@ -317,6 +335,7 @@ We found 4 ducks
 <li>Hint: Pay attention to indenting!</li>
 <li>Hint: You’ll use <code>count = count + 1</code> to make <code>count</code> one bigger each time you look at a duck</li>
 <li>Hint: Add <code>count = count + 1</code> right after you print the duck’s name.</li>
+<li>Hint: Make sure you indent your incrementing line so it happens inside of the loop!</li>
 </ul>
 <h3 id="chapter-summary">Chapter summary</h3>
 <p>We started to learn about <strong>programming thinking</strong>, where we break down ideas into steps we can tell Python about. We also learned the word <strong>increment</strong>, which means to make someting one bigger.</p>
