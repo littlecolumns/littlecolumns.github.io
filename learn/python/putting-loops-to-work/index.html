@@ -247,7 +247,7 @@ numbers = sorted(numbers)
 print(numbers)
 </pre>
 <p>So yes, counting ducks was <em>dumb</em>, because you can use <code>len(ducks)</code> until the day you die! Maybe even afterward, depending on how advanced computers are at that point.</p>
-<p>But so our hard work doesn’t go to waste, let’s improve on what we did. But first: <strong>run the code below</strong> to see that yes, <code>&quot;Leonard&quot;</code> does start with L. Then <strong>change the name to <code>&quot;Stewart&quot;</code> and try it again!</strong></p>
+<p>But so our hard work doesn’t go to waste, let’s improve on what we did. But first: <strong>run the code below</strong> to see that yes, <code>&quot;Leonard&quot;</code> does start with <code>Leo</code>. Then <strong>change the name to <code>&quot;Stewart&quot;</code> and try it again!</strong></p>
 <pre class="facing" test="Stewart does not start with Leo">
 name = "Leonard"
 
@@ -257,8 +257,9 @@ else:
   print(name, "does not start with Leo")
 </pre>
 <p>Now you know about <code>.startswith</code>.</p>
-<p>It seems dumb, but I promise it mostly isn’t! <strong>Conditionals</strong> (<code>if</code> statements) become super useful when we’re counting things in for loops. <strong>Sometimes you don’t want to count everything, you only want to count things that meet a certain condition.</strong></p>
-<p>Right now, the loop below counts <strong>every duck</strong>. Use our new friend <code>.startswith</code> and an <code>if</code> statement to make it <strong>only count the ducks whose names start with <code>Leo</code></strong>.</p>
+<p>It seems dumb, but I promise it mostly isn’t! Conditionals - <code>if</code> statements - become super useful when we’re counting things in for loops. <strong>Sometimes you don’t want to count everything, you only want to count things that meet a certain condition.</strong></p>
+<p>Instead incrementing every single time you’re going through your loop, you might stop and say hey, do I care about this one? Do I want to count it? And then either count it or not. Let’s try to put that concept to work!</p>
+<p>The loop below counts <strong>every duck</strong>. Use our new friend <code>.startswith</code> and an <code>if</code> statement to make it <strong>only count the ducks whose names start with <code>Leo</code></strong>.</p>
 <pre class="facing" test="We found 2 ducks">
 ducks = ["Leonard", "Starburst", "Leopold", "Lackluster"]
 
@@ -290,7 +291,8 @@ We found 2 ducks
 <li>Hint: We’re going to need <strong>two levels of indenting!</strong> One for the <code>for</code>, and another for the <code>if</code>. <code>count = count + 1</code> will be indented the most.</li>
 <li>Hint: The next line after the <code>if</code> will be <code>count = count + 1</code>, but indented <em>twice</em>, so it’s inside of the <code>if</code></li>
 </ul>
-<p>Let’s try again, this time from scratch! How many students have grades that are <code>85</code> or higher?</p>
+<p>Should we have looked at a complete example first? <em>Maybe!</em> Are we both still alive, even though we dove right in ? <em>Yes!</em></p>
+<p>Let’s push our luck and try again, this time starting with even less! Given the grades in the list below, <strong>how many students scored <code>85</code> or higher?</strong></p>
 <pre class="facing" test="7">
 grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
 </pre>
@@ -305,22 +307,24 @@ grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
 <li>Hint: We’ll use <code>for grade in grades:</code> and <code>if grade &gt;= 85:</code>.</li>
 <li>Hint: And, of course, <code>count = count + 1</code></li>
 </ul>
-<p>Cut and paste your answer down here, and get a little fancier. <strong>What percentage of the class got <code>85</code> or higher?</strong></p>
+<p>Excellent work! Those are both pretty typical ways of using for loops and counters, and we’ll see this pattern (or similar ones) again and again. For example, sometimes you don’t care about the <em>raw number</em> you counted, you care about the <em>percentage</em> instead.</p>
+<p>Using the completed code from above as a starting point, <strong>what percentage of the class received an <code>85</code> or higher?</strong> We’ll only need to change one line!</p>
 <pre class="facing" test="0.4666666666666667">
 grades = [100, 100, 45, 89, 73, 43, 13, 85, 90, 55, 87, 52, 94, 70, 21]
 </pre>
 <ul>
-<li>Hint: We’ll want to divide your answer from above by the total number of grades</li>
-<li>Hint: How can you easily count the total number of grades?</li>
+<li>Hint: To get the percentage, we’ll want to divide the number we counted by the total number of grades</li>
+<li>Hint: We counted the <code>&gt;= 85</code> grades already, but how can we easily count the total number of grades?</li>
 <li>Hint: We can use <code>len(grades)</code>, we don’t have to count them the hard way!</li>
-<li>Hint: If we want to make it a normal-looking percentage, we can multiply the decimal version by 100, then round it with <code>round()</code></li>
+<li>Hint: The confetti comes out for the decimal version, but if we want to make it a normal-looking percentage, we can multiply the decimal version by 100, then round it with <code>round()</code></li>
 </ul>
-<h3 id="lets-take-a-breather.">Let’s take a breather.</h3>
-<p>If this is starting to seem tough, I’m with you! These problems are one of the <strong>gatekeepers</strong> of learning to program - figuring out for loops and how to use them is one of the big parts where people get frustrated, shrug and walk away.</p>
-<p><strong>That doesn’t need to be you!</strong> And if it <em>is</em> you, I’m going to cry and cry and cry. So please, let’s not let that happen.</p>
-<p>Lops and lists can be tough to think and reason through, so here’s my suggestion: if you found this part tough <em>at all</em> (which is probably most of you!), skip back to <a href="../list-introduction/">the beginning of talking about lists</a>. Go through it again. <strong>Repeat the lists/loops section three times.</strong></p>
-<p>Yes, that’s super boring! I won’t pretend it isn’t! It might even seem like a <em>dumb idea</em>, but I promise it’s not <em>that</em> much of your time, and by the time you’re done you’ll feel a lot more comfortable with them. Even if you just mindlessly type answers again and again it helps you absorb the materials.</p>
-<p>Once you feel a little bit comfortable, you can continue on to tackle an <em>almost-interesting</em> project.</p>
+<h3 id="allll-right-lets-take-a-breather.">Allll right, let’s take a breather.</h3>
+<p>If this is starting to seem tough, I’m with you! These kinds of problems are one of the <strong>gatekeepers</strong> of learning to program - figuring out for loops and how to use them is one of the big parts where people get frustrated, shrug and walk away.</p>
+<p><sup>If anyone has any perfect ideas for how I could explain it better, I’m definitely <a href="mailto:jonathan.soma@gmail.com">all ears</a>.</sup></p>
+<p><strong>That doesn’t need to be you!</strong> And if it <em>is</em> you, I’m going to cry and cry and cry. So please, let’s not let have that happen. I have a reputation to uphold!</p>
+<p>Loops and lists can be tough to think and reason through, so here’s my suggestion: if you found this part tough <em>at all</em> (which is probably most of you!), skip back to <a href="../list-introduction/">the beginning of talking about lists</a>. Go through it again. <strong>Repeat the lists/loops section three times.</strong></p>
+<p>Yes, that’s super boring! I won’t pretend it isn’t! It might even seem like a <em>dumb idea</em>, but I promise it’s not <em>that</em> much of your time, and by the time you’re done you’ll feel a lot more comfortable with these concepts. Even if you just mindlessly type answers again and again it totally help you absorb the materials.</p>
+<p>Once you feel a little bit comfortable, you can continue on to tackle an <em>almost-interesting</em> project!</p>
 <h3 id="chapter-summary">Chapter summary</h3>
 <p>We got a little more practice at <strong>programming thinking</strong>, especially using <strong>conditionals</strong> inside of <strong>for loops</strong>. This allows us to only count <em>some</em> of our data points.</p>
       </div>
