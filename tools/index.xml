@@ -41,5 +41,18 @@ Remove items from your $PATH by unchecking a box, or add new ones by clicking a 
 It&amp;rsquo;s highly opinionated, so you don&amp;rsquo;t need to think too hard: just do what Python Wrangler says and you&amp;rsquo;ll end up with a nice setup. Have opinions of your own? No worries, just use the data it gives you to clean up your system according to your own best practices.</description>
     </item>
     
+    <item>
+      <title>Python Wrangler Notes</title>
+      <link>http://www.littlecolumns.com/tools/python-wrangler-notes/</link>
+      <pubDate>Fri, 23 Feb 2018 09:05:37 -0500</pubDate>
+      
+      <guid>http://www.littlecolumns.com/tools/python-wrangler-notes/</guid>
+      <description>Python Wrangler helps you install Python in a nice, pleasant, perfect way. But what do you do once you&amp;rsquo;re done? Read on!
+
+Your default Python If you visit the command line and type python, it will run your &amp;ldquo;good&amp;rdquo; Python.
+
+Installing packages (Windows) Your usual pip install should work fine, but since we&amp;rsquo;re not using Anaconda some of the more technical packages might be trouble for Windows users.</description>
+    </item>
+    
   </channel>
 </rss>

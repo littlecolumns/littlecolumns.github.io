@@ -69,11 +69,11 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col-sm-4 text-right">
-        <img src="/images/python-wrangler-icon-large.png" class="tool-icon">
+        <img src="/images/python-wrangler-notes-icon-large.png" class="tool-icon">
       </div>
       <div class="col">
-        <h1>Python Wrangler</h1>
-        <p>Clean up all those Pythons crawling around your computer.</p>
+        <h1>Python Wrangler Notes</h1>
+        <p>How to operate once you&#39;ve set your machine up with Python Wrangler.</p>
       </div>
     </div>
   </div>
@@ -89,20 +89,79 @@
   <div class="container">
     <div class="row">
       <div class="col-md-8 offset-md-2 lead">
-        <p><strong>Python Wrangler</strong> helps you install Python in a nice, pleasant, perfect way. Already installed it? Four times? Eighteen times? No problem, Python Wrangler can also help you <strong>understand, organize, and remove</strong> the Python installations hiding on your computer.</p>
+        
 
-<p>It&rsquo;s <strong>highly opinionated</strong>, so you don&rsquo;t need to think too hard: just do what Python Wrangler says and you&rsquo;ll end up with a nice setup. Have opinions of your own? No worries, just use the data it gives you to clean up your system according to your own best practices.</p>
+<p><strong>Python Wrangler</strong> helps you install Python in a nice, pleasant, perfect way. But what do you do once you&rsquo;re done? Read on!</p>
 
-<p><strong>General opinions it might possess:</strong></p>
+<p><br></p>
 
-<ul>
-<li>If you&rsquo;re using Python 2 we need to have an Important Talk. <strong>Python 3 or bust!</strong></li>
-<li>You&rsquo;ll use <a href="https://docs.pipenv.org/">pipenv</a> for virtual environments</li>
-<li>You&rsquo;ll use <a href="https://github.com/pyenv/pyenv">pyenv</a> to juggle Python versions (OS X)</li>
-<li>It&rsquo;s okay to have a few random Pythons installed that you don&rsquo;t actively use, and it might even be <em>useful</em></li>
-<li><a href="https://anaconda.org/">Anaconda</a> is a pain unless you only work with people who use Anaconda and never want to break outside of its tall, barbed walls. Or if you use Windows, I guess.</li>
-<li>Ugh, it&rsquo;s hard to do anything on Windows, I&rsquo;m so sorry</li>
-</ul>
+<h2 id="your-default-python">Your default Python</h2>
+
+<p>If you visit the command line and type <code>python</code>, it will run your &ldquo;good&rdquo; Python.</p>
+
+<p><br></p>
+
+<h2 id="installing-packages-windows">Installing packages (Windows)</h2>
+
+<p>Your usual <code>pip install</code> should work fine, but since we&rsquo;re not using Anaconda some of the more technical packages might be trouble for Windows users.</p>
+
+<p>These packages need to be <strong>compiled</strong> - converted from source code into actual runnable code - which needs extra software installed on Windows. Download and install the <a href="http://landinghub.visualstudio.com/visual-cpp-build-tools">Visual Studio Build Tools</a> from Microsoft and you should be good to go.</p>
+
+<p><strong>Using wheel files</strong></p>
+
+<p>If it <em>still</em> doesn&rsquo;t work, we can install using a <strong>wheel</strong>, which has already been compiled for us.  First, install the <code>wheel</code> package to be able to install using wheel files.</p>
+
+<pre><code>pip install wheel
+</code></pre>
+
+<p>Then, download the package you need from Christopher Gohlke&rsquo;s <a href="https://www.lfd.uci.edu/~gohlke/pythonlibs/">Unofficial Windows Binaries page</a>. With Python 3.6 and 32-bit Windows, the file you want should end in <code>-cp36‑cp36m‑win32.whl</code>.</p>
+
+<p>Finally, <code>cd</code> to your Downloads folder and install it using <code>pip</code>. It should look something like this:</p>
+
+<pre><code>cd Downloads
+pip install pandas‑0.22.0‑cp36‑cp36m‑win32.whl
+</code></pre>
+
+<p><br></p>
+
+<h3 id="creating-virtual-environments">Creating virtual environments</h3>
+
+<p>If you used Python previously, you&rsquo;re probably familiar with <strong>virtualenv</strong>. Well, fun update: stop using it!! Now <a href="https://github.com/pypa/pipenv">pipenv</a> is the official recommendation from Python.org, and it&rsquo;s awesome.</p>
+
+<ol>
+<li>Visit your project directory</li>
+<li><code>pipenv install</code> to create a virtual environment</li>
+<li><code>pipenv shell</code> to activate it</li>
+<li><code>pip install ...</code> the packages you need</li>
+<li><code>python ...</code> just like normal</li>
+</ol>
+
+<p>That&rsquo;s basically it, but you can visit <a href="https://github.com/pypa/pipenv">https://github.com/pypa/pipenv</a> for more details.</p>
+
+<p><br></p>
+
+<h2 id="using-python-2-os-x">Using Python 2 (OS X)</h2>
+
+<p>For OS X, We&rsquo;re using <a href="https://github.com/pyenv/pyenv">pyenv</a> to manage different versions of Python. To switch to 2.7, use the following command.</p>
+
+<pre><code>pyenv install 2.7
+pyenv shell 2.7
+</code></pre>
+
+<p>Once you exit the shell, you&rsquo;ll be back to your default Python. And you only need to use <code>pyenv install</code> the first time.</p>
+
+<p><br></p>
+
+<h3 id="using-python-2-windows">Using Python 2 (Windows)</h3>
+
+<p><a href="https://docs.python.org/3/using/windows.html#python-launcher-for-windows">Python Launcher</a> comes installed automatically with newer versions of Python 3, and allows you to use the <code>py</code> command.</p>
+
+<p>The <code>py</code> command runs whatever the latest version of Python you have is. If you&rsquo;ve also installed Python 2, you can use it with <code>-2</code> or <code>-2.7</code> to run your script using Python 2. For example:</p>
+
+<pre><code>py -2 something.py
+</code></pre>
+
+<p>You can install Python 2 <a href="https://www.python.org/downloads/">from Python.org</a>, just scroll down and keep a sharp eye out.</p>
 
       </div>
     </div>
@@ -111,60 +170,11 @@
       <div class="col">
         <div class="row">
           
-            <div class="col col-md-6">
-              <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
-  <div class="fbox-icon">
-    <a href="#" onclick="return false"><i class="icon-pencil2 i-alt"></i></a>
-  </div>
-</div>
-
-              <h4>Highly opinionated</h4>
-              <p>Instead of giving you a million options, we just tell you the One True Way to do things. Just trust us! ...or don't, if you have your own opinions.</p>
-            </div>
-          
-            <div class="col col-md-6">
-              <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
-  <div class="fbox-icon">
-    <a href="#" onclick="return false"><i class="icon-line-paper i-alt"></i></a>
-  </div>
-</div>
-
-              <h4>Detailed data</h4>
-              <p>At-a-glance displays on your Python installations, including versions, paths, and packages</p>
-            </div>
-          
-            <div class="col col-md-6">
-              <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
-  <div class="fbox-icon">
-    <a href="#" onclick="return false"><i class="icon-question i-alt"></i></a>
-  </div>
-</div>
-
-              <h4>It ain't out yet</h4>
-              <p>I don't know why I'm even filling out this page, honestly. If you're interested in testing it out, <a href="mailto:hello@littlecolumns.com">get in touch</a>.</p>
-            </div>
-          
-            <div class="col col-md-6">
-              <div class="feature-box fbox-effect fbox-center fbox-outline fbox-dark nobottomborder" style="padding-right: 20px; float: left; margin-bottom: 40px">
-  <div class="fbox-icon">
-    <a href="#" onclick="return false"><i class="icon-code i-alt"></i></a>
-  </div>
-</div>
-
-              <h4>Open source</h4>
-              <p>Want adjustments or new features? You have the power.</p>
-            </div>
-          
         </div>
       </div>
     </div>
 
     
-      <div class="row screenshots">
-        <div class="col">
-          <img src="/images/python-wrangler-screenshot.png">
-        </div>
-      </div>
     
   </div>
 </div>

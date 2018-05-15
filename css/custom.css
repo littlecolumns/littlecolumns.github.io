@@ -245,3 +245,9 @@ a {
 .navbar-dark .navbar-nav .nav-link {
   color: #ffffff;
 }
+
+pre {
+  padding: 10px;
+  background: #eff0f1;
+  font-size: 13px;
+}
