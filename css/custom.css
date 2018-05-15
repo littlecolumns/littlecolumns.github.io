@@ -251,3 +251,32 @@ pre {
   background: #eff0f1;
   font-size: 13px;
 }
+
+
+@media (max-width: 768px) {
+  .product-container p {
+    text-align: left;
+  }
+  .top-container,
+  .product-container .col-md-5 h2 {
+    text-align: center;
+  }
+  .product-container h2:after {
+    position: relative !important;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .product-container img,
+  .top-container img,
+  .about-container img {
+    max-height: 200px !important;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  .about-container img {
+    margin-bottom: 30px;
+  }
+}
