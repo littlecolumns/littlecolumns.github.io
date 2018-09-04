@@ -10,12 +10,12 @@ a.sourceLine:empty { height: 1.2em; }
 code.sourceCode { 
   white-space: pre; position: relative; 
 }
-pre.sourceCode, pre.txt {
+pre.sourceCode, pre.txt, pre.csv {
   margin: 0;
   background: #eaedf5;
   padding: 10px 15px;
 }
-div.sourceCode, pre.txt { margin: 1em 0; }
+div.sourceCode, pre.txt, pre.csv { margin: 1em 0; }
 @media screen {
 div.sourceCode { overflow: auto; }
 }
