@@ -1,0 +1,318 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Installing eslint - JavaScript Tooling is Not (Just) For Unicorns</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/manifest.json">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
+    <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
+    <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/installing-eslint/">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+        background: #37474F;
+        color: white;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .logo {
+        text-align: center;
+      }
+
+      @media only screen and (min-width: 768px) {
+        text-align: right;
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+      .checklist {
+        border-left: #f9c034 solid 10px;
+        margin: 0;
+        padding-left: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .is-success .checklist {
+        border-left-color: #91a54e;
+      }
+
+      .checklist > ul {
+        list-style-type: none;
+        margin-bottom: 0;
+        padding-left: 1rem;
+      }
+
+      .has-errors {
+        cursor: pointer;
+      }
+
+      .checklist li.expanded .test-details {
+        display: block;
+      }
+
+      .checklist li.has-errors:hover:after {
+        content: "details";
+        margin-left: 5px;
+        color: #007bff;
+        font-size: 0.75em;
+      }
+
+      .checklist .has-errors.expanded:after {
+        display: none;
+      }
+
+      .checklist .test-details {
+        list-style-type: disc;
+        display: none;
+      }
+
+      .checklist > ul > li {
+        margin-bottom: 5px;
+      }
+
+      .checklist > ul > li.fail:before,
+      .checklist > ul > li.pass:before {
+        position: relative;
+        top: 1px;
+        display: inline-block;
+        speak:none;
+        font-family: 'Icons';
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding-right: 1rem;
+      }
+
+      .checklist > ul > li.fail:before {
+        color: #f9c034;
+        content: '\e049';
+      }
+
+      .checklist > ul > li.pass {
+        color: #89ab4a;
+      }
+
+      .checklist > ul > li.pass:before {
+        content: '\e038';
+      }
+
+      .table td, .table th {
+        padding: 0.5rem 0.75rem;
+      }
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3 logo">
+          <img src="../common/snekicorn.png" height="150" title="snekicorn">
+        </div>
+        <div class="col-sm-9 text-left">
+          <h3 class="mt-5">D3 + JavaScript Tooling's Not (Just) For Unicorns</h3>
+          <p>A horrible introduction to using modern JavaScript tooling with D3</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 text-left">
+          <a href="../meeting-npm/"><span class="oi oi-arrow-left"></span> Meeting npm</a>
+          &nbsp;
+        </div>
+        <div class="col-sm-2 text-center">
+          <a href="http://littlecolumns.com/learn/d3-javascript-tooling/"><span class="oi oi-home"></span></a>
+        </div>
+        <div class="col-sm-5 text-right">
+          &nbsp;
+          <a href="../dependencies/">Dependencies <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 5</em></p>
+        <h1 class="display-4">Installing eslint</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>First off, we suck at writing code.</p>
+<p>Or, I mean, I don’t know, maybe you’re great and cool, but <em>I</em> suck at writing code. Or at least writing clear code, or consistent code, or code that will make my coworkers happy<sup>1</sup>.</p>
+<p>But that’s okay, because there’s an easy way to <strong>trick the computer into doing it for you!</strong> Well, not totally for you - you still have to write the code, but the computer will clean the code up for you.</p>
+<p>The process of cleaning up your code is called <strong>linting</strong>. You set up a list of rules - space things like this, indent like that, use semicolons this other way, use all of your variables, etc - and the linter tells you when you’re broken them. Sometimes it even fixes them for you!</p>
+<p>We’re going to use a linter called <a href="https://eslint.org/demo/">eslint</a>. It’s the best.</p>
+<p>Remember how <code>npm</code> installs things only for a single project? That means our first job is to <strong>make a new project</strong>. <code>cd</code> into a new folder and run</p>
+<pre><code>npm init</code></pre>
+<p>You’ll be asked a lot of questions, but they really don’t matter! You can just hit enter a lot of times. When you’re done it just kind of… sits there. Nothing happened, right?</p>
+<p>No!!! A <strong>GREAT THING</strong> happened, and that is <code>package.json</code> was created. Open that file up! Mine looks like this:</p>
+<pre><code>{
+  &quot;name&quot;: &quot;test3&quot;,
+  &quot;version&quot;: &quot;1.0.0&quot;,
+  &quot;description&quot;: &quot;&quot;,
+  &quot;main&quot;: &quot;index.js&quot;,
+  &quot;scripts&quot;: {
+    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
+  },
+  &quot;author&quot;: &quot;Jonathan Soma &lt;jonathan.soma@gmail.com&gt; (http://jonathansoma.com)&quot;,
+  &quot;license&quot;: &quot;ISC&quot;
+}</code></pre>
+<p>This <code>package.json</code> is the magic file that describes your project. It will be used to say who build it, what it’s called, what version it is, and what modules it uses. We probably only care about the last part, but we need a <code>package.json</code> anyway.</p>
+<p>Now we need to install <code>eslint</code> for our module. TO do that, we’re going to use <code>npm install</code>.</p>
+<pre><code>npm install --save-dev eslint</code></pre>
+<p><code>npm</code> works hard, fills its progress bar, and voilà! <code>eslint</code> is installed. The <code>--save-dev</code> part means “we only need this when we’re working on our own machine, we don’t need it in the published project.”</p>
+<p>If you <em>type</em> <code>eslint</code>, though, it <em>doesn’t work</em>. Your computer can’t find it! Let’s try to track it down.</p>
+<p><sup>1</sup> A good trick is to just <em>not have coworkers</em>. I have students instead, which means they just have to put up with every single thing I say and believe it like it’s been handed down from King Of Space And Time.</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../dependencies/">Next up: Dependencies <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing D3+JSTN(J)4U because bad tutorials make me grumpy, and combining D3 and JavaScript tooling makes me grumpiest of all. You think it's your fault you have no idea what's going on? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">D3 + JavaScript Tooling is not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/bluebird.js"></script>
+  <script type="text/javascript" src="../common/fetch-polyfill.js"></script>
+  <script type="text/javascript" src="../common/startswith-polyfill.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script>
+    function tableCleanup () {
+      let elements = document.querySelectorAll("table")
+      for(let i = 0; i < elements.length; i++) {
+        elements[i].classList.add("table")
+        elements[i].classList.add("table-striped")
+      }
+    }
+
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>

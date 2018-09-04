@@ -1,0 +1,362 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Building for keeps - JavaScript Tooling is Not (Just) For Unicorns</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/manifest.json">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
+    <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
+    <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/building-for-keeps/">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+        background: #37474F;
+        color: white;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .logo {
+        text-align: center;
+      }
+
+      @media only screen and (min-width: 768px) {
+        text-align: right;
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+      .checklist {
+        border-left: #f9c034 solid 10px;
+        margin: 0;
+        padding-left: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .is-success .checklist {
+        border-left-color: #91a54e;
+      }
+
+      .checklist > ul {
+        list-style-type: none;
+        margin-bottom: 0;
+        padding-left: 1rem;
+      }
+
+      .has-errors {
+        cursor: pointer;
+      }
+
+      .checklist li.expanded .test-details {
+        display: block;
+      }
+
+      .checklist li.has-errors:hover:after {
+        content: "details";
+        margin-left: 5px;
+        color: #007bff;
+        font-size: 0.75em;
+      }
+
+      .checklist .has-errors.expanded:after {
+        display: none;
+      }
+
+      .checklist .test-details {
+        list-style-type: disc;
+        display: none;
+      }
+
+      .checklist > ul > li {
+        margin-bottom: 5px;
+      }
+
+      .checklist > ul > li.fail:before,
+      .checklist > ul > li.pass:before {
+        position: relative;
+        top: 1px;
+        display: inline-block;
+        speak:none;
+        font-family: 'Icons';
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding-right: 1rem;
+      }
+
+      .checklist > ul > li.fail:before {
+        color: #f9c034;
+        content: '\e049';
+      }
+
+      .checklist > ul > li.pass {
+        color: #89ab4a;
+      }
+
+      .checklist > ul > li.pass:before {
+        content: '\e038';
+      }
+
+      .table td, .table th {
+        padding: 0.5rem 0.75rem;
+      }
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3 logo">
+          <img src="../common/snekicorn.png" height="150" title="snekicorn">
+        </div>
+        <div class="col-sm-9 text-left">
+          <h3 class="mt-5">D3 + JavaScript Tooling's Not (Just) For Unicorns</h3>
+          <p>A horrible introduction to using modern JavaScript tooling with D3</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 text-left">
+          <a href="../external-files-and-parcel/"><span class="oi oi-arrow-left"></span> External files and Parcel</a>
+          &nbsp;
+        </div>
+        <div class="col-sm-2 text-center">
+          <a href="http://littlecolumns.com/learn/d3-javascript-tooling/"><span class="oi oi-home"></span></a>
+        </div>
+        <div class="col-sm-5 text-right">
+          &nbsp;
+          <a href=""> <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 16</em></p>
+        <h1 class="display-4">Building for keeps</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>At some point we’re going to want to build a <strong>production copy</strong> of our files - something we’re willing to publish to the internet! To do this, we can start with just a simple command to tell parcel to build the website instead of building <em>and</em> serving it.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">parcel</span> build index.html</a></code></pre></div>
+<p>It’s the <em>exact same thing</em> parcel did before - saving into the <code>dist/</code> folder - except if we peek at our finished graph file - <code>graph.185b2ef5.js</code> or whatever - you’ll see it <em>very very different</em>.</p>
+<p>It’s all mashed together on one line, it’s totally unreadable, it’s definitely not lint-friendly - it’s <strong>bundled</strong> and <strong>minified!</strong> Parcel only minifies your code once you’re ready to publish, since otherwise it would be pretty hard to debug it.</p>
+<p>Since we’re probably going to publish to GitHub pages, I’m going to make a checklist of needs before we publish:</p>
+<ul>
+<li>Our finished code has to go into a <code>docs/</code> folder</li>
+<li>Parcel needs to support <em>multiple</em> html files in <em>multiple folders</em> with <em>multiple js</em> files</li>
+<li>We don’t want the <code>dist/</code> stuff to go up on GitHub</li>
+</ul>
+<p>First, we can change our <code>parcel build</code> to do output into <code>docs/</code></p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">parcel</span> build --out-dir docs index.html</a></code></pre></div>
+<p>And if we added in another folder - for example, <code>pizza/</code> - and put some files in there - for example, an <code>index.html</code> and some JavaScript in there, we can easily tell Parcel to process them, too.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">parcel</span> build --out-dir docs index.html pizza/index.html</a></code></pre></div>
+<p>But listing all of our HTML files gets tedious and boring! The normal way of doing things is to <strong>move all of our html and JavaScript</strong> into a folder called <code>src/</code> and tell Parcel to build everything inside.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">parcel</span> build --out-dir docs src/*.html src/**/*.html</a></code></pre></div>
+<p>Let’s break the command down:</p>
+<ul>
+<li><code>parcel build</code> - don’t keep watching and rebuilding, just build it once for a ‘production’ build</li>
+<li><code>--out-dir docs</code> - put the output in docs</li>
+<li><code>src/*.html</code> - process any html files inside of src</li>
+<li><code>src/**/*.html</code> - also process any html files inside of any folder inside of src</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> We don’t need to tell parcel about the <code>.js</code> files because it can find them by reading the HTML!</p>
+</blockquote>
+<p>When we publish our code, we really don’t care about that <code>dist/</code> folder. It’s just the folder Parcel stores drafts in while while we’re developing our code, so it makes sense to not send it up to GitHub. We want the original <code>src/</code> code and the publishable <code>docs/</code> code, just not the <code>dist/</code> version!</p>
+<p>Also, what about <code>node_modules</code>? We don’t need that, either. Those modules are all listed in <code>package.json</code>, so if someone wanted to download our project and recreate it they can just use <code>npm install</code> to automatically install them all.</p>
+<p>When you want to ignore files with git, you create a filed named <code>.gitignore</code>. Yes, it starts with a period, it’s a secret magic file!</p>
+<p><code>.gitignore</code> is just a plain list of files or file patterns to not store in git. You can write it yourself, or you can use something like https://www.gitignore.io/ to find one someone else has already written.</p>
+<p>Let’s say we use <a href="https://gitignore.io">gitignore.io</a>, search for node, and use what comes up. We can also add the <code>dist</code> directory, and <code>.DS_Store</code>, which is a weird file that shows up everything on OS X. Our final <code>.gitignore</code> might look like this:</p>
+<pre><code># Custom files
+.DS_Store
+dist
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Optional npm cache directory
+.npm
+
+# dotenv environment variables file
+.env
+
+# Optional eslint cache
+.eslintcache
+
+# Dependency directories
+node_modules/</code></pre>
+<p>Now it’s time to send it all up!</p>
+<ol type="1">
+<li>Make a repo</li>
+<li>Add our files</li>
+<li>Make a commit</li>
+<li>Send it all up</li>
+<li>Publish through the <strong>Settings</strong> page on GitHub</li>
+<li>Rejoice!</li>
+</ol>
+<p>…but let’s say we wanted to make <em>another</em> project. Do we have to do all of that again? <strong>NOPE!</strong></p>
+<p>If we want to be smart/lazy, we can re-use a lot of the files we already have. These ones will be the same for every project we have:</p>
+<ul>
+<li><code>.eslintrc</code> for the linting options</li>
+<li><code>package.json</code> for the dependencies - the packages our project needs (like <code>eslint</code> and Prettier)</li>
+<li><code>.gitignore</code> for what we don’t want going into git</li>
+</ul>
+<p>…and that’s it! We might need to change some of the <code>package.json</code> options, but it’s easy enough in a text editor. It might be worh saving this as a “quickstart” setup! We’d copy them to a folder, run <code>npm install</code> to automatically install everything from <code>package.json</code>, and be good to go!</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="">Next up:  <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing D3+JSTN(J)4U because bad tutorials make me grumpy, and combining D3 and JavaScript tooling makes me grumpiest of all. You think it's your fault you have no idea what's going on? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">D3 + JavaScript Tooling is not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/bluebird.js"></script>
+  <script type="text/javascript" src="../common/fetch-polyfill.js"></script>
+  <script type="text/javascript" src="../common/startswith-polyfill.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script>
+    function tableCleanup () {
+      let elements = document.querySelectorAll("table")
+      for(let i = 0; i < elements.length; i++) {
+        elements[i].classList.add("table")
+        elements[i].classList.add("table-striped")
+      }
+    }
+
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>

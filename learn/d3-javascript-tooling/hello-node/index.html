@@ -1,0 +1,305 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Hello Node - JavaScript Tooling is Not (Just) For Unicorns</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/manifest.json">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
+    <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
+    <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/hello-node/">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+        background: #37474F;
+        color: white;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .logo {
+        text-align: center;
+      }
+
+      @media only screen and (min-width: 768px) {
+        text-align: right;
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+      .checklist {
+        border-left: #f9c034 solid 10px;
+        margin: 0;
+        padding-left: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .is-success .checklist {
+        border-left-color: #91a54e;
+      }
+
+      .checklist > ul {
+        list-style-type: none;
+        margin-bottom: 0;
+        padding-left: 1rem;
+      }
+
+      .has-errors {
+        cursor: pointer;
+      }
+
+      .checklist li.expanded .test-details {
+        display: block;
+      }
+
+      .checklist li.has-errors:hover:after {
+        content: "details";
+        margin-left: 5px;
+        color: #007bff;
+        font-size: 0.75em;
+      }
+
+      .checklist .has-errors.expanded:after {
+        display: none;
+      }
+
+      .checklist .test-details {
+        list-style-type: disc;
+        display: none;
+      }
+
+      .checklist > ul > li {
+        margin-bottom: 5px;
+      }
+
+      .checklist > ul > li.fail:before,
+      .checklist > ul > li.pass:before {
+        position: relative;
+        top: 1px;
+        display: inline-block;
+        speak:none;
+        font-family: 'Icons';
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding-right: 1rem;
+      }
+
+      .checklist > ul > li.fail:before {
+        color: #f9c034;
+        content: '\e049';
+      }
+
+      .checklist > ul > li.pass {
+        color: #89ab4a;
+      }
+
+      .checklist > ul > li.pass:before {
+        content: '\e038';
+      }
+
+      .table td, .table th {
+        padding: 0.5rem 0.75rem;
+      }
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3 logo">
+          <img src="../common/snekicorn.png" height="150" title="snekicorn">
+        </div>
+        <div class="col-sm-9 text-left">
+          <h3 class="mt-5">D3 + JavaScript Tooling's Not (Just) For Unicorns</h3>
+          <p>A horrible introduction to using modern JavaScript tooling with D3</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 text-left">
+          <a href="../why-use-tooling/"><span class="oi oi-arrow-left"></span> Why use tooling?</a>
+          &nbsp;
+        </div>
+        <div class="col-sm-2 text-center">
+          <a href="http://littlecolumns.com/learn/d3-javascript-tooling/"><span class="oi oi-home"></span></a>
+        </div>
+        <div class="col-sm-5 text-right">
+          &nbsp;
+          <a href="../meeting-npm/">Meeting npm <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 3</em></p>
+        <h1 class="display-4">Hello Node</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>For millions and millions of years, you could only run JavaScript in a web browser, while Python and C++ and all of that lived on the command line.</p>
+<p>But then one day <em>everything changed</em>.</p>
+<p>In 2009, <a href="https://nodejs.org/">node.js</a> appeared! It let you run JavaScript on the <em>command line</em>, which was absolute heresy. It was <em>insane</em>. It didn’t make any <em>sense</em>. Why would you run this garbage heap of a language in a place as serious as the command line?</p>
+<p>That might have been a mystery, but people <em>loved it</em>. People <em>flocked to it</em>. It grew and it grew and it grew, and this newfound interest in JavaScript convinced JavaScript to get <em>better</em> and <em>cooler</em> and more <em>useful</em>.</p>
+<p>You can see this by taking a peek at the schedule of JavaScript version releases:</p>
+<p>|—|—| |Year|JavaScript Version| |—|—| |1997|Version 1.0| |1998|Version 2.0| |1999|Version 3.0| |???|THE DARK AGES. Version 4 was never released!| |2009|Version 5.0| |2011|Version 5.1| |2015|Version 6.0| |2016|Version 7.0| |2017|Version 8.0| |2018|Version 9.0|</p>
+<p>We had <em>zero</em> new versions of JS come out for <em>ten years</em>, and now we have a new one come out <em>every single freaking year</em>. And it’s all thanks to node!</p>
+<p><strong>Installing node.js</strong></p>
+<p>To install node:</p>
+<ul>
+<li><strong>Mac users</strong> need to install <a href="http://brew.sh/">Homebrew</a> if it isn’t installed yet, and then type <code>brew install node</code>.</li>
+<li><strong>Windows users</strong> can use the installer from <a href="https://nodejs.org/">nodejs.org</a>. Restart once it’s done.</li>
+</ul>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../meeting-npm/">Next up: Meeting npm <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing D3+JSTN(J)4U because bad tutorials make me grumpy, and combining D3 and JavaScript tooling makes me grumpiest of all. You think it's your fault you have no idea what's going on? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">D3 + JavaScript Tooling is not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/bluebird.js"></script>
+  <script type="text/javascript" src="../common/fetch-polyfill.js"></script>
+  <script type="text/javascript" src="../common/startswith-polyfill.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script>
+    function tableCleanup () {
+      let elements = document.querySelectorAll("table")
+      for(let i = 0; i < elements.length; i++) {
+        elements[i].classList.add("table")
+        elements[i].classList.add("table-striped")
+      }
+    }
+
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>

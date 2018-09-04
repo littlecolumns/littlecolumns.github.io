@@ -1,0 +1,429 @@
+<!doctype html>
+<html>
+<head>
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-5541738-26"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+
+      gtag('config', 'UA-5541738-26');
+    </script>
+
+    <title>Getting Prettier - JavaScript Tooling is Not (Just) For Unicorns</title>
+
+    <meta charset="UTF-8">
+
+    <link rel="apple-touch-icon" sizes="57x57" href="/favicon/apple-icon-57x57.png">
+    <link rel="apple-touch-icon" sizes="60x60" href="/favicon/apple-icon-60x60.png">
+    <link rel="apple-touch-icon" sizes="72x72" href="/favicon/apple-icon-72x72.png">
+    <link rel="apple-touch-icon" sizes="76x76" href="/favicon/apple-icon-76x76.png">
+    <link rel="apple-touch-icon" sizes="114x114" href="/favicon/apple-icon-114x114.png">
+    <link rel="apple-touch-icon" sizes="120x120" href="/favicon/apple-icon-120x120.png">
+    <link rel="apple-touch-icon" sizes="144x144" href="/favicon/apple-icon-144x144.png">
+    <link rel="apple-touch-icon" sizes="152x152" href="/favicon/apple-icon-152x152.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-icon-180x180.png">
+    <link rel="icon" type="image/png" sizes="192x192"  href="/favicon/android-icon-192x192.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="96x96" href="/favicon/favicon-96x96.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+    <link rel="manifest" href="/favicon/manifest.json">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
+    <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
+    <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/getting-prettier/">
+
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
+    <style>
+      .hint-button {
+        cursor: pointer;
+        display: inline-block;
+        background: #ededed;
+        border-radius: 2px;
+        padding: 1px 5px;
+        font-size: 12px;
+      }
+      .hint > span {
+          opacity: 0;
+          transition: opacity 0.5s ease-in;
+          /* + optional vendor prefix variants for old browsers */
+      }
+      .hint.is-revealed > span {
+          opacity: 1;
+          background: #ccfcff;
+      }
+      .hint.is-revealed .hint-button {
+        display: none;
+      }
+
+      .notice-header, .footer {
+        background-color: #fad0c4;
+        background-image: linear-gradient(315deg, #fad0c4 0%, #f1a7f1 74%);
+        padding: 3em 0em;
+        font-size: 14px;
+      }
+
+      .notice-header {
+        text-align: center;
+        background: #37474F;
+        color: white;
+      }
+
+      .notice-header a, .footer a {
+        background: white;
+        color: black;
+        padding: 0 2px;
+      }
+
+      .footer ul {
+        list-style-type: none;
+        padding-left: 0;
+      }
+
+      .footer li {
+        margin-bottom: 10px;
+      }
+
+      .container {
+        max-width: 760px;
+      }
+
+      @media only screen and (min-width: 992px) {
+        .py-facing-row {
+          margin-left: -80px;
+          margin-right: -80px;
+        }
+      }
+
+      .logo {
+        text-align: center;
+      }
+
+      @media only screen and (min-width: 768px) {
+        text-align: right;
+      }
+
+      .topnav > div {
+        background: grey;
+      }
+
+      #mc_embed_signup {
+        background:#fff;
+        clear:left;
+        width:100%;
+        margin-bottom: 1rem;
+      }
+
+      .checklist {
+        border-left: #f9c034 solid 10px;
+        margin: 0;
+        padding-left: 0.5rem;
+        margin-bottom: 1rem;
+      }
+      
+      .is-success .checklist {
+        border-left-color: #91a54e;
+      }
+
+      .checklist > ul {
+        list-style-type: none;
+        margin-bottom: 0;
+        padding-left: 1rem;
+      }
+
+      .has-errors {
+        cursor: pointer;
+      }
+
+      .checklist li.expanded .test-details {
+        display: block;
+      }
+
+      .checklist li.has-errors:hover:after {
+        content: "details";
+        margin-left: 5px;
+        color: #007bff;
+        font-size: 0.75em;
+      }
+
+      .checklist .has-errors.expanded:after {
+        display: none;
+      }
+
+      .checklist .test-details {
+        list-style-type: disc;
+        display: none;
+      }
+
+      .checklist > ul > li {
+        margin-bottom: 5px;
+      }
+
+      .checklist > ul > li.fail:before,
+      .checklist > ul > li.pass:before {
+        position: relative;
+        top: 1px;
+        display: inline-block;
+        speak:none;
+        font-family: 'Icons';
+        font-style: normal;
+        font-weight: normal;
+        line-height: 1;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        padding-right: 1rem;
+      }
+
+      .checklist > ul > li.fail:before {
+        color: #f9c034;
+        content: '\e049';
+      }
+
+      .checklist > ul > li.pass {
+        color: #89ab4a;
+      }
+
+      .checklist > ul > li.pass:before {
+        content: '\e038';
+      }
+
+      .table td, .table th {
+        padding: 0.5rem 0.75rem;
+      }
+    </style>
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
+</head>
+
+<body>
+  <div class="notice-header">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-3 logo">
+          <img src="../common/snekicorn.png" height="150" title="snekicorn">
+        </div>
+        <div class="col-sm-9 text-left">
+          <h3 class="mt-5">D3 + JavaScript Tooling's Not (Just) For Unicorns</h3>
+          <p>A horrible introduction to using modern JavaScript tooling with D3</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="pt-2 pb-2" style="background: #f6f6f6; font-size: 14px; border: solid #eeeeee 1px; border-width: 1px 0 1px 0">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-5 text-left">
+          <a href="../running-npm-scripts/"><span class="oi oi-arrow-left"></span> Running NPM scripts</a>
+          &nbsp;
+        </div>
+        <div class="col-sm-2 text-center">
+          <a href="http://littlecolumns.com/learn/d3-javascript-tooling/"><span class="oi oi-home"></span></a>
+        </div>
+        <div class="col-sm-5 text-right">
+          &nbsp;
+          <a href="../linting-in-your-editor/">Linting in your editor <span class="oi oi-arrow-right"></span></a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container">
+    <div class="row text-center mt-5 mb-5">
+      <div class="col-sm">
+        <p class="subtitle mb-0"><em>Chapter 9</em></p>
+        <h1 class="display-4">Getting Prettier</h1>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm">
+<p>It’s pretty cool how with just one command - <code>eslint --fix</code> - we were able to solve so many problems with our code! And I mean, not even <em>problems</em>, but it just made things look nicer.</p>
+<p>But maybe <em>nice</em> isn’t enough. Maybe <em>nice</em> is <em>fine</em>, but we want something more. We want our code to be… <a href="https://github.com/prettier/prettier">prettier</a>?</p>
+<p><code>eslint</code> has a pretty good number of opions about things, but sometimes it just isn’t <em>enough</em>. We want some evil editor, some highly demanding lead programmer, some paragon of artistic virtue who will smash our fingers with a hammer if we don’t hit enter and tab in all the right places.</p>
+<p>That, my friends, is <a href="https://github.com/prettier/prettier">Prettier</a>. According to the Prettier website:</p>
+<blockquote>
+<p>Prettier is an opinionated code formatter. It enforces a consistent style by parsing your code and re-printing it with its own rules that take the maximum line length into account, wrapping code when necessary.</p>
+</blockquote>
+<p>Prettier can work with eslint to really really standardize your code into something that is super-readable and easy for your coworkers/teaching assistants/instructors/students/friends/neighbors/enemies/etc to read and understand.</p>
+<p>So what’s the difference between Prettier and eslint?</p>
+<p>eslint is mostly about <strong>code quality</strong>, like no unused variables. The fact that it checks our quotation marks and stuff is just extra fluff. Prettier is mostly about <strong>code formatting</strong>, so it loves to criticize quotation marks and semicolons and lines being too long and stuff.</p>
+<p>Let’s install Prettier using <code>npm</code>! We’ll also install a few plugins that allow it to work with <code>eslint</code>.</p>
+<pre><code>npm install --save-dev prettier eslint-plugin-prettier eslint-config-prettier</code></pre>
+<p>Just like we got an <code>eslint</code> command when we installed <code>eslint</code>, we now have a <code>prettier</code> command since we installed <code>prettier</code>. We don’t want to do the whole <code>./node_modules/.bin/prettier</code> thing, though, so let’s just add a new script to <code>package.json</code>. We’ll called it <code>prettier</code>.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb2-1" data-line-number="1">  <span class="er">&quot;scripts&quot;:</span> <span class="fu">{</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="dt">&quot;test&quot;</span><span class="fu">:</span> <span class="st">&quot;echo </span><span class="ch">\&quot;</span><span class="st">Error: no test specified</span><span class="ch">\&quot;</span><span class="st"> &amp;&amp; exit 1&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="dt">&quot;lint&quot;</span><span class="fu">:</span> <span class="st">&quot;eslint --fix graph.js&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">    <span class="dt">&quot;prettier&quot;</span><span class="fu">:</span> <span class="st">&quot;prettier graph.js&quot;</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="fu">}</span><span class="er">,</span></a></code></pre></div>
+<p>If we run <code>npm run prettier</code>, it spits the fixed-up file back at us. I dunno, that doesn’t seem useful, I’d rather have it do something like <code>--fix</code> did for <code>eslint</code>, and automatically save the cool new version.</p>
+<p>Let’s add the <code>--write</code> option…</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb3-1" data-line-number="1">  <span class="er">&quot;scripts&quot;:</span> <span class="fu">{</span></a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">    <span class="dt">&quot;test&quot;</span><span class="fu">:</span> <span class="st">&quot;echo </span><span class="ch">\&quot;</span><span class="st">Error: no test specified</span><span class="ch">\&quot;</span><span class="st"> &amp;&amp; exit 1&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">    <span class="dt">&quot;lint&quot;</span><span class="fu">:</span> <span class="st">&quot;eslint --fix graph.js&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="dt">&quot;prettier&quot;</span><span class="fu">:</span> <span class="st">&quot;prettier --write graph.js&quot;</span></a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="fu">}</span><span class="er">,</span></a></code></pre></div>
+<p>…and run <code>npm run prettier</code> again.</p>
+<pre><code>npm run prettier</code></pre>
+<p>It worked! It changed a bunch of stuff about our file! Look at that cool new formatting!</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">/* global d3 */</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">var</span> datapoints <span class="op">=</span> [</a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">  <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;New York&quot;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="dv">8</span> <span class="op">},</span></a>
+<a class="sourceLine" id="cb5-4" data-line-number="4">  <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Los Angeles&quot;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="fl">3.9</span> <span class="op">},</span></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5">  <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Washington, DC&quot;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="fl">0.7</span> <span class="op">}</span></a>
+<a class="sourceLine" id="cb5-6" data-line-number="6">]<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb5-8" data-line-number="8"><span class="kw">var</span> svg <span class="op">=</span> d3</a>
+<a class="sourceLine" id="cb5-9" data-line-number="9">  .<span class="at">select</span>(<span class="st">&quot;body&quot;</span>)</a>
+<a class="sourceLine" id="cb5-10" data-line-number="10">  .<span class="at">append</span>(<span class="st">&quot;svg&quot;</span>)</a>
+<a class="sourceLine" id="cb5-11" data-line-number="11">  .<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb5-12" data-line-number="12">  .<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> <span class="dv">400</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb5-14" data-line-number="14"><span class="kw">var</span> xPositionScale <span class="op">=</span> d3</a>
+<a class="sourceLine" id="cb5-15" data-line-number="15">  .<span class="at">scaleLinear</span>()</a>
+<a class="sourceLine" id="cb5-16" data-line-number="16">  .<span class="at">domain</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">8</span>])</a>
+<a class="sourceLine" id="cb5-17" data-line-number="17">  .<span class="at">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">200</span>])<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="va">d3</span>.<span class="at">selectAll</span>(<span class="st">&quot;circle&quot;</span>)</a>
+<a class="sourceLine" id="cb5-20" data-line-number="20">  .<span class="at">data</span>(datapoints)</a>
+<a class="sourceLine" id="cb5-21" data-line-number="21">  .<span class="at">enter</span>()</a>
+<a class="sourceLine" id="cb5-22" data-line-number="22">  .<span class="at">append</span>(<span class="st">&quot;circle&quot;</span>)</a>
+<a class="sourceLine" id="cb5-23" data-line-number="23">  .<span class="at">attr</span>(<span class="st">&quot;r&quot;</span><span class="op">,</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb5-24" data-line-number="24">  .<span class="at">attr</span>(<span class="st">&quot;cx&quot;</span><span class="op">,</span> <span class="kw">function</span>(d) <span class="op">{</span></a>
+<a class="sourceLine" id="cb5-25" data-line-number="25">    <span class="cf">return</span> <span class="at">xPositionScale</span>(<span class="va">d</span>.<span class="at">population</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-26" data-line-number="26">  <span class="op">}</span>)</a>
+<a class="sourceLine" id="cb5-27" data-line-number="27">  .<span class="at">attr</span>(<span class="st">&quot;cy&quot;</span><span class="op">,</span> <span class="kw">function</span>(d<span class="op">,</span> i) <span class="op">{</span></a>
+<a class="sourceLine" id="cb5-28" data-line-number="28">    <span class="cf">return</span> <span class="dv">100</span> <span class="op">*</span> i<span class="op">;</span></a>
+<a class="sourceLine" id="cb5-29" data-line-number="29">  <span class="op">}</span>)<span class="op">;</span></a></code></pre></div>
+<p>Amazing! Great! Now let’s run <code>eslint</code> on it again, just to make sure.</p>
+<pre><code>npm run lint</code></pre>
+<p>And our file changes again…</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">/* global d3 */</span></a>
+<a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">var</span> datapoints <span class="op">=</span> [</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&#39;New York&#39;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="dv">8</span> <span class="op">},</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">  <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&#39;Los Angeles&#39;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="fl">3.9</span> <span class="op">},</span></a>
+<a class="sourceLine" id="cb7-5" data-line-number="5">  <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&#39;Washington, DC&#39;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="fl">0.7</span> <span class="op">}</span></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6">]</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"><span class="kw">var</span> svg <span class="op">=</span> d3</a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">  .<span class="at">select</span>(<span class="st">&#39;body&#39;</span>)</a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">  .<span class="at">append</span>(<span class="st">&#39;svg&#39;</span>)</a>
+<a class="sourceLine" id="cb7-11" data-line-number="11">  .<span class="at">attr</span>(<span class="st">&#39;height&#39;</span><span class="op">,</span> <span class="dv">100</span>)</a>
+<a class="sourceLine" id="cb7-12" data-line-number="12">  .<span class="at">attr</span>(<span class="st">&#39;width&#39;</span><span class="op">,</span> <span class="dv">400</span>)</a>
+<a class="sourceLine" id="cb7-13" data-line-number="13"></a>
+<a class="sourceLine" id="cb7-14" data-line-number="14"><span class="kw">var</span> xPositionScale <span class="op">=</span> d3</a>
+<a class="sourceLine" id="cb7-15" data-line-number="15">  .<span class="at">scaleLinear</span>()</a>
+<a class="sourceLine" id="cb7-16" data-line-number="16">  .<span class="at">domain</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">8</span>])</a>
+<a class="sourceLine" id="cb7-17" data-line-number="17">  .<span class="at">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">200</span>])</a>
+<a class="sourceLine" id="cb7-18" data-line-number="18"></a>
+<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="va">d3</span>.<span class="at">selectAll</span>(<span class="st">&#39;circle&#39;</span>)</a>
+<a class="sourceLine" id="cb7-20" data-line-number="20">  .<span class="at">data</span>(datapoints)</a>
+<a class="sourceLine" id="cb7-21" data-line-number="21">  .<span class="at">enter</span>()</a>
+<a class="sourceLine" id="cb7-22" data-line-number="22">  .<span class="at">append</span>(<span class="st">&#39;circle&#39;</span>)</a>
+<a class="sourceLine" id="cb7-23" data-line-number="23">  .<span class="at">attr</span>(<span class="st">&#39;r&#39;</span><span class="op">,</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb7-24" data-line-number="24">  .<span class="at">attr</span>(<span class="st">&#39;cx&#39;</span><span class="op">,</span> <span class="kw">function</span> (d) <span class="op">{</span></a>
+<a class="sourceLine" id="cb7-25" data-line-number="25">    <span class="cf">return</span> <span class="at">xPositionScale</span>(<span class="va">d</span>.<span class="at">population</span>)</a>
+<a class="sourceLine" id="cb7-26" data-line-number="26">  <span class="op">}</span>)</a>
+<a class="sourceLine" id="cb7-27" data-line-number="27">  .<span class="at">attr</span>(<span class="st">&#39;cy&#39;</span><span class="op">,</span> <span class="kw">function</span> (d<span class="op">,</span> i) <span class="op">{</span></a>
+<a class="sourceLine" id="cb7-28" data-line-number="28">    <span class="cf">return</span> <span class="dv">100</span> <span class="op">*</span> i</a>
+<a class="sourceLine" id="cb7-29" data-line-number="29">  <span class="op">}</span>)</a></code></pre></div>
+<p>…wait a second. Waaaaait a second. Try running <code>npm run prettier</code> one more time, and see what happens.</p>
+<p>Oof. <strong>It looks like they can’t agree.</strong> Our “Standard” <code>eslint</code> style guide uses single quotes and no semicolons, but Prettier just changes it all back. Who should we trust?! Who is the True King?!</p>
+<p>Well, I am, and I say: no semicolons, single quotes, but also <em>I really want to use Prettier</em>. In order to do this, we’re going to set up Prettier to run as <em>part of eslint</em>, and give it a few changes to its default rules.</p>
+<p>In order to do this, we need to open up the secret <code>.estlintrc</code> file hiding in the same folder. It currently looks like this:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">    <span class="dt">&quot;extends&quot;</span><span class="fu">:</span> <span class="st">&quot;standard&quot;</span></a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"><span class="fu">}</span></a></code></pre></div>
+<p>We’re going to make a few tiiiiny tiny adjustments to make the two be friends:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">  <span class="dt">&quot;extends&quot;</span><span class="fu">:</span> <span class="ot">[</span><span class="st">&quot;standard&quot;</span><span class="ot">,</span> <span class="st">&quot;prettier&quot;</span><span class="ot">,</span> <span class="st">&quot;prettier/standard&quot;</span><span class="ot">]</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">  <span class="dt">&quot;plugins&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
+<a class="sourceLine" id="cb9-4" data-line-number="4">    <span class="st">&quot;prettier&quot;</span></a>
+<a class="sourceLine" id="cb9-5" data-line-number="5">  <span class="ot">]</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb9-6" data-line-number="6">  <span class="dt">&quot;rules&quot;</span><span class="fu">:</span> <span class="fu">{</span></a>
+<a class="sourceLine" id="cb9-7" data-line-number="7">    <span class="dt">&quot;prettier/prettier&quot;</span><span class="fu">:</span> <span class="ot">[</span></a>
+<a class="sourceLine" id="cb9-8" data-line-number="8">      <span class="st">&quot;error&quot;</span><span class="ot">,</span></a>
+<a class="sourceLine" id="cb9-9" data-line-number="9">      <span class="fu">{</span></a>
+<a class="sourceLine" id="cb9-10" data-line-number="10">        <span class="dt">&quot;singleQuote&quot;</span><span class="fu">:</span> <span class="kw">true</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb9-11" data-line-number="11">        <span class="dt">&quot;semi&quot;</span><span class="fu">:</span> <span class="kw">false</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb9-12" data-line-number="12">        <span class="dt">&quot;printWidth&quot;</span><span class="fu">:</span> <span class="dv">80</span></a>
+<a class="sourceLine" id="cb9-13" data-line-number="13">      <span class="fu">}</span></a>
+<a class="sourceLine" id="cb9-14" data-line-number="14">    <span class="ot">]</span></a>
+<a class="sourceLine" id="cb9-15" data-line-number="15">  <span class="fu">}</span></a>
+<a class="sourceLine" id="cb9-16" data-line-number="16"><span class="fu">}</span></a></code></pre></div>
+<p>This plugs the <code>prettier</code> into <code>eslint</code>. Try pasting a somewhat edited version of our old <code>graph.js</code> code in there:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="co">/* global d3 */</span></a>
+<a class="sourceLine" id="cb10-2" data-line-number="2"><span class="kw">var</span> datapoints <span class="op">=</span> [ <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;New York&quot;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="dv">8</span> <span class="op">},</span></a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">  <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Los Angeles&quot;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="fl">3.9</span> <span class="op">},</span></a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">  <span class="op">{</span> <span class="dt">name</span><span class="op">:</span> <span class="st">&quot;Washington, DC&quot;</span><span class="op">,</span> <span class="dt">population</span><span class="op">:</span> <span class="fl">0.7</span> <span class="op">}</span></a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">]</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb10-7" data-line-number="7"><span class="kw">var</span> xPositionScale <span class="op">=</span> <span class="va">d3</span>.<span class="at">scaleLinear</span>().<span class="at">domain</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">8</span>]).<span class="at">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">200</span>])</a>
+<a class="sourceLine" id="cb10-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb10-9" data-line-number="9"><span class="kw">var</span> svg <span class="op">=</span> <span class="va">d3</span>.<span class="at">select</span>(<span class="st">&quot;body&quot;</span>).<span class="at">append</span>(<span class="st">&quot;svg&quot;</span>).<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> <span class="dv">100</span>).<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> <span class="dv">400</span>)</a>
+<a class="sourceLine" id="cb10-10" data-line-number="10"></a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="va">d3</span>.<span class="at">selectAll</span>(<span class="st">&#39;circle&#39;</span>).<span class="at">data</span>(datapoints)</a>
+<a class="sourceLine" id="cb10-12" data-line-number="12">  .<span class="at">enter</span>().<span class="at">append</span>(<span class="st">&#39;circle&#39;</span>)</a>
+<a class="sourceLine" id="cb10-13" data-line-number="13">  .<span class="at">attr</span>(<span class="st">&#39;r&#39;</span><span class="op">,</span> <span class="dv">10</span>)</a>
+<a class="sourceLine" id="cb10-14" data-line-number="14">  .<span class="at">attr</span>(<span class="st">&#39;cx&#39;</span><span class="op">,</span> <span class="kw">function</span> (d) <span class="op">{</span></a>
+<a class="sourceLine" id="cb10-15" data-line-number="15">  <span class="cf">return</span> <span class="at">xPositionScale</span>(<span class="va">d</span>.<span class="at">population</span>)<span class="op">;</span></a>
+<a class="sourceLine" id="cb10-16" data-line-number="16">  <span class="op">}</span>)</a>
+<a class="sourceLine" id="cb10-17" data-line-number="17">  .<span class="at">attr</span>(<span class="st">&#39;cy&#39;</span><span class="op">,</span> <span class="kw">function</span> (d<span class="op">,</span> i) <span class="op">{</span></a>
+<a class="sourceLine" id="cb10-18" data-line-number="18">  <span class="cf">return</span> <span class="dv">100</span> <span class="op">*</span> i<span class="op">;</span></a>
+<a class="sourceLine" id="cb10-19" data-line-number="19">  <span class="op">}</span>)</a></code></pre></div>
+<p>And now run the linter</p>
+<pre><code>npm run lint</code></pre>
+<p>Quotation marks are fixed, semicolons removed, indenting solved, long lines shortened, etc etc etc. It’s fixed, it’s nice, it’s <em>prettier!</em></p>
+<p>This is great and all, but… maybe even though it does all this work, I’m still a little too lazy to do all that?</p>
+      </div>
+    </div>
+    <div class="row mt-3 mb-3">
+      <div class="col-sm text-center">
+        <p><a href="../linting-in-your-editor/">Next up: Linting in your editor <span class="oi oi-arrow-right"></span></a></p>
+      </div>
+    </div>
+  </div>
+  <div class="footer">
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-6">
+          <p>Hi, I'm <strong>Soma</strong>.</p>
+          <p>I'm writing D3+JSTN(J)4U because bad tutorials make me grumpy, and combining D3 and JavaScript tooling makes me grumpiest of all. You think it's your fault you have no idea what's going on? No way, friend, <a href="https://www.youtube.com/watch?v=F8mYLi3PGOc">D3 + JavaScript Tooling is not (just) for unicorns!</a></p>
+        </div>
+        <div class="col-sm-6">
+          <ul>
+          <li><strong>Email:</strong> <a href="mailto:jonathan.soma@gmail.com">jonathan.soma@gmail.com</a></li>
+          <li><strong>Twitter:</strong> <a href="https://twitter.com/dangerscarf">@dangerscarf</a></li>
+          </ul>
+          <p>Join the <strong><a href="http://eepurl.com/dscg9v" target="_new">Mailing list</a></strong> to hear about when I post updates or new projects.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script type="text/javascript" src="../common/bluebird.js"></script>
+  <script type="text/javascript" src="../common/fetch-polyfill.js"></script>
+  <script type="text/javascript" src="../common/startswith-polyfill.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
+  <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
+
+  <script>
+    function tableCleanup () {
+      let elements = document.querySelectorAll("table")
+      for(let i = 0; i < elements.length; i++) {
+        elements[i].classList.add("table")
+        elements[i].classList.add("table-striped")
+      }
+    }
+
+    window.addEventListener('load', tableCleanup)
+    window.addEventListener('load', addHints)
+  </script>
+<script>
+
+</script>
+</body>
+
+</html>
