@@ -36,6 +36,7 @@
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
     <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/getting-prettier/">
 
+    <link rel="stylesheet" href="../common/code-style.css">
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
@@ -250,7 +251,7 @@
 <p>So what’s the difference between Prettier and eslint?</p>
 <p>eslint is mostly about <strong>code quality</strong>, like no unused variables. The fact that it checks our quotation marks and stuff is just extra fluff. Prettier is mostly about <strong>code formatting</strong>, so it loves to criticize quotation marks and semicolons and lines being too long and stuff.</p>
 <p>Let’s install Prettier using <code>npm</code>! We’ll also install a few plugins that allow it to work with <code>eslint</code>.</p>
-<pre><code>npm install --save-dev prettier eslint-plugin-prettier eslint-config-prettier</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">npm</span> install --save-dev prettier eslint-plugin-prettier eslint-config-prettier</a></code></pre></div>
 <p>Just like we got an <code>eslint</code> command when we installed <code>eslint</code>, we now have a <code>prettier</code> command since we installed <code>prettier</code>. We don’t want to do the whole <code>./node_modules/.bin/prettier</code> thing, though, so let’s just add a new script to <code>package.json</code>. We’ll called it <code>prettier</code>.</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb2-1" data-line-number="1">  <span class="er">&quot;scripts&quot;:</span> <span class="fu">{</span></a>
 <a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="dt">&quot;test&quot;</span><span class="fu">:</span> <span class="st">&quot;echo </span><span class="ch">\&quot;</span><span class="st">Error: no test specified</span><span class="ch">\&quot;</span><span class="st"> &amp;&amp; exit 1&quot;</span><span class="fu">,</span></a>
@@ -265,7 +266,7 @@
 <a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="dt">&quot;prettier&quot;</span><span class="fu">:</span> <span class="st">&quot;prettier --write graph.js&quot;</span></a>
 <a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="fu">}</span><span class="er">,</span></a></code></pre></div>
 <p>…and run <code>npm run prettier</code> again.</p>
-<pre><code>npm run prettier</code></pre>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">npm</span> run prettier</a></code></pre></div>
 <p>It worked! It changed a bunch of stuff about our file! Look at that cool new formatting!</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="co">/* global d3 */</span></a>
 <a class="sourceLine" id="cb5-2" data-line-number="2"><span class="kw">var</span> datapoints <span class="op">=</span> [</a>
@@ -297,7 +298,7 @@
 <a class="sourceLine" id="cb5-28" data-line-number="28">    <span class="cf">return</span> <span class="dv">100</span> <span class="op">*</span> i<span class="op">;</span></a>
 <a class="sourceLine" id="cb5-29" data-line-number="29">  <span class="op">}</span>)<span class="op">;</span></a></code></pre></div>
 <p>Amazing! Great! Now let’s run <code>eslint</code> on it again, just to make sure.</p>
-<pre><code>npm run lint</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">npm</span> run lint</a></code></pre></div>
 <p>And our file changes again…</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="co">/* global d3 */</span></a>
 <a class="sourceLine" id="cb7-2" data-line-number="2"><span class="kw">var</span> datapoints <span class="op">=</span> [</a>
@@ -373,7 +374,7 @@
 <a class="sourceLine" id="cb10-18" data-line-number="18">  <span class="cf">return</span> <span class="dv">100</span> <span class="op">*</span> i<span class="op">;</span></a>
 <a class="sourceLine" id="cb10-19" data-line-number="19">  <span class="op">}</span>)</a></code></pre></div>
 <p>And now run the linter</p>
-<pre><code>npm run lint</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="ex">npm</span> run lint</a></code></pre></div>
 <p>Quotation marks are fixed, semicolons removed, indenting solved, long lines shortened, etc etc etc. It’s fixed, it’s nice, it’s <em>prettier!</em></p>
 <p>This is great and all, but… maybe even though it does all this work, I’m still a little too lazy to do all that?</p>
       </div>

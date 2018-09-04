@@ -36,6 +36,7 @@
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
     <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/building-for-keeps/">
 
+    <link rel="stylesheet" href="../common/code-style.css">
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
@@ -249,8 +250,10 @@
 <li>Parcel needs to support <em>multiple</em> html files in <em>multiple folders</em> with <em>multiple js</em> files</li>
 <li>We don’t want the <code>dist/</code> stuff to go up on GitHub</li>
 </ul>
+<h3 id="publishing-into-docs">Publishing into docs</h3>
 <p>First, we can change our <code>parcel build</code> to do output into <code>docs/</code></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">parcel</span> build --out-dir docs index.html</a></code></pre></div>
+<h3 id="working-with-multiple-files">Working with multiple files</h3>
 <p>And if we added in another folder - for example, <code>pizza/</code> - and put some files in there - for example, an <code>index.html</code> and some JavaScript in there, we can easily tell Parcel to process them, too.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">parcel</span> build --out-dir docs index.html pizza/index.html</a></code></pre></div>
 <p>But listing all of our HTML files gets tedious and boring! The normal way of doing things is to <strong>move all of our html and JavaScript</strong> into a folder called <code>src/</code> and tell Parcel to build everything inside.</p>
@@ -265,12 +268,13 @@
 <blockquote>
 <p><strong>Note:</strong> We don’t need to tell parcel about the <code>.js</code> files because it can find them by reading the HTML!</p>
 </blockquote>
+<h3 id="hiding-some-files">Hiding some files</h3>
 <p>When we publish our code, we really don’t care about that <code>dist/</code> folder. It’s just the folder Parcel stores drafts in while while we’re developing our code, so it makes sense to not send it up to GitHub. We want the original <code>src/</code> code and the publishable <code>docs/</code> code, just not the <code>dist/</code> version!</p>
 <p>Also, what about <code>node_modules</code>? We don’t need that, either. Those modules are all listed in <code>package.json</code>, so if someone wanted to download our project and recreate it they can just use <code>npm install</code> to automatically install them all.</p>
 <p>When you want to ignore files with git, you create a filed named <code>.gitignore</code>. Yes, it starts with a period, it’s a secret magic file!</p>
 <p><code>.gitignore</code> is just a plain list of files or file patterns to not store in git. You can write it yourself, or you can use something like https://www.gitignore.io/ to find one someone else has already written.</p>
 <p>Let’s say we use <a href="https://gitignore.io">gitignore.io</a>, search for node, and use what comes up. We can also add the <code>dist</code> directory, and <code>.DS_Store</code>, which is a weird file that shows up everything on OS X. Our final <code>.gitignore</code> might look like this:</p>
-<pre><code># Custom files
+<pre class="txt"><code># Custom files
 .DS_Store
 dist
 
@@ -301,6 +305,7 @@ node_modules/</code></pre>
 <li>Publish through the <strong>Settings</strong> page on GitHub</li>
 <li>Rejoice!</li>
 </ol>
+<h3 id="looking-to-the-future">Looking to the future</h3>
 <p>…but let’s say we wanted to make <em>another</em> project. Do we have to do all of that again? <strong>NOPE!</strong></p>
 <p>If we want to be smart/lazy, we can re-use a lot of the files we already have. These ones will be the same for every project we have:</p>
 <ul>

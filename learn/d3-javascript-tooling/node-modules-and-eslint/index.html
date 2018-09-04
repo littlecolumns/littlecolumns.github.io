@@ -36,6 +36,7 @@
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
     <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/node-modules-and-eslint/">
 
+    <link rel="stylesheet" href="../common/code-style.css">
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
@@ -263,24 +264,24 @@
 <a class="sourceLine" id="cb1-16" data-line-number="16">  <span class="op">}</span>)</a></code></pre></div>
 <p>You’ll save this as <code>graph.js</code> in your project folder, right next to the <code>package.json</code> file.</p>
 <p>If we want to <strong>lint</strong> this file to fix it up, we need to ask eslint to take a look at it. Our command needs to say “go into <code>node_moduels</code>, then go into <code>.bin</code>, then run <code>eslint</code>, and tell it to look at <code>graph.js</code>.” The end result looks like this:</p>
-<pre><code>./node_modules/.bin/eslint graph.js</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">./node_modules/.bin/eslint</span> graph.js</a></code></pre></div>
 <p>It mostly makes sense, except for the <code>./</code> part - this just means “go into <code>node_modules</code> that’s inside of our current directory.” You don’t always need it, but if you don’t use it sometimes you’ll run into issues.</p>
 <p>Spoiler alert: <strong>the command doesn’t work.</strong> That’s because <code>eslint</code> doesn’t know what rules we want to listen to yet! We can tell <code>eslint</code> by initializing it.</p>
-<pre><code>node_modules/.bin/eslint --init</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">node_modules/.bin/eslint</span> --init</a></code></pre></div>
 <p>The default is <strong>Answer questions about your style</strong>, but we’re probably too dumb to have a quality consistent style. It’s probably best if we use an existing style guide! So push up, select <strong>Use a popular style guide</strong>, and hit enter.</p>
 <p>Then pick <strong>Standard</strong>. This allows us to not use semicolons, which is normally a terrible idea but pretty relaxing when cutting and pasting D3 code from the internet</p>
 <p>Then pick <strong>JSON</strong>. That’s just a personal preference.</p>
 <p><strong>Yes</strong>, install whatever it wants.</p>
 <p>And now we’re good! The very last line says</p>
-<pre><code>Successfully created .eslintrc.json file in /Users/jonathansoma/Documents/Columbia/Curriculum/2018-storytelling/test3</code></pre>
+<pre class="txt"><code>Successfully created .eslintrc.json file in /Users/jonathansoma/Documents/Columbia/Curriculum/2018-storytelling/test3</code></pre>
 <p>Which sounds pretty cool. This is the file that tells <code>eslint</code> what kind of syle we’re going to use. Right now it looks like this:</p>
-<pre><code>{
-    &quot;extends&quot;: &quot;standard&quot;
-}</code></pre>
+<div class="sourceCode" id="cb5"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">    <span class="dt">&quot;extends&quot;</span><span class="fu">:</span> <span class="st">&quot;standard&quot;</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3"><span class="fu">}</span></a></code></pre></div>
 <p>Cool, right? So cool? So much the best cool? Sigh, I know, that was a lot of work to just get those three lines. Let’s try to run <code>eslint</code> on our file again.</p>
-<pre><code>./node_modules/.bin/eslint graph.js</code></pre>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">./node_modules/.bin/eslint</span> graph.js</a></code></pre></div>
 <p><strong>LOOKS LIKE WE’RE IDIOTS.</strong> Here are our errors:</p>
-<pre><code>   2:3   error  Expected consistent spacing                    standard/object-curly-even-spacing
+<pre class="txt"><code>   2:3   error  Expected consistent spacing                    standard/object-curly-even-spacing
    2:41  error  A space is required before &#39;}&#39;                 object-curly-spacing
    5:1   error  &#39;d3&#39; is not defined                            no-undef
    5:14  error  Strings must use singlequote                   quotes
@@ -299,23 +300,23 @@
 <p>Oof, oof, oof. That’s the problem with rules: you’re in trouble if you break them! We’re supposd to only use single quotes, apparently, and put spaces before <code>}</code>, and some other stuff about spaces and functions parentheses.</p>
 <p>I’m sick of reading errors! Luckily, there’s a nugget of hope: <code>8 errors and 0 warnings potentially fixable with the</code>–fix<code>option</code>. Let’s try that.</p>
 <p>First, open up your <code>graph.js</code>. Take a good, long look at it. Stare it down. Now run this command:</p>
-<pre><code>./node_modules/.bin/eslint --fix graph.js</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="ex">./node_modules/.bin/eslint</span> --fix graph.js</a></code></pre></div>
 <p>Hey, look at that! Down to 2 errors. Pretty nice! If you watched your <code>graph.js</code> closely, you’ll see it transformed a little bit - the <code>&quot;</code> all became <code>'</code> and the spaces shifted around a litte. Instead of us doing the hard work of consistent style, <code>eslint</code> did it for us!</p>
 <p>Now we have two remaining errors</p>
-<pre><code>   6:1   error  &#39;d3&#39; is not defined              no-undef
+<pre class="txt"><code>   6:1   error  &#39;d3&#39; is not defined              no-undef
   10:12  error  &#39;xPositionScale&#39; is not defined  no-undef</code></pre>
 <p>Let’s start with the second one… did I never define <code>xPositionScale</code>? Hm, guess not! Can my code work without it? Nope!</p>
 <p><strong>And that’s how linting finds all of your dumbest errors for you.</strong> You don’t need a teaching assistant or a rubber duck, just the <code>eslint</code> command! It’s great at catching typos or reminding you of variables that you should or shouldn’t be using.</p>
 <p>To fix that error, we can define <code>xPositionScale</code> somewhere in our code:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">var</span> xPositionScale <span class="op">=</span> <span class="va">d3</span>.<span class="at">scaleLinear</span>().<span class="at">domain</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">8</span>]).<span class="at">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">200</span>])</a></code></pre></div>
 <p>Run the linter again…</p>
-<pre><code>./node_modules/.bin/eslint --fix graph.js</code></pre>
+<div class="sourceCode" id="cb11"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="ex">./node_modules/.bin/eslint</span> --fix graph.js</a></code></pre></div>
 <p>And we’re just down to the d3 problem!</p>
 <p>The big issue here is that our code is <em>fine</em> how it is - we didn’t forget to create the <code>d3</code> variable, we’re just adding d3 way off in the <code>html</code> file, <em>not</em> in our graph file.</p>
 <p>To fix this, we need to tell <code>eslint</code> that <code>d3</code> is actually a <em>global</em> variable, one that comes from outer space (or wherever) and falls right into our script. Let’s add one line to the <strong>top of our code</strong>:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode js"><code class="sourceCode javascript"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="co">/* global d3 */</span></a></code></pre></div>
 <p>Now let’s run the linter one more time…</p>
-<pre><code>./node_modules/.bin/eslint --fix graph.js</code></pre>
+<div class="sourceCode" id="cb13"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="ex">./node_modules/.bin/eslint</span> --fix graph.js</a></code></pre></div>
 <p>And ta-da! No issues. I think it should probably do a little dance for us since we did such a good job, but I guess we can’t have it all.</p>
       </div>
     </div>

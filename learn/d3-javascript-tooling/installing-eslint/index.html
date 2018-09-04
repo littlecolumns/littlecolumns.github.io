@@ -36,6 +36,7 @@
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
     <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/installing-eslint/">
 
+    <link rel="stylesheet" href="../common/code-style.css">
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
@@ -245,23 +246,23 @@
 <p>The process of cleaning up your code is called <strong>linting</strong>. You set up a list of rules - space things like this, indent like that, use semicolons this other way, use all of your variables, etc - and the linter tells you when you’re broken them. Sometimes it even fixes them for you!</p>
 <p>We’re going to use a linter called <a href="https://eslint.org/demo/">eslint</a>. It’s the best.</p>
 <p>Remember how <code>npm</code> installs things only for a single project? That means our first job is to <strong>make a new project</strong>. <code>cd</code> into a new folder and run</p>
-<pre><code>npm init</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">npm</span> init</a></code></pre></div>
 <p>You’ll be asked a lot of questions, but they really don’t matter! You can just hit enter a lot of times. When you’re done it just kind of… sits there. Nothing happened, right?</p>
 <p>No!!! A <strong>GREAT THING</strong> happened, and that is <code>package.json</code> was created. Open that file up! Mine looks like this:</p>
-<pre><code>{
-  &quot;name&quot;: &quot;test3&quot;,
-  &quot;version&quot;: &quot;1.0.0&quot;,
-  &quot;description&quot;: &quot;&quot;,
-  &quot;main&quot;: &quot;index.js&quot;,
-  &quot;scripts&quot;: {
-    &quot;test&quot;: &quot;echo \&quot;Error: no test specified\&quot; &amp;&amp; exit 1&quot;
-  },
-  &quot;author&quot;: &quot;Jonathan Soma &lt;jonathan.soma@gmail.com&gt; (http://jonathansoma.com)&quot;,
-  &quot;license&quot;: &quot;ISC&quot;
-}</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="dt">&quot;name&quot;</span><span class="fu">:</span> <span class="st">&quot;test3&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="dt">&quot;version&quot;</span><span class="fu">:</span> <span class="st">&quot;1.0.0&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="dt">&quot;description&quot;</span><span class="fu">:</span> <span class="st">&quot;&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="dt">&quot;main&quot;</span><span class="fu">:</span> <span class="st">&quot;index.js&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  <span class="dt">&quot;scripts&quot;</span><span class="fu">:</span> <span class="fu">{</span></a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">    <span class="dt">&quot;test&quot;</span><span class="fu">:</span> <span class="st">&quot;echo </span><span class="ch">\&quot;</span><span class="st">Error: no test specified</span><span class="ch">\&quot;</span><span class="st"> &amp;&amp; exit 1&quot;</span></a>
+<a class="sourceLine" id="cb2-8" data-line-number="8">  <span class="fu">},</span></a>
+<a class="sourceLine" id="cb2-9" data-line-number="9">  <span class="dt">&quot;author&quot;</span><span class="fu">:</span> <span class="st">&quot;Jonathan Soma &lt;jonathan.soma@gmail.com&gt; (http://jonathansoma.com)&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb2-10" data-line-number="10">  <span class="dt">&quot;license&quot;</span><span class="fu">:</span> <span class="st">&quot;ISC&quot;</span></a>
+<a class="sourceLine" id="cb2-11" data-line-number="11"><span class="fu">}</span></a></code></pre></div>
 <p>This <code>package.json</code> is the magic file that describes your project. It will be used to say who build it, what it’s called, what version it is, and what modules it uses. We probably only care about the last part, but we need a <code>package.json</code> anyway.</p>
 <p>Now we need to install <code>eslint</code> for our module. TO do that, we’re going to use <code>npm install</code>.</p>
-<pre><code>npm install --save-dev eslint</code></pre>
+<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">npm</span> install --save-dev eslint</a></code></pre></div>
 <p><code>npm</code> works hard, fills its progress bar, and voilà! <code>eslint</code> is installed. The <code>--save-dev</code> part means “we only need this when we’re working on our own machine, we don’t need it in the published project.”</p>
 <p>If you <em>type</em> <code>eslint</code>, though, it <em>doesn’t work</em>. Your computer can’t find it! Let’s try to track it down.</p>
 <p><sup>1</sup> A good trick is to just <em>not have coworkers</em>. I have students instead, which means they just have to put up with every single thing I say and believe it like it’s been handed down from King Of Space And Time.</p>

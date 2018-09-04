@@ -36,6 +36,7 @@
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
     <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/meeting-npm/">
 
+    <link rel="stylesheet" href="../common/code-style.css">
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
@@ -217,7 +218,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../hello-node/"><span class="oi oi-arrow-left"></span> Hello Node</a>
+          <a href="../hello-node/"><span class="oi oi-arrow-left"></span> Hello node</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -240,15 +241,15 @@
     <div class="row">
       <div class="col-sm">
 <p>Now that we have node installed, we’re going to learn about its most important part: its <strong>package manager</strong>! Packages are pieces of code and tools that were written by someone else.</p>
-<p>For example, instead of writing a ton of code that talks to a web server to download web pages, there’s a package that will do it for me. Or instead of writing a ton of code that turns <code>3</code> into <code>3</code>, we can use a package to do that too! (<a href="https://www.npmjs.com/package/lpad">not kidding</a>)</p>
+<p>For example, instead of writing a ton of code that talks to a web server to download web pages, there’s a package that will do it for me. Or instead of writing a ton of code that turns <code>3</code> into <code>     3</code>, we can use a package to do that too! (<a href="https://www.npmjs.com/package/lpad">I’m not kidding</a>)</p>
 <blockquote>
-<p><strong>Note:</strong> Packages and libraries and modules are the same thing. People call them modules a lot when using JavaScript.</p>
+<p><strong>Note:</strong> Packages and libraries and modules are the same thing. People refer to packages as <strong>modules</strong> when using JavaScript.</p>
 </blockquote>
 <p>The package manager for JavaScript is called <code>npm</code>, <em>node package manager</em>. If you know Python, it’s just like <code>pip</code>.</p>
 <p>Let’s try to upgrade <code>npm</code>, just in case we don’t have the most recent version. We’re going to use <code>npm</code> to upgrade itself!</p>
-<pre><code>npm install -g npm</code></pre>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="ex">npm</span> install -g npm</a></code></pre></div>
 <p>If you want to see what packages you already have installed, you can use <code>npm list</code>. Give it a shot!</p>
-<pre><code>npm list</code></pre>
+<div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">npm</span> list</a></code></pre></div>
 <p>Maybe you don’t have anything installed? No big deal, we’ll install a package in our next step.</p>
 <p>A big difference between <code>npm</code> and other package managers like <code>pip</code> is that <strong><code>npm</code> installs things just for a specific project.</strong> When you’re working with Python, you have to try extra hard to say, “install this specific BeautifulSoup for this specific project,” but <code>npm</code> does it automatically.</p>
 <p>This is kind of a pain if you keep using the same packages again and again and again, but it really helps keep your code organized, and ends up being worth it. Each project only has the exact modules that it needs, and if you need version <code>4.5</code> of something for one project and version <code>7.6</code> for another project it’s no big deal!</p>

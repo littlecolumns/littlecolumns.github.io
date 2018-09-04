@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Hello Node - JavaScript Tooling is Not (Just) For Unicorns</title>
+    <title>Hello node - JavaScript Tooling is Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -36,6 +36,7 @@
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
     <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/hello-node/">
 
+    <link rel="stylesheet" href="../common/code-style.css">
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
@@ -234,7 +235,7 @@
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
         <p class="subtitle mb-0"><em>Chapter 3</em></p>
-        <h1 class="display-4">Hello Node</h1>
+        <h1 class="display-4">Hello node</h1>
       </div>
     </div>
     <div class="row">
@@ -244,8 +245,57 @@
 <p>In 2009, <a href="https://nodejs.org/">node.js</a> appeared! It let you run JavaScript on the <em>command line</em>, which was absolute heresy. It was <em>insane</em>. It didn’t make any <em>sense</em>. Why would you run this garbage heap of a language in a place as serious as the command line?</p>
 <p>That might have been a mystery, but people <em>loved it</em>. People <em>flocked to it</em>. It grew and it grew and it grew, and this newfound interest in JavaScript convinced JavaScript to get <em>better</em> and <em>cooler</em> and more <em>useful</em>.</p>
 <p>You can see this by taking a peek at the schedule of JavaScript version releases:</p>
-<p>|—|—| |Year|JavaScript Version| |—|—| |1997|Version 1.0| |1998|Version 2.0| |1999|Version 3.0| |???|THE DARK AGES. Version 4 was never released!| |2009|Version 5.0| |2011|Version 5.1| |2015|Version 6.0| |2016|Version 7.0| |2017|Version 8.0| |2018|Version 9.0|</p>
-<p>We had <em>zero</em> new versions of JS come out for <em>ten years</em>, and now we have a new one come out <em>every single freaking year</em>. And it’s all thanks to node!</p>
+<table>
+<thead>
+<tr class="header">
+<th>Year</th>
+<th>JavaScript Version</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1997</td>
+<td>Version 1.0</td>
+</tr>
+<tr class="even">
+<td>1998</td>
+<td>Version 2.0</td>
+</tr>
+<tr class="odd">
+<td>1999</td>
+<td>Version 3.0</td>
+</tr>
+<tr class="even">
+<td>???</td>
+<td>THE DARK AGES. Version 4 was never released!</td>
+</tr>
+<tr class="odd">
+<td>2009</td>
+<td>Version 5.0</td>
+</tr>
+<tr class="even">
+<td>2011</td>
+<td>Version 5.1</td>
+</tr>
+<tr class="odd">
+<td>2015</td>
+<td>Version 6.0</td>
+</tr>
+<tr class="even">
+<td>2016</td>
+<td>Version 7.0</td>
+</tr>
+<tr class="odd">
+<td>2017</td>
+<td>Version 8.0</td>
+</tr>
+<tr class="even">
+<td>2018</td>
+<td>Version 9.0</td>
+</tr>
+</tbody>
+</table>
+<p>We had <em>zero</em> new versions of JS come out for <em>ten years</em>, and now we have <strong>a new version come out every single year</strong>. And it’s all thanks to node!</p>
 <p><strong>Installing node.js</strong></p>
 <p>To install node:</p>
 <ul>

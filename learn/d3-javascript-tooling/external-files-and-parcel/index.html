@@ -36,6 +36,7 @@
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
     <link rel="canonical" href="http://littlecolumns.com/learn/d3-javascript-tooling/external-files-and-parcel/">
 
+    <link rel="stylesheet" href="../common/code-style.css">
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
@@ -351,7 +352,7 @@ Bahrain,Asia,22015,74.497,638193</code></pre>
 <p>Try running <code>python -m http.server</code> and visit <a href="http://localhost:8000"><code>localhost:8000</code></a> - everything will work perfect!</p>
 <p>Now try running <code>parcel index.html</code> and visit <a href="http://localhost:1234"><code>localhost:1234</code></a> - everything will be broken!</p>
 <p>If we open up the console, our error seems to be…</p>
-<pre><code>GET http://localhost:1234/countries.csv 404 (Not Found)</code></pre>
+<pre class="txt"><code>GET http://localhost:1234/countries.csv 404 (Not Found)</code></pre>
 <p>…which is weird, because we <em>definitely</em> saved <code>countries.csv</code>. Go look! It’s there!</p>
 <p>Big secret: <strong>Parcel is serving our content out of another <em>secret</em> folder</strong>. After it processes our <code>index.html</code> and <code>graph.js</code>, it sends them over to <code>dist/</code>, where it is running the actual server. If you open up the folder, you’ll see: no <code>countries.csv</code>!</p>
 <p>We have two solutions:</p>
