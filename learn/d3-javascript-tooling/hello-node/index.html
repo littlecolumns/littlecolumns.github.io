@@ -302,6 +302,17 @@
 <li><strong>Mac users</strong> need to install <a href="http://brew.sh/">Homebrew</a> if it isn’t installed yet, and then type <code>brew install node</code>.</li>
 <li><strong>Windows users</strong> can use the installer from <a href="https://nodejs.org/">nodejs.org</a>. Restart once it’s done.</li>
 </ul>
+<p><strong>Extra setup for OS X</strong></p>
+<p>If you’re on a more recent version of OS X, there’s some extra security that prevents you from saving files to certain parts of the computer. Unfortunately, this is where node usually saves things you install!</p>
+<p>To fix this, we’re going to tell node to save into a different directory. After you’ve installed node, run the following code to make the change.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="fu">mkdir</span> ~/.npm-global</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2"><span class="ex">npm</span> config set prefix <span class="st">&#39;~/.npm-global&#39;</span></a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"><span class="bu">echo</span> <span class="st">&#39;export PATH=~/.npm-global/bin:$PATH&#39;</span> <span class="op">&gt;&gt;</span> ~/.bash_profile</a>
+<a class="sourceLine" id="cb1-4" data-line-number="4"><span class="bu">source</span> ~/.bash_profile</a></code></pre></div>
+<p>It won’t give you any output, but it should work fine!</p>
+<blockquote>
+<p><strong>Note:</strong> If you’ve previously installed node packages globally with <code>npm install -g</code>, you’ll need to reinstall those packages before you use them again.</p>
+</blockquote>
       </div>
     </div>
     <div class="row mt-3 mb-3">

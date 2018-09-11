@@ -247,17 +247,55 @@
 <p>Since we’re probably going to publish to GitHub pages, I’m going to make a checklist of needs before we publish:</p>
 <ul>
 <li>Our finished code has to go into a <code>docs/</code> folder</li>
+<li>Our finished code has to point to the correct GitHub subdirectory</li>
 <li>Parcel needs to support <em>multiple</em> html files in <em>multiple folders</em> with <em>multiple js</em> files</li>
 <li>We don’t want the <code>dist/</code> stuff to go up on GitHub</li>
 </ul>
 <h3 id="publishing-into-docs">Publishing into docs</h3>
 <p>First, we can change our <code>parcel build</code> to do output into <code>docs/</code></p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="ex">parcel</span> build --out-dir docs index.html</a></code></pre></div>
+<h3 id="pointing-to-the-right-subdirectory">Pointing to the right subdirectory</h3>
+<p>If we look at our <code>index.html</code> file and take a look at our script tag, it looks something like this:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">&lt;script</span><span class="ot"> src=</span><span class="st">&quot;/graph.185b2ef5.js&quot;</span><span class="kw">&gt;&lt;/script&gt;</span></a></code></pre></div>
+<p>When we finally publish to somewhere like <code>https://littlecolumns.github.io/d3-project/</code>, this is going to cause <em>terrible problems</em>. The little <code>/</code> at the beginning of the URL changes everything:</p>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>filepath</th>
+<th>what it means</th>
+<th>will it work?</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><code>/graph.185b2ef5.js</code></td>
+<td>look for <code>https://littlecolumns.github.io/graph.185b2ef5.js</code></td>
+<td>No</td>
+</tr>
+<tr class="even">
+<td><code>graph.185b2ef5.js</code></td>
+<td>look for <code>graph.185b2ef5.js</code> in the current directory</td>
+<td>Sometimes, but not in subdirectories</td>
+</tr>
+<tr class="odd">
+<td><code>/d3-project/graph.185b2ef5.js</code></td>
+<td>for look <code>graph.185b2ef5.js</code> in <code>https://littlecolumns.github.io/d3-project</code></td>
+<td>Yes, always</td>
+</tr>
+</tbody>
+</table>
+<p>So the last one is what we really want, so we need to</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">parcel</span> build index.html --out-dir docs --public-url /d3-project</a></code></pre></div>
 <h3 id="working-with-multiple-files">Working with multiple files</h3>
 <p>And if we added in another folder - for example, <code>pizza/</code> - and put some files in there - for example, an <code>index.html</code> and some JavaScript in there, we can easily tell Parcel to process them, too.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="ex">parcel</span> build --out-dir docs index.html pizza/index.html</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="ex">parcel</span> build index.html  pizza/index.html --out-dir docs --public-url /d3-project</a></code></pre></div>
 <p>But listing all of our HTML files gets tedious and boring! The normal way of doing things is to <strong>move all of our html and JavaScript</strong> into a folder called <code>src/</code> and tell Parcel to build everything inside.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="ex">parcel</span> build --out-dir docs src/*.html src/**/*.html</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode bash"><code class="sourceCode bash"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="ex">parcel</span> build src/*.html src/**/*.html --out-dir docs --public-url /d3-project</a></code></pre></div>
 <p>Let’s break the command down:</p>
 <ul>
 <li><code>parcel build</code> - don’t keep watching and rebuilding, just build it once for a ‘production’ build</li>
