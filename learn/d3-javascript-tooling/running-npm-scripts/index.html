@@ -241,6 +241,9 @@
     <div class="row">
       <div class="col-sm">
 <p>Are you sick of typing <code>./node_modules/.bin/eslint</code> again and again? Yeah, me too.</p>
+<blockquote>
+<p><strong>Windows:</strong> Tired of forgetting the quotation marks?</p>
+</blockquote>
 <p>Let’s open up <code>package.json</code> and make a little change. See the <code>&quot;scripts&quot;</code> part?</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb1-1" data-line-number="1">  <span class="er">&quot;scripts&quot;:</span> <span class="fu">{</span></a>
 <a class="sourceLine" id="cb1-2" data-line-number="2">    <span class="dt">&quot;test&quot;</span><span class="fu">:</span> <span class="st">&quot;echo </span><span class="ch">\&quot;</span><span class="st">Error: no test specified</span><span class="ch">\&quot;</span><span class="st"> &amp;&amp; exit 1&quot;</span></a>
@@ -250,6 +253,9 @@
 <a class="sourceLine" id="cb2-2" data-line-number="2">    <span class="dt">&quot;test&quot;</span><span class="fu">:</span> <span class="st">&quot;echo </span><span class="ch">\&quot;</span><span class="st">Error: no test specified</span><span class="ch">\&quot;</span><span class="st"> &amp;&amp; exit 1&quot;</span><span class="fu">,</span></a>
 <a class="sourceLine" id="cb2-3" data-line-number="3">    <span class="dt">&quot;lint&quot;</span><span class="fu">:</span> <span class="st">&quot;eslint --fix graph.js&quot;</span></a>
 <a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="fu">}</span><span class="er">,</span></a></code></pre></div>
+<blockquote>
+<p><strong>Windows:</strong> No more quotation marks for this one! You’re free!</p>
+</blockquote>
 <p><strong>Be sure to add a comma at the end of the <code>test</code> line!</strong></p>
 <p>We can now have <code>eslint</code> run by just typing <code>npm run lint</code>. <code>npm</code> knows that even though we just type <code>eslint</code> that it needs to go into <code>node_modules/.bin</code> and find the secret <code>eslint</code> hiding in there.</p>
 <p>So: never again type <code>./node_modules/.bin/</code> for anything! If you need to run a tool, add it to <code>scripts</code> to make your life so much easier.</p>
