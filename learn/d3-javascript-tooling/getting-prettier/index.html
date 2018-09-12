@@ -286,7 +286,7 @@
 <a class="sourceLine" id="cb5-16" data-line-number="16">  .<span class="at">domain</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">8</span>])</a>
 <a class="sourceLine" id="cb5-17" data-line-number="17">  .<span class="at">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">200</span>])<span class="op">;</span></a>
 <a class="sourceLine" id="cb5-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="va">d3</span>.<span class="at">selectAll</span>(<span class="st">&quot;circle&quot;</span>)</a>
+<a class="sourceLine" id="cb5-19" data-line-number="19"><span class="va">svg</span>.<span class="at">selectAll</span>(<span class="st">&quot;circle&quot;</span>)</a>
 <a class="sourceLine" id="cb5-20" data-line-number="20">  .<span class="at">data</span>(datapoints)</a>
 <a class="sourceLine" id="cb5-21" data-line-number="21">  .<span class="at">enter</span>()</a>
 <a class="sourceLine" id="cb5-22" data-line-number="22">  .<span class="at">append</span>(<span class="st">&quot;circle&quot;</span>)</a>
@@ -318,7 +318,7 @@
 <a class="sourceLine" id="cb7-16" data-line-number="16">  .<span class="at">domain</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">8</span>])</a>
 <a class="sourceLine" id="cb7-17" data-line-number="17">  .<span class="at">range</span>([<span class="dv">0</span><span class="op">,</span> <span class="dv">200</span>])</a>
 <a class="sourceLine" id="cb7-18" data-line-number="18"></a>
-<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="va">d3</span>.<span class="at">selectAll</span>(<span class="st">&#39;circle&#39;</span>)</a>
+<a class="sourceLine" id="cb7-19" data-line-number="19"><span class="va">svg</span>.<span class="at">selectAll</span>(<span class="st">&#39;circle&#39;</span>)</a>
 <a class="sourceLine" id="cb7-20" data-line-number="20">  .<span class="at">data</span>(datapoints)</a>
 <a class="sourceLine" id="cb7-21" data-line-number="21">  .<span class="at">enter</span>()</a>
 <a class="sourceLine" id="cb7-22" data-line-number="22">  .<span class="at">append</span>(<span class="st">&#39;circle&#39;</span>)</a>
@@ -364,7 +364,7 @@
 <a class="sourceLine" id="cb10-8" data-line-number="8"></a>
 <a class="sourceLine" id="cb10-9" data-line-number="9"><span class="kw">var</span> svg <span class="op">=</span> <span class="va">d3</span>.<span class="at">select</span>(<span class="st">&quot;body&quot;</span>).<span class="at">append</span>(<span class="st">&quot;svg&quot;</span>).<span class="at">attr</span>(<span class="st">&quot;height&quot;</span><span class="op">,</span> <span class="dv">100</span>).<span class="at">attr</span>(<span class="st">&quot;width&quot;</span><span class="op">,</span> <span class="dv">400</span>)</a>
 <a class="sourceLine" id="cb10-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="va">d3</span>.<span class="at">selectAll</span>(<span class="st">&#39;circle&#39;</span>).<span class="at">data</span>(datapoints)</a>
+<a class="sourceLine" id="cb10-11" data-line-number="11"><span class="va">svg</span>.<span class="at">selectAll</span>(<span class="st">&#39;circle&#39;</span>).<span class="at">data</span>(datapoints)</a>
 <a class="sourceLine" id="cb10-12" data-line-number="12">  .<span class="at">enter</span>().<span class="at">append</span>(<span class="st">&#39;circle&#39;</span>)</a>
 <a class="sourceLine" id="cb10-13" data-line-number="13">  .<span class="at">attr</span>(<span class="st">&#39;r&#39;</span><span class="op">,</span> <span class="dv">10</span>)</a>
 <a class="sourceLine" id="cb10-14" data-line-number="14">  .<span class="at">attr</span>(<span class="st">&#39;cx&#39;</span><span class="op">,</span> <span class="kw">function</span> (d) <span class="op">{</span></a>
