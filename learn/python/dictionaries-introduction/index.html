@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Intro to Dictionaries - Python's Not (Just) For Unicorns</title>
+    <title>Intro to dictionaries - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../project-fizzbuzz/"><span class="oi oi-arrow-left"></span> Project - FizzBuzz</a>
+          <a href="../why-we-need-dictionaries/"><span class="oi oi-arrow-left"></span> Why we need dictionaries</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href="../under-construction/">Okay then <span class="oi oi-arrow-right"></span></a>
+          <a href="../getting-fancy-with-dictionaries/">Getting fancy with dictionaries <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,65 +233,29 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 21</em></p>
-        <h1 class="display-4">Intro to Dictionaries</h1>
+        <p class="subtitle mb-0"><em>Chapter 22</em></p>
+        <h1 class="display-4">Intro to dictionaries</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>This is a long chapter, so <em>go grab a snack</em>.</p>
-<p>In the real world, <strong>dictionaries are things you use to look up words.</strong> Same kind of thing in Python, more or less. Let’s take a look!</p>
-<p>Say we have a friend, and we know some stuff about her.</p>
+<p>In the last chapter, we struggled with finding a way to store a lot of information about a single person. We tried two ways:</p>
 <pre class="facing">
+# Separate named variables for separate pieces of info
 name = "Annie"
 age = 83
 town = "Cleveland"
 
-print(name, "is", age, "and is from", town)
-</pre>
-<p>Nothing new, nothing crazy, totally normal.</p>
-<p>Now, say we’re the most popular person on the planet, and we have <em>two</em> friends, Annie and Roberto. If we didn’t know better (which we don’t right now), we might do this:</p>
-<pre class="facing">
-# Annie's info
-name = "Annie"
-age = 83
-town = "Cleveland"
-
-# Roberto's info
-name2 = "Roberto"
-age2 = 103
-town2 = "Reno"
-
-# Print it all out
-print(name, "is", age, "and is from", town)
-print(name2, "is", age2, "and is from", town2)
-</pre>
-<p>It’s not the best thing I’ve ever seen, I’ll be honest. <code>name</code> seems like a fine variable name, but <code>name2</code> and <code>age2</code> and <code>town2</code> just seem… tacky. Maybe I don’t like them because they aren’t very descriptive?</p>
-<p>Now imagine if we were even <em>more</em> popular and had even <em>more</em> friends! If we had <strong>dozens of friends</strong> and kept naming variables the same way, we’d be stuck with variable names like <code>name33</code> and <code>age33</code> and <code>town33</code> - it’d be terrible!</p>
-<p><strong>“A-ah!”</strong> you exclaim, ready to use your new programming knowledge. “What about <strong>lists?</strong> They’re great for storing lots of information!”</p>
-<p>Yeah, that’s true, and it definitely makes sense. But let’s see what happens if we try to use lists:</p>
-<pre class="facing">
-names = ["Annie", "Roberto"]
-ages = [83, 103]
-town = ["Cleveland", "Reno"]
-
-# Print out Annie's info
-print(names[0], "is", ages[0], "and is from", town[0])
-# Print out Roberto's info
-print(names[1], "is", ages[1], "and is from", town[1])
-</pre>
-<p>It seems a <em>little</em> better, but it seems like a lot of work to use three different lists! It’s tough because <strong>a person is a single thing</strong>, but we also want to know <strong>multiple pieces of information about each of them</strong>. What we just did separates our names and ages into different variables - it splits them by <em>topic</em> instead of by <em>person</em>.</p>
-<p>It seems like <strong>one single thing should be one single variable, yeah?</strong> In a perfect world each person could get a variable to themselves - the person has a name and an age and a town, and all of that info could live together in a single variable.</p>
-<p>Maybe we could give <strong>each person a separate list</strong> so their stuff stays together?</p>
-<pre class="facing">
+# One variable for each person, with a list
 annie = ["Annie", 83, "Cleveland"]
-roberto = ["Roberto", 103, "Reno"]
-
-print(annie[0], "is", annie[1], "and is from", annie[2])
-print(roberto[0], "is", roberto[1], "and is from", roberto[2])
 </pre>
-<p>The problem now is we don’t know what makes <code>annie[0]</code> different than <code>annie[1]</code>. Which one was her name and which one was her age? I forget! At least when we used variables like <code>names</code> and <code>ages</code> we could be sure that one had names and one had ages.</p>
-<p>If we could combine the two approaches our live swould be a lot easier. What we seem to need is <strong>one variable with multiple <em>named</em> things inside</strong>. Oh hey, it turns out Python can do that!</p>
+<ul>
+<li>Separate variables were <strong>good</strong> for remembering that <code>name</code> was her name and <code>age</code> was her age</li>
+<li>Separate variables were <strong>bad</strong> because we had to keep track of <em>three</em> variables for <em>one</em> person</li>
+<li>A list was <strong>good</strong> because it allowed us to store <em>one</em> person’s information in <em>one</em> variable</li>
+<li>A list was <strong>bad</strong> because it was hard to remember whether her name was stored in <code>annie[0]</code> or <code>annie[1]</code> - the numbers aren’t easy to understand like <code>name</code> or <code>age</code> were.</li>
+</ul>
+<p>If we could combine the two approaches our lives would be a lot easier. What we seem to need is <strong>one variable with multiple <em>named</em> things inside</strong>. And hey, Python can do that!</p>
 <pre class="facing">
 annie = {'name': 'Annie', 'age': 83, 'town': 'Cleveland'}
 
@@ -300,9 +264,9 @@ print(annie['age'])
 print(annie['town'])
 print(annie['name'], "is", annie['age'], "and is from", annie['town'])
 </pre>
-<p>Hooray! Life is perfect now. Our friend annie has <strong>one variable that has information about her, organized by topic.</strong></p>
-<p>This data type is called a <strong>dictionary</strong>. Dictionaries are a single variable, but they can have all sorts of labeled information inside. A name can be stored as <code>['name']</code> and an age can be stored as <code>['age']</code>, instead of using <code>[0]</code> and <code>[1]</code> like we had to do with lists.</p>
-<p>They might look a little like lists, but they have a few major differences:</p>
+<p>Hooray! Life is perfect now. Our friend Annie has <strong>one variable named <code>annie</code> that has information about her, organized by topic.</strong></p>
+<p>This data type is called a <strong>dictionary</strong>. Dictionaries are a single variable, but they can have all sorts of labeled information inside. If we have a dictionary variable named <code>annie</code>, name can be stored as <code>annie['name']</code> and an age can be stored as <code>annie['age']</code>, instead of using <code>[0]</code> and <code>[1]</code> like we had to do with lists.</p>
+<p>Dictionaries might look a little like lists, but they have a few major differences:</p>
 <table>
 <thead>
 <tr class="header">
@@ -313,9 +277,9 @@ print(annie['name'], "is", annie['age'], "and is from", annie['town'])
 </thead>
 <tbody>
 <tr class="odd">
-<td>Wrapped by</td>
-<td>Uses <code>{</code> and <code>}</code></td>
-<td>Uses <code>[</code> and <code>]</code></td>
+<td>Created using</td>
+<td><code>{</code> and <code>}</code></td>
+<td><code>[</code> and <code>]</code></td>
 </tr>
 <tr class="even">
 <td>Inside Punctuation</td>
@@ -333,20 +297,25 @@ print(annie['name'], "is", annie['age'], "and is from", annie['town'])
 <td><code>['Annie', 'Roberto']</code></td>
 </tr>
 <tr class="odd">
-<td>Usage</td>
+<td>Getting data</td>
 <td><code>annie['name']</code></td>
 <td><code>friends[0]</code></td>
 </tr>
 </tbody>
 </table>
-<p>Since creating a dictionary on one line looks a little messy, you can also use multiple lines. Just pay attention to the commas!</p>
+<p>If we think creating a dictionary on one line looked a little messy, we can also use multiple lines. Just pay attention to the commas!</p>
 <pre class="facing">
+# You can make a dictionary all on one line...
+roberto = { 'name': 'Roberto', 'age': 103, 'town': 'Reno' }
+
+# ...or you can do it on multiple lines.
 roberto = {
   'name': 'Roberto',
   'age': 103,
   'town': 'Reno'
 }
-print(roberto['name'], "is", roberto['age'], "and is from", roberto['town'])
+
+print(roberto['name'], 'is', roberto['age'], 'and is from', roberto['town'])
 </pre>
 <p>Python dictionaries are pretty similar to a <strong>real dictionaries</strong> - if have a dictionary named <code>roberto</code> and want to look up his name, I open up to the <code>'name'</code> page. If I want to learn about his age, I find the definition under <code>'age'</code>. With Python, it just becomes <code>roberto['name']</code> and <code>roberto['age']</code></p>
 <p>For no reason whatsoever, let’s talk about a house! <strong>Create a dictionary below named <code>house</code> with the following information in it.</strong></p>
@@ -380,9 +349,10 @@ house and house['address'] == '99 Main Street' and house['price'] = 50000 and ho
 <ul>
 <li>Hint: Use curly braces - <code>{</code> and <code>}</code> - to wrap the dictionary</li>
 <li>Hint: If we’re creating it across multiple lines, make sure to put a comma <code>,</code> at the end of (almost) every line (see <code>roberto</code> up above)</li>
+<li>Hint: Their next-door neighbor might be at <code>house = { 'address': '101 Main Street', 'price': 45000, 'year': 1989 }</code></li>
 </ul>
-<p>Cool, ’eh? Now let’s practice taking information out of them. This is a part we’ll probably mess up here and there, so we’re going to mess it up <em>on purpose</em> first so we can recognize the error when we see it.</p>
-<p><strong>It’s important to use strings when asking for information from dictionaries.</strong> Run the code below and see the error that happens if we use <code>roberto[name]</code> instead of <code>roberto['name']</code>.</p>
+<p>Cool, ’eh? Now let’s practice taking information out of dictionaries. This is a part we’ll probably mess up here and there, so we’re going to mess it up <em>on purpose</em> first so we can recognize the error when we see it.</p>
+<p><strong>It’s important to use strings when asking for information from dictionaries.</strong> Run the code below and <strong>read the error</strong> that happens if we use <code>roberto[name]</code> instead of <code>roberto['name']</code>.</p>
 <pre class="facing" test="Roberto">
 roberto = {
   'name': "Roberto",
@@ -391,8 +361,9 @@ roberto = {
 }
 print(roberto[name])
 </pre>
-<p>Pay attention to that error message, we’re certain to see it again! <strong>Now change the <code>print</code> line to use <code>'name'</code> instead of <code>name</code></strong> and see if it works.</p>
-<p>We’re on a dictionary roll: let’s try another one. Create a dictionary named <code>musician</code>, and then print out <code>Earl Scruggs played banjo</code> using the new dictionary.</p>
+<p>Pay attention to that error message, we’re certain to see it again! <strong>Now change the <code>print</code> line to use <code>'name'</code> instead of <code>name</code></strong> and see if the code works.</p>
+<p>Notice how the color changes when you change it into a string? This doens’t mean working vs. not working, it just means <code>name</code> is a variable and <code>'name'</code> is a string. We’ll talk more about the difference later!</p>
+<p>Now that we’re on a dictionary roll: let’s try another one. It’s nice and long: create a dictionary named <code>musician</code>, and then print out <code>Earl Scruggs played banjo</code> using the new dictionary.</p>
 <table>
 <thead>
 <tr class="header">
@@ -415,7 +386,7 @@ print(roberto[name])
 </tr>
 <tr class="even">
 <td>city</td>
-<td>North Carolina</td>
+<td>Flint Hill, North Carolina</td>
 </tr>
 <tr class="odd">
 <td>genre</td>
@@ -431,9 +402,9 @@ musician and musician['name'] == 'Earl Scruggs' and musician['birth'] = 1924 and
 <ul>
 <li>Hint: Use curly braces - <code>{</code> and <code>}</code> - to wrap the dictionary</li>
 <li>Hint: If we’re creating it across multiple lines, make sure to put a comma <code>,</code> at the end of each line (see <code>roberto</code> up above)</li>
-<li>Hint: Wrap the city as <code>&quot;Flint Hill, North Carolina&quot;</code> - don’t let that comma escape!</li>
+<li>Hint: Surrounding the entire city with quotes, like <code>"Flint Hill, North Carolina"</code> - don’t let that comma escape!</li>
 <li>Hint: Use <code>print</code> with commas to print multiple things out</li>
-<li>Hint: You can use <code>print(musician['name'], &quot;played&quot;, musician['instrument'])</code></li>
+<li>Hint: You can use <code>print(musician['name'], "played", musician['instrument'])</code></li>
 </ul>
 <p>We’ve been using dictionaries to hold <strong>multiple pieces of information about the same thing</strong>, but we can also use them for <strong>the same piece of information about multiple things</strong><sup>1</sup>.</p>
 <pre class="facing">
@@ -445,12 +416,13 @@ population = {
 }
 print("The population of Moscow is", population['Moscow'])
 </pre>
-<p>I find it’s a lot more convenient than a list, because</p>
+<p>This technique is a lot more convenient than a list, because:</p>
 <ul>
 <li>You get to store everything in one variable, and</li>
 <li>You get to name each of your data points</li>
 </ul>
-<p>The one difference between Python dictionaries and real dictionaries is <strong>you can’t have duplicates in a Python dictionary.</strong> Only one definition for Moscow! Only one definition for Nara! But we’ll be okay.</p>
+<p>We’ll only use it when we need to name each separate datapoint, though. If we just have a bunch of numbers without names a list will work just fine.</p>
+<p>The one difference between Python dictionaries and real-life dictionaries is <strong>you can’t have duplicates in a Python dictionary.</strong> Only one definition for Moscow! Only one definition for Nara! But we’ll be okay.</p>
 <p><strong>Mini mission:</strong> New York City is made up of <a href="https://en.wikipedia.org/wiki/Boroughs_of_New_York_City">five boroughs</a>. I’ve stored the population of each in a dictionary below. <strong>Print out the total population of New York City</strong>.</p>
 <pre class="facing" test="8.55">
 pop = {
@@ -474,7 +446,7 @@ pop = {
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="../under-construction/">Next up: Okay then <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../getting-fancy-with-dictionaries/">Next up: Getting fancy with dictionaries <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>

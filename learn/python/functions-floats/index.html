@@ -240,7 +240,7 @@
     <div class="row">
       <div class="col-sm">
 <p>The little bit of magic we did at the end of last chapter - <code>str(2)</code> to convert an integer into a string - the <code>str</code> part is called a <strong>function</strong>. Functions are… things that do things. And have parentheses! Honestly, that might be the best explanation you’re going to get.</p>
-<p>There are a lot of <strong>functions</strong> out there! For example, <code>len</code> can be tell you how many letters is in a string (the <strong>len</strong>gth, in other words). If you type <code>len(&quot;blah&quot;)</code>, it will give you <code>4</code>.</p>
+<p>There are a lot of <strong>functions</strong> out there! For example, <code>len</code> can be tell you how many letters is in a string (the <strong>len</strong>gth, in other words). If you type <code>len("blah")</code>, it will give you <code>4</code>.</p>
 <pre class="blox" static="true">len("blah")</pre>
 <ul>
 <li>Hint: Remember, you need to put <strong>quotes</strong> around words for Python to understand them. This is called a <strong>string.</strong></li>
@@ -250,7 +250,7 @@
 <ul>
 <li>Hint: Make sure you put quotes around your string so Python knows you’re talking about <strong>text</strong>.</li>
 <li>Hint: Put your function with parentheses — <code>len(</code> and <code>)</code> — around your entire string.</li>
-<li>Hint: Type <code>len(&quot;Hello, my name is Daphne&quot;)</code> and press enter.</li>
+<li>Hint: Type <code>len("Hello, my name is Daphne")</code> and press enter.</li>
 </ul>
 <p>Now, try to get the <code>len</code> of <code>3</code> (the number). It won’t work. Can you understand any part of the error message?</p>
 <pre class="blox"></pre>
@@ -258,11 +258,11 @@
 <li>Hint: Type <code>len(3)</code> and press enter.</li>
 </ul>
 <p>Trying to use <code>len</code> with <code>3</code> gives you the error <code>object of type int has no len()</code>, which seems to mean integers don’t have a length. Makes sense!</p>
-<p>But what if you try to get the <code>len</code> of <code>&quot;3&quot;</code> (the <em>string</em> version, with quotes!). Will that work?</p>
+<p>But what if you try to get the <code>len</code> of <code>"3"</code> (the <em>string</em> version, with quotes!). Will that work?</p>
 <pre class="blox" test="1"></pre>
 <ul>
 <li>Hint: Remember the quotes around your <code>3</code> or else Python will think you mean the integer</li>
-<li>Hint: Type <code>len(&quot;3&quot;)</code> and press enter</li>
+<li>Hint: Type <code>len("3")</code> and press enter</li>
 </ul>
 <p>What do the parentheses do? Why are they attached to the function? Well, like usual: <strong>it’s just how Python works.</strong> Most programming languages have functions, and most use parentheses just like this, so at least you only have to learn about them once in your <em>entire life</em>.</p>
 <p>Another useful <strong>function</strong> is <code>type</code>. We can use <code>type</code> to tell us whether our data is a string or an integer or whatever other <strong>data type</strong> it might be.</p>
@@ -272,14 +272,14 @@ type(2)</pre>
 <p>That <code>class</code> thing is just Python’s fancy way of saying <strong>type</strong>. We can also say <strong>data type</strong> if we want to be long-winded and fancy and wearing tuxedos and nice shoes.</p>
 <p>A few questions we can answer now:</p>
 <ul>
-<li>What’s the data type of <code>&quot;submarine&quot;</code>?</li>
+<li>What’s the data type of <code>"submarine"</code>?</li>
 <li>What’s the data type of 10000?</li>
 <li>What’s the data type of 3.14?</li>
 </ul>
 <pre class="blox" test="<class 'float'>"></pre>
 <ul>
 <li>Hint: Remember to put quotes around <code>submarine</code>, or Python won’t know it’s a string and will get confused/panic</li>
-<li>Hint: Run <code>type(&quot;submarine&quot;)</code> to get the data type of <code>&quot;submarine&quot;</code></li>
+<li>Hint: Run <code>type("submarine")</code> to get the data type of <code>"submarine"</code></li>
 <li>Hint: If you type <code>type(10,000)</code> you’ll break our fake Python console and have to refresh the page! So only do it if you’re an anarchist.</li>
 <li>Hint: Run <code>type(10000)</code> to get the data type of <code>10000</code></li>
 <li>Hint: Run <code>type(3.14)</code> to get the data type of <code>3.14</code></li>
@@ -301,15 +301,15 @@ print("Hello", "world!")</pre>
 <pre class="blox" static="true">print("I am", 100, "years old")</pre>
 <p>In that case, we printed:</p>
 <ul>
-<li><code>&quot;I am&quot;</code> (a string)</li>
+<li><code>"I am"</code> (a string)</li>
 <li><code>100</code> (an integer)</li>
 <li>“years old” (a string)</li>
 </ul>
-<p>Now it’s your turn. Let’s make Python say <code>I ate 55 bananas</code>. It’s a lot of bananas, right? I’d brag about it, too. And don’t just print <code>&quot;I ate 55 bananas&quot;</code>, that’s cheating!</p>
+<p>Now it’s your turn. Let’s make Python say <code>I ate 55 bananas</code>. It’s a lot of bananas, right? I’d brag about it, too. And don’t just print <code>"I ate 55 bananas"</code>, that’s cheating!</p>
 <pre class="blox" test="I ate 55 bananas"></pre>
 <ul>
-<li>Hint: You’ll be using <code>print</code> with <code>&quot;I ate&quot;</code> and <code>55</code> and <code>&quot;bananas&quot;</code></li>
-<li>Hint: Type <code>print(&quot;I ate&quot;, 55, &quot;bananas&quot;)</code> and press return</li>
+<li>Hint: You’ll be using <code>print</code> with <code>"I ate"</code> and <code>55</code> and <code>"bananas"</code></li>
+<li>Hint: Type <code>print("I ate", 55, "bananas")</code> and press return</li>
 </ul>
 <p>Is your mind blown yet?</p>
 <p><code>print</code> also becomes useful when we stop using the <strong>console</strong> and start using the <strong>editor</strong>, which is a tool that allows us to edit multiple lines of code at once. We aren’t going to do that for a little while, but just so you know, try clicking run on the editor below.</p>
@@ -339,7 +339,7 @@ print("This gets displayed")
 <td>Absolute value (distance from zero)</td>
 </tr>
 <tr class="odd">
-<td><code>len(&quot;hello&quot;)</code></td>
+<td><code>len("hello")</code></td>
 <td><code>5</code></td>
 <td>String length (number of characters)</td>
 </tr>
@@ -359,8 +359,8 @@ print("This gets displayed")
 <td>Convert data to <code>float</code></td>
 </tr>
 <tr class="odd">
-<td><code>print(&quot;hello&quot;)</code></td>
-<td><code>&quot;hello&quot;</code></td>
+<td><code>print("hello")</code></td>
+<td><code>"hello"</code></td>
 <td>Print things out</td>
 </tr>
 </tbody>
@@ -369,7 +369,7 @@ print("This gets displayed")
 <pre class="blox" test="6"></pre>
 <ul>
 <li>Hint: You’ll be using <code>abs</code> and <code>round</code></li>
-<li>Hint: You can put functions inside functions! Like <code>print(len(&quot;hello&quot;))</code></li>
+<li>Hint: You can put functions inside functions! Like <code>print(len("hello"))</code></li>
 <li>Hint: Type <code>round(abs(-5.6))</code> - it takes the absolute value of <code>-5.6</code> (which is <code>5.6</code>), then rounds <code>5.6</code> up to <code>6</code>.</li>
 </ul>
 <h3 id="chapter-summary">Chapter summary</h3>

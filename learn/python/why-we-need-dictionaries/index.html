@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Python's Not (Just) For Unicorns</title>
+    <title>Why we need dictionaries - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,10 +34,10 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/why-we-need-dictionaries/">
 
-    <link rel="stylesheet" href="common/bootstrap.min.css">
-    <link href="common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
+    <link rel="stylesheet" href="../common/bootstrap.min.css">
+    <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
     <link href="//cdn-images.mailchimp.com/embedcode/horizontal-slim-10_7.css" rel="stylesheet" type="text/css">
     <style>
       .hint-button {
@@ -196,7 +196,7 @@
         padding: 0.5rem 0.75rem;
       }
     </style>
-  <link rel="stylesheet" href="common/pyweb/pyweb.css">
+  <link rel="stylesheet" href="../common/pyweb/pyweb.css">
 </head>
 
 <body>
@@ -204,7 +204,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-3 logo">
-          <img src="common/snekicorn.png" height="150" title="snekicorn">
+          <img src="../common/snekicorn.png" height="150" title="snekicorn">
         </div>
         <div class="col-sm-9 text-left">
           <h3 class="mt-5">Python's Not (Just) For Unicorns</h3>
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-
+          <a href="../project-fizzbuzz/"><span class="oi oi-arrow-left"></span> Project - FizzBuzz</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-
+          <a href="../dictionaries-introduction/">Intro to dictionaries <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,47 +233,75 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-
-        <h1 class="display-4">Table of Contents</h1>
+        <p class="subtitle mb-0"><em>Chapter 21</em></p>
+        <h1 class="display-4">Why we need dictionaries</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p><strong>Hey there!</strong> Welcome to <strong>Python's Not (Just) For Unicorns</strong>, an interactive introduction to programming in Python.</p><p>I'm <strong>Soma</strong>, and I'm building PNJ4U because I wanted to give some of my irl students a head start on my class, but every Python intro I could find just seemed suuuper booooring. I still have a lot to add to this one, but hey, that's life. Enjoy!</p><p><strong>Table of Contents</strong></p><ol>
-<li><a href='introduction/'>Introduction</a></li>
-<li><a href='what-we-are-learning/'>What are we learning?</a></li>
-<li><a href='how-it-works/'>How this will work</a></li>
-<li><a href='python-basics/'>Python basics</a></li>
-<li><a href='simple-text-strings/'>Working with text</a></li>
-<li><a href='data-types-errors/'>Data types and error messages</a></li>
-<li><a href='functions-floats/'>Functions and floats</a></li>
-<li><a href='using-variables/'>Variables</a></li>
-<li><a href='intro-to-projects/'>Introduction to projects</a></li>
-<li><a href='project-moon-measurer/'>Project - Moon Measurer</a></li>
-<li><a href='conditionals/'>If this then that</a></li>
-<li><a href='user-input/'>Asking questions</a></li>
-<li><a href='else-elif/'>When conditions fail</a></li>
-<li><a href='intro-to-debugging/'>Intro to debugging</a></li>
-<li><a href='project-speed-limits/'>Project - Speeding robot</a></li>
-<li><a href='list-introduction/'>Lists</a></li>
-<li><a href='lists-intermediate/'>Even more lists</a></li>
-<li><a href='for-loops/'>Being lazy with lists</a></li>
-<li><a href='comments/'>Interlude - Comments</a></li>
-<li><a href='updating-variables/'>Updating variables</a></li>
-<li><a href='counting-with-loops/'>Counting with loops</a></li>
-<li><a href='putting-loops-to-work/'>Putting loops to work</a></li>
-<li><a href='project-fizzbuzz/'>Project - FizzBuzz</a></li>
-<li><a href='why-we-need-dictionaries/'>Why we need dictionaries</a></li>
-<li><a href='dictionaries-introduction/'>Intro to dictionaries</a></li>
-<li><a href='getting-fancy-with-dictionaries/'>Getting fancy with dictionaries</a></li>
-<li><a href='project-dictionary-moon-measurer/'>Project - Moon Measurer with Dictionaries</a></li>
-<li><a href='under-construction/'>Okay then</a></li>
-</ol>
+<p>So far we know about strings, a few kinds of numbers, lists, and it’s looking pretty good. There’s <em>one more</em> super-important kind of data that’s left: <strong>dictionaries</strong>.</p>
+<p>In the real world, <strong>dictionaries are things you use to look up words.</strong> Same kind of thing in Python, more or less. But before we talk about how they work, let’s talk about the problem they solve.</p>
+<p>Say we have a friend, and we know some stuff about her.</p>
+<pre class="facing">
+name = "Annie"
+age = 83
+town = "Cleveland"
+
+print(name, "is", age, "and is from", town)
+</pre>
+<p>Nothing new, nothing crazy, totally normal.</p>
+<p>Now, say we’re the most popular person on the planet, and we have <em>two</em> friends, Annie and Roberto. If we didn’t know better (which we don’t right now), we might do this:</p>
+<pre class="facing">
+# Annie's info
+name = "Annie"
+age = 83
+town = "Cleveland"
+
+# Roberto's info
+name2 = "Roberto"
+age2 = 103
+town2 = "Reno"
+
+# Print it all out
+print(name, "is", age, "and is from", town)
+print(name2, "is", age2, "and is from", town2)
+</pre>
+<p>It’s not the best thing we’ve ever seen, let’s be honest. <code>name</code> seems like a fine variable name, but <code>name2</code> and <code>age2</code> and <code>town2</code> just seem… tacky. Maybe it’s because they aren’t very descriptive?</p>
+<p>Now imagine if we were even <em>more</em> popular and had even <em>more</em> friends! If we had <strong>dozens of friends</strong> and kept naming variables the same way, we’d be stuck with variable names like <code>name33</code> and <code>age33</code> and <code>town33</code>. It’d be terrible!</p>
+<p><strong>“A-ah!”</strong> you exclaim, ready to use your new programming knowledge. “What about <strong>lists?</strong> They’re great for storing lots of information!”</p>
+<p>Yeah, that’s true, and it definitely makes sense. But let’s see what happens if we try to use lists. We have two ages, two names and two towns, so maybe we can combine each set into separate lists:</p>
+<pre class="facing">
+names = ["Annie", "Roberto"]
+ages = [83, 103]
+town = ["Cleveland", "Reno"]
+
+# Print out Annie's info
+print(names[0], "is", ages[0], "and is from", town[0])
+# Print out Roberto's info
+print(names[1], "is", ages[1], "and is from", town[1])
+</pre>
+<p>It seems a <em>little</em> more organized, but it’s also a lot of work to use three different lists!</p>
+<p>It’s tough because <strong>a person is a single thing</strong>, but we also want to save <strong>multiple pieces of information about the person</strong>. What we just did separates our names and ages into different variables - we split our information into separate <em>topics</em> instead of separate <em>people</em>.</p>
+<p>It might make sense if <strong>one single thing should be one single variable,</strong> yeah? In this case, each single person can be one single variable. In this perfect world, each person would have a variable of their own - the person has a name and an age and a town, and all of that info could live together in a single variable.</p>
+<p>Since we tried lists once, let’s try it again. What if we could give <strong>each person a separate list</strong> so their information stays together?</p>
+<pre class="facing">
+annie = ["Annie", 83, "Cleveland"]
+roberto = ["Roberto", 103, "Reno"]
+
+print(annie[0], "is", annie[1], "and is from", annie[2])
+print(roberto[0], "is", roberto[1], "and is from", roberto[2])
+</pre>
+<p>It definitely works a little better, keeping all of one person’s information in one variable. But… we’re still not happy!</p>
+<p>The problem now is we don’t know what makes <code>annie[0]</code> different than <code>annie[1]</code>. Which one was her name and which one was her age? I forget! In the beginning when we used variables like <code>names</code> and <code>ages</code> we could be sure that one was a name and one was an age. Now, though, we have to remember what order they go in, and which number is which information. We’re way too lazy for that!</p>
+<p>If we could combine the two approaches our lives would be a lot easier. What we seem to need is <strong>one variable for each person, with multiple <em>named</em> things inside</strong>. Oh hey, it turns out Python can do that!</p>
+<p>(But you’ll need to wait for the next chapter to learn more.)</p>
+<h3 id="chapter-summary">Chapter summary</h3>
+<p>We learned that <strong>lists can’t do everything</strong>, and that it makes sense to store the information about a single thing in a single variable. But we don’t know how just yet!</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-
+        <p><a href="../dictionaries-introduction/">Next up: Intro to dictionaries <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>
@@ -294,60 +322,60 @@
       </div>
     </div>
   </div>
-  <script type="text/javascript" src="common/bluebird.js"></script>
-  <script type="text/javascript" src="common/fetch-polyfill.js"></script>
-  <script type="text/javascript" src="common/startswith-polyfill.js"></script>
+  <script type="text/javascript" src="../common/bluebird.js"></script>
+  <script type="text/javascript" src="../common/fetch-polyfill.js"></script>
+  <script type="text/javascript" src="../common/startswith-polyfill.js"></script>
 
 
   <!--
-  <script type="text/javascript" src="common/brython.js"></script>
-  <script type="text/javascript" src="common/brython_stdlib.js"></script>
+  <script type="text/javascript" src="../common/brython.js"></script>
+  <script type="text/javascript" src="../common/brython_stdlib.js"></script>
   -->
 
-  <script src="common/brython/brython_builtins.js"></script>
-  <script src="common/brython/version_info.js"></script>
-  <script src="common/brython/py2js.js"></script>
-  <script src="common/brython/py_object.js"></script>
-  <script src="common/brython/py_type.js"></script>
-  <script src="common/brython/py_utils.js"></script>
-  <script src="common/brython/py_sort.js"></script>
-  <script src="common/brython/py_builtin_functions.js"></script>
-  <script src="common/brython/py_exceptions.js"></script>
-  <script src="common/brython/py_range_slice.js"></script>
-  <script src="common/brython/py_bytes.js"></script>
-  <script src="common/brython/py_set.js"></script>
-  <script src="common/brython/js_objects.js"></script>
-  <script src="common/brython/stdlib_paths.js"></script>
-  <script src="common/brython/py_import.js"></script>
-  <script src="common/brython/unicode.min.js"></script>
-  <script src="common/brython/py_string.js"></script>
-  <script src="common/brython/py_int.js"></script>
-  <script src="common/brython/py_long_int.js"></script>
-  <script src="common/brython/py_float.js"></script>
-  <script src="common/brython/py_complex.js"></script>
-  <script src="common/brython/py_dict.js"></script>
-  <script src="common/brython/py_list.js"></script>
-  <script src="common/brython/py_generator.js"></script>
-  <script src="common/brython/py_dom.js"></script>
-  <script src="common/brython/builtin_modules.js"></script>
-  <script src="common/brython/py_import_hooks.js"></script>
-  <script src="common/brython/async.js"></script>
+  <script src="../common/brython/brython_builtins.js"></script>
+  <script src="../common/brython/version_info.js"></script>
+  <script src="../common/brython/py2js.js"></script>
+  <script src="../common/brython/py_object.js"></script>
+  <script src="../common/brython/py_type.js"></script>
+  <script src="../common/brython/py_utils.js"></script>
+  <script src="../common/brython/py_sort.js"></script>
+  <script src="../common/brython/py_builtin_functions.js"></script>
+  <script src="../common/brython/py_exceptions.js"></script>
+  <script src="../common/brython/py_range_slice.js"></script>
+  <script src="../common/brython/py_bytes.js"></script>
+  <script src="../common/brython/py_set.js"></script>
+  <script src="../common/brython/js_objects.js"></script>
+  <script src="../common/brython/stdlib_paths.js"></script>
+  <script src="../common/brython/py_import.js"></script>
+  <script src="../common/brython/unicode.min.js"></script>
+  <script src="../common/brython/py_string.js"></script>
+  <script src="../common/brython/py_int.js"></script>
+  <script src="../common/brython/py_long_int.js"></script>
+  <script src="../common/brython/py_float.js"></script>
+  <script src="../common/brython/py_complex.js"></script>
+  <script src="../common/brython/py_dict.js"></script>
+  <script src="../common/brython/py_list.js"></script>
+  <script src="../common/brython/py_generator.js"></script>
+  <script src="../common/brython/py_dom.js"></script>
+  <script src="../common/brython/builtin_modules.js"></script>
+  <script src="../common/brython/py_import_hooks.js"></script>
+  <script src="../common/brython/async.js"></script>
 
 
-  <script type="text/javascript" src="common/pyweb/pyweb.js"></script>
+  <script type="text/javascript" src="../common/pyweb/pyweb.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.5/TweenLite.min.js"></script>
   <script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/16327/Physics2DPlugin.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.13.1/lodash.min.js"></script>
-  <script src="common/confetti.js" type="text/javascript"></script>
+  <script src="../common/confetti.js" type="text/javascript"></script>
 
-  <script src="common/brython-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+  <script src="../common/brython-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
 
   <script>
     function pywebSetup () {
       window.pyweb.initialize({
         console: '.blox',
         facing: '.facing',
-        base: 'common/pyweb/'
+        base: '../common/pyweb/'
       })
     }
 

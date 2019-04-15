@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Intro to debugging - Python's Not (Just) For Unicorns</title>
+    <title>Project - Moon Measurer with Dictionaries - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/intro-to-debugging/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/project-dictionary-moon-measurer/">
 
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../else-elif/"><span class="oi oi-arrow-left"></span> When conditions fail</a>
+          <a href="../getting-fancy-with-dictionaries/"><span class="oi oi-arrow-left"></span> Getting fancy with dictionaries</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href="../project-speed-limits/">Project - Speeding robot <span class="oi oi-arrow-right"></span></a>
+          <a href="../under-construction/">Okay then <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,124 +233,168 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 13</em></p>
-        <h1 class="display-4">Intro to debugging</h1>
+        <p class="subtitle mb-0"><em>Project </em></p>
+        <h1 class="display-4">Project - Moon Measurer with Dictionaries</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>Now that we know about <strong>conditionals</strong> and <strong>prompting the user for information</strong>, we can start to party a little bit harder. Last time we ended up with this piece of art, that tells you what kind of animal you’re listening to:</p>
-<pre class="facing">
-sound = input("What sound does the animal make?")
+<p>Remember when we worked on the <a href="../project-moon-measurer/">moon measurer</a>, and calculated a lot of information about how much people weigh on different planets? We’re back at it!</p>
+<blockquote>
+<p>The tests for this one don’t work yet, sorry! Soon, soon. You’re welcome to work on it on your own, though.</p>
+</blockquote>
+<p>Last time we had bet our friend whether we could pick them up on different planets, but this time they’re being <em>much</em> more demanding. But first, A little review:</p>
+<p>Your weight on different planets<sup>1</sup> depends on the <strong>surface gravity</strong> of that planet. According to the <a href="https://en.wikipedia.org/wiki/Surface_gravity">surface gravity page on Wikipedia</a>, the Earth has a surface gravity of 1g, while the Moon has a surface gravity of 0.1654g. This means <strong>if something weighs 100kg on the Earth, it would weigh 16.54kg on the Moon</strong>.</p>
+<p>Last time we had to see <strong>how much our 80kg friend weighed on other planets<sup>[1]</sup>,</strong> and we did a <em>lot</em> of calculations based on this list:</p>
+<table>
+<thead>
+<tr class="header">
+<th>Planet</th>
+<th>Surface Gravity</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Venus</td>
+<td>0.904g</td>
+</tr>
+<tr class="even">
+<td>Earth</td>
+<td>1g</td>
+</tr>
+<tr class="odd">
+<td>Mars</td>
+<td>0.376g</td>
+</tr>
+<tr class="even">
+<td><a href="https://solarsystem.nasa.gov/planets/dwarf-planets/ceres/overview/">Ceres</a></td>
+<td>0.0275g</td>
+</tr>
+<tr class="odd">
+<td>Jupiter</td>
+<td>2.53g</td>
+</tr>
+<tr class="even">
+<td><a href="https://solarsystem.nasa.gov/moons/jupiter-moons/europa/in-depth/">Europa</a></td>
+<td>0.134g</td>
+</tr>
+<tr class="odd">
+<td><a href="https://en.wikipedia.org/wiki/Enceladus">Encelaedus</a></td>
+<td>0.0113g</td>
+</tr>
+<tr class="even">
+<td><a href="https://www.space.com/18390-super-earth-exoplanet-habitable-zone-infographic.html">HD 40307g</a></td>
+<td>1.420g</td>
+</tr>
+</tbody>
+</table>
+<p>Remember how dictionaries are good at storing <strong>the same information for many things?</strong> We’re using that ability in this project - we’re starting with a dictionary called <code>gravities</code> that saves the surface gravity for each planet.</p>
+<p>This time, we want to <strong>create a new dictionary of their weight on each planet</strong>, and <strong>print our friend’s weight on each planet</strong>. <em>Be sure to use <code>round</code> to round to the nearest 2 decimal points, just like last time.</em></p>
+<pre class="facing" run="true">
+gravities = {
+    'Venus': 0.904,
+    'Earth': 1,
+    'Mars': 0.376,
+    'Ceres': 0.0275,
+    'Jupiter': 2.53,
+    'Europa': 0.134,
+    'Enceladaedus': 0.0113,
+    'HD 40307g': 1.420
+}
 
-if sound == 'meow meow':
-  print("It's a cat!")
-elif sound == 'woof woof':
-  print("It's a dog!")
-else:
-  print("I don't know what animal it is.")
+weights = {}
+# weights is an empty dictionary, with no keys or values (yet).
+# Let's try to do this without putting anything between the {}.
+# Instead, add new keys and values one-by-one in the lines below
+
+# After you save the information, print out the weight for each planet
 </pre>
-<p>Let’s try to do the same sort of thing, but with numbers this time.</p>
+<script type="text/test">
+{
+  "basis": "Assumed weight was 80",
+  "variables": {
+    "weight": 80
+  },
+  "tests": [
+    {
+      "desc": "Weight on Venus printed out",
+      "assertions": [ ["match", "72.32"] ]
+    },
+    {
+      "desc": "Weight on Earth saved in dictionary",
+      "assertions": [ ["match", "80"] ]
+    },
+    {
+      "desc": "Weight on Earth printed out",
+      "assertions": [ ["match", "80"] ]
+    },
+    {
+      "desc": "Weight on Mars saved in dictionary",
+      "assertions": [ ["match", "30.08"] ]
+    },
+    {
+      "desc": "Weight on Mars printed out",
+      "assertions": [ ["match", "30.08"] ]
+    },
+    {
+      "desc": "Weight on Ceres saved in dictionary",
+      "assertions": [ ["match", "2.2"] ]
+    },
+    {
+      "desc": "Weight on Ceres printed out",
+      "assertions": [ ["match", "2.2"] ]
+    },
+    {
+      "desc": "Weight on Jupiter saved in dictionary",
+      "assertions": [ ["match", "202.4"] ]
+    },
+    {
+      "desc": "Weight on Jupiter printed out",
+      "assertions": [ ["match", "202.4"] ]
+    },
+    {
+      "desc": "Weight on Europa saved in dictionary",
+      "assertions": [ ["match", "10.72"] ]
+    },
+    {
+      "desc": "Weight on Europa printed out",
+      "assertions": [ ["match", "10.72"] ]
+    },
+    {
+      "desc": "Weight on Enceladus saved in dictionary",
+      "assertions": [ ["match", "0.9"] ]
+    },
+    {
+      "desc": "Weight on Enceladus printed out",
+      "assertions": [ ["match", "0.9"] ]
+    },
+    {
+      "desc": "Weight on HD 40307g printed out",
+      "assertions": [ ["match", "113.6"] ]
+    },
+    {
+      "desc": "Weight on HD 40307g printed out",
+      "assertions": [ ["match", "113.6"] ]
+    }
+  ]
+}
+</script>
 <ul>
-<li>We’ll ask the user for a number</li>
-<li>Did they guess <code>7</code>? They’re right!</li>
-<li>If their guess was less than <code>7</code>, print that they were too low</li>
-<li>If their guess was greater than <code>7</code>, print that they were too high.</li>
+<li>Hint: Use <code>print</code> to print out the name and the weight</li>
+<li>Hint: We can print strings and numbers together without trouble if we separate with commas, e.g. <code>print("Words words", 30, "more words")</code></li>
+<li>Hint: Since the Moon has a surface gravity of <code>0.1654g</code> and Earth has a surface gravity of <code>1g</code>, we can convert from Earth weight to Moon weight by multiplying the Earth weight by <code>0.1654</code></li>
+<li>Hint: <code>round(weight * 0.1654, 2)</code> would give us a rounded weight on the moon</li>
+<li>Hint: We want to use the dictionary this time, though. We can read that Venus is <code>0.904</code>, but how do we get that out of the <code>gravities</code> dictionary?</li>
+<li>Hint: Use <code>gravities['Venus']</code> to get the surface gravity for Venus.</li>
+<li>Hint: To convert 80kg on Earth to Venus weight, you would multiply like <code>80 * gravities['Venus']</code>. But instead of <code>80</code>, you’ll want to use a variable.</li>
+<li>Hint: If we want to do the calculation and display all in one line, we can do something like <code>print("On Venus he weighs", round(weight * gravities['Venus'], 2))</code>. If that seems too complicated, we can also save <code>round(weight * gravities['Venus'], 2)</code> into its own variable named <code>venus_weight</code>, and <code>print(and have the</code>print` on another line!</li>
 </ul>
-<p>I wrote the code out for us already, give it a run and see if it works <em>(Hint: it won’t!)</em>. <strong>Type in <code>5</code> as your guess.</strong></p>
-<pre class="facing">
-guess = input("Please guess a number between 1 and 10")
-
-if guess == 7:
-  print("You got it!")
-elif guess < 7: 
-  print("You guessed too low")
-elif guess > 7:
-  print("You guessed too high")
-</pre>
-<p>Oh no! An error! Our code has a bug! Let’s start crying, <em>immediately!</em> We can’t handle it!</p>
-<p><strong>But we must handle it.</strong> We must… <em>debug!</em></p>
-<p>Once our eyes are finally dry, let’s take a moment to <strong>read the error message.</strong> This is an important step every time you see an error! The message is <code>TypeError: unorderable types: 'str' &lt; int()</code>, but to make it easier we can look at it piece by piece.</p>
-<ul>
-<li><code>TypeError</code> is probably something about <strong>data types</strong>, like strings and floats and lists and stuff.</li>
-<li><code>unorderable types</code> is about.. I dunno, we can’t put something in order?</li>
-<li><code>'str' &lt; int()</code> seems like the error we got a million years ago about adding an string and an integer, except this one seems to be about <strong>comparing a string and an integer</strong></li>
-</ul>
-<p>If we go up a little further in the long long lines of error message, Python actually <strong>shows us the line that gives the error</strong>:</p>
-<pre><code>Traceback (most recent call last):
-  module __main__2 line 53
-    self.run()
-  module __main__2 line 47
-    self.write(traceback.format_exc())
-  module &lt;module&gt; line 5
-    elif guess &lt; 7: 
-TypeError: unorderable types: &#39;str&#39; &lt; int()</code></pre>
-<p>See? <strong>The second to last line shows us our maybe-bad code.</strong> Looks like it’s <code>elif guess &lt; 7:</code> — How useful!</p>
-<p>…but also how <em>weird</em>, because our error seems to be “you’re can’t compare a string and an integer.” But <strong>how can that make sense?</strong> I’m pretty sure we’re comparing two integers, right?</p>
-<p>When we asked for a number, we typed in <code>5</code>. That’s an integer, obviously. And we saved that into a variable, so <code>guess</code> must be an integer, too. But when we ask if <code>guess &lt; 7</code>, Python starts yelling that <code>guess</code> is a string (because <code>7</code> is definitely an integer!).</p>
-<p><strong>I refuse to belive that <code>guess</code> is a string!</strong> I totally super promise that <code>guess</code> is an integer! Right? <em>Right??</em> To confirm that <code>guess</code> is an integer and Python has gone crazy, let’s <strong>print out the data type of <code>guess</code> right after we save it.</strong> If it’s an integer, it should say <code>int</code>.</p>
-<pre class="facing">
-guess = input("Please guess a number between 1 and 10")
-
-print(type(guess))
-
-if guess == 7:
-  print("You got it!")
-elif guess < 7: 
-  print("You guessed too low")
-elif guess > 7:
-  print("You guessed too high")
-</pre>
-<p>We still get an error, but see the very first output line? It’s when we printed out the data type of <code>guess</code>, and it says…. <code>&lt;class 'str'&gt;</code>. Wait, what? The <code>guess</code> variable <strong>is</strong> a string!</p>
-<p><strong>Here’s a secret:</strong> Every time you use <code>input</code> to get something from the user, no matter what is typed in, <em>Python always saves it as a string!</em> So instead of the <strong>number</strong> <code>5</code>, which is what we <em>think</em> we typed, Python’s using <code>"5"</code> instead, which <em>looks exactly the same</em> but is a <strong>string</strong>, not an integer! So when we compare it with the number <code>7</code>, Python freaks out.</p>
-<p>Okay, now that we know our problem, let’s try to fix it.</p>
-<p>To make the comparison without Python yelling at us, <strong>we need to convert our <code>guess</code> variable into a number</strong>. To do that, we’re going to use <code>int</code> — remember a million years ago when we used <code>str(2)</code> to convert the integer <code>2</code> into the string <code>"2"</code>? It’s just like that, but the total opposite.</p>
-<p>See how we use it below.</p>
-<pre class="facing">
-guess = input("Please guess a number between 1 and 10")
-
-if int(guess) == 7:
-  print("You got it!")
-elif int(guess) < 7: 
-  print("You guessed too low")
-elif int(guess) > 7:
-  print("You guessed too high")
-</pre>
-<p>We could use <code>float</code> the same way, but since it doesn’t have decimals we’re okay with <code>int</code>.</p>
-<p>But let’s be honest — it looks kind of silly converting <code>guess</code> again and again and again. We’re too lazy to type all that! Maybe instead we can <strong>convert it once and permanently change its data type?</strong></p>
-<p>To do that, we need one more change to our code — right after we read in the guess, we’re going to say “let’s convert <code>guess</code> into an integer, then save it right back on top of the old <code>guess</code> variable.” The old string version of <code>guess</code> is replaced with the new <code>int</code> version.</p>
-<p>Run the changed code, then read the output.</p>
-<pre class="facing">
-guess = input("Please guess a number between 1 and 10")
-
-guess = int(guess)
-
-if guess == 7:
-  print("You got it!")
-elif guess < 7: 
-  print("You guessed too low")
-elif guess > 7:
-  print("You guessed too high")
-</pre>
-<p><strong>What an adventure!</strong></p>
-<p>It took a while, but we eventually tracked down and solved our problem. <strong>This process is called debugging</strong>, and it’s a very very important part of programming.</p>
-<p>If you can write code that’s always perfect… you aren’t real. Sorry! For the rest of us, we’re going to have bugs and errors popping up all of the time, and figuring out how to fix them (without crying too much) is going to make our lives much much easier.</p>
-<p>Let’s think about how we used <strong>debugging</strong> to solve this problem:</p>
-<ul>
-<li><p><strong>First, we read our error message closely.</strong> We didn’t understand all of it, but some of it made sense, and we’d seen similar error messages before.</p></li>
-<li><p><strong>Then, we looked at the line it said had the error.</strong> Your error isn’t <em>always</em> on the line Python says, but it’s a good start. It will usually help you understand the error message better and give you an idea of what to change.</p></li>
-<li><p><strong>Then, we printed things out to confirm what was happening.</strong> A lot of time when you’re coding, you <em>think</em> you know what’s happening, but you can’t always be sure unless you <code>print</code> and <code>print</code> and <code>print</code>. We thought our number was an integer, but to make sure we printed out its data type.</p></li>
-<li><p><strong>Then, we made a small change and ran our code again.</strong> We were lucky that it worked on the first try. If it didn’t, we’d need to go back to reading our error message and seeing what else we might have done wrong.</p></li>
-</ul>
-<p>It takes a long time to remind yourself to slow down and check each one of these steps every time you run into an error (especially the <code>print</code> part!). It’s common to <a href="https://en.wikipedia.org/wiki/Shotgun_debugging">randomly change code</a>, hoping it will work, instead of taking a few seconds to calm down and focus your energy. I promise that reading error messages, trying to understand them, and debugging step-by-step is going to be super helpful (and super common!) in our coding journey.</p>
-<p>But hey, even if it’s impossible, we can <em>hope</em> we’ll never see bugs again, right?</p>
-<h3 id="chapter-summary">Chapter summary</h3>
-<p>We practiced tracking down and solving errors, and in the process learned that using <code>input</code> to get data from the user always saves as a string.</p>
+<p><sup>[1] Planet or <em>other body in space</em>. Moons are cool, dwarf planets are cool, planets from far away are cool. I don’t want to hear you complaining.</sup></p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="../project-speed-limits/">Next up: Project - Speeding robot <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../under-construction/">Next up: Okay then <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>

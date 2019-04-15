@@ -244,20 +244,20 @@
 <p>What do you think happens if you try to <strong>add words together?</strong> Let’s try it: how about adding together <code>hello</code> and <code>world</code>? Remember to use quotes for each of them!</p>
 <pre class="blox" test="helloworld"></pre>
 <ul>
-<li>Hint: You should quote them separately, don’t write <code>&quot;hello world&quot;</code></li>
-<li>Hint: Try to add <code>&quot;hello&quot;</code> and <code>&quot;world&quot;</code> together</li>
-<li>Hint: Type <code>&quot;hello&quot; + &quot;world&quot;</code> and press enter.</li>
+<li>Hint: You should quote them separately, don’t write <code>"hello world"</code></li>
+<li>Hint: Try to add <code>"hello"</code> and <code>"world"</code> together</li>
+<li>Hint: Type <code>"hello" + "world"</code> and press enter.</li>
 </ul>
 <p>Hm, weird, they’re kind of smushed together. Makes sense if you think about it, I guess, but a space would be nice. Maybe try to add a space in the middle of them, too?</p>
 <pre class="blox" test="hello world"></pre>
 <ul>
-<li>Hint: You can use a space like <code>&quot; &quot;</code>. It looks like nothing is inside, but I promise it’s a space!</li>
+<li>Hint: You can use a space like <code>" "</code>. It looks like nothing is inside, but I promise it’s a space!</li>
 <li>Hint: Add the three pieces together - hello, the space, and world.</li>
-<li>Hint: Type <code>&quot;hello&quot; + &quot; &quot; + &quot;world&quot;</code> and press enter</li>
-<li>Hint: You could also do <code>&quot;hello &quot; + &quot;world&quot;</code>, but that’s not as fun!</li>
+<li>Hint: Type <code>"hello" + " " + "world"</code> and press enter</li>
+<li>Hint: You could also do <code>"hello " + "world"</code>, but that’s not as fun!</li>
 </ul>
 <p>Okay, we’re genius experts now! We’ve done math with numbers, math with words, how about math with… <strong>numbers and words?!</strong></p>
-<p>Try to add together <code>2</code> and <code>&quot;hello&quot;</code>. <strong>(Hint: it ain’t gonna work)</strong></p>
+<p>Try to add together <code>2</code> and <code>"hello"</code>. <strong>(Hint: it ain’t gonna work)</strong></p>
 <pre class="blox"></pre>
 <p>Hooray, an error message! Just what we wanted.</p>
 <p>We’ve already seen a couple error messages, but we didn’t read them very closely. We didn’t care! But this time <strong>let’s look at each part of the error</strong> to see what it might mean.</p>
@@ -268,12 +268,12 @@
 <li><code>'int' and 'str'</code>: Hm, what are we trying to add? It sounds like Python thinks we’re adding <strong>int</strong> and <strong>str</strong>.</li>
 </ul>
 <p>If you paid attention in math class, you’ll know that whole numbers - 0, 1, 2, 3, etc - are called <strong>integers</strong>. That’s what <code>int</code> means - it’s talking about the <code>2</code>! According to Python, <code>2</code> is an <strong>integer</strong>.</p>
-<p>And <code>str</code>? It stands for <strong>string</strong>. <strong>Strings</strong> are what Python calls text, or words, or sentences. Every time we did <code>&quot;hello&quot;</code> or <code>&quot;I hate bread&quot;</code> or any of that, the quotation marks turned our text into a <strong>string</strong> that Python could understand. According to Python, <code>&quot;hello&quot;</code> is a <strong>string</strong>.</p>
+<p>And <code>str</code>? It stands for <strong>string</strong>. <strong>Strings</strong> are what Python calls text, or words, or sentences. Every time we did <code>"hello"</code> or <code>"I hate bread"</code> or any of that, the quotation marks turned our text into a <strong>string</strong> that Python could understand. According to Python, <code>"hello"</code> is a <strong>string</strong>.</p>
 <p>“Integer” and “string” are called <strong>data types</strong>. They’re… types of data. You’ll learn a few more over the next several chapters.</p>
 <p>Now that we know about <strong>data types</strong> like integer and string, if we go back to the error message, it says <code>unsupported operand types for +: 'int' and 'str'</code>. It sounds like it might just mean, “you can’t add together integers and strings!”</p>
 <p>But let’s say I can’t give up. <strong>I really want to combine the 2 with “hello”</strong>. How am I going to do it? How can we solve this problem?</p>
 <p>Well, same way we learn to fix a doorknob or how to make spaghetti: <strong>we’re going to ask a search engine.</strong></p>
-<p>Let’s actually try this like Real Live Programers: go search around online and see if you can figure out how to solve our problem of <strong>adding <code>2</code> and <code>&quot;hello&quot;</code></strong>. Use the console below to try out answers.</p>
+<p>Let’s actually try this like Real Live Programers: go search around online and see if you can figure out how to solve our problem of <strong>adding <code>2</code> and <code>"hello"</code></strong>. Use the console below to try out answers.</p>
 <p>Try to google something on your own, but you can also find suggestions in the hints below. If you can’t get it, no big deal, but at least give it a try!</p>
 <ul>
 <li>Hint: The actual error message, <code>TypeError: unsupported operand type(s) for +: 'int' and 'str'</code></li>
@@ -290,7 +290,7 @@
 <p><strong>But back to the problem:</strong> it turns out you can <a href="https://stackoverflow.com/questions/6981495/how-can-i-concatenate-a-string-and-a-number-in-python">turn an integer into a string</a> by doing, for example, <code>str(9)</code>. Then you combine <em>that</em> with the string. According to that link, it looks like this:</p>
 <pre class="blox" static="true">"asd" + str(9)</pre>
 <p>Seems right, ’eh?</p>
-<p>You could also have put quotation marks around the <code>9</code>, turning it from the <em>integer</em> <code>9</code> into the <em>string</em> <code>&quot;9&quot;</code>. Quotes turn it into a string, just like <code>str</code> turns it into a string.</p>
+<p>You could also have put quotation marks around the <code>9</code>, turning it from the <em>integer</em> <code>9</code> into the <em>string</em> <code>"9"</code>. Quotes turn it into a string, just like <code>str</code> turns it into a string.</p>
 <pre class="blox" static="true">"asd" + "9"</pre>
 <p><strong>Now it’s your turn:</strong> try to combine <code>2</code> and <code>hello</code> again, this time using that new trick! Remember your quotes, and if you get an error just think hard and try again (or search for a better explanation than mine).</p>
 <pre class="blox" test="2hello"></pre>
