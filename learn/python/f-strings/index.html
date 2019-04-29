@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>f strings - Python's Not (Just) For Unicorns</title>
+    <title>Formatting output with f strings - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -234,7 +234,7 @@
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
         <p class="subtitle mb-0"><em>Chapter 25</em></p>
-        <h1 class="display-4">f strings</h1>
+        <h1 class="display-4">Formatting output with f strings</h1>
       </div>
     </div>
     <div class="row">
@@ -298,6 +298,10 @@ for key, value in populations.items():
 <li>Hint: 7200000 needs some commas! Check the example above to see how we did it when talking about dinosaurs.</li>
 <li>Hint: If you’re doing math in the curly brace, the <code>:,</code> goes before the <code>}</code>, <em>not</em> after the variable name.</li>
 <li>Hint: Try out `{value * 1000000:,}</li>
+<li>Hint: <code>7,200,000.0</code> looks kind of weird, we don’t need that decimal. We rounded to two decimal places with pi up above, how do we round to zero decimal places?</li>
+<li>Hint: If we made a separate variable, we could have used <code>int()</code>! But let’s practice the f-string way.</li>
+<li>Hint: <code>:.0,}</code> doesn’t work, and <code>:,:.0}</code> doesn’t either… but <code>,.0}</code> does!</li>
+<li>Hint: Our final f-string might be <code>f'The city {key} has a population of {value * 1000000:,.0}'</code></li>
 </ul>
 <h3 id="chapter-summary">Chapter summary</h3>
 <p>We learned about <strong>f strings</strong>, which are a nicer way to print and format strings. They work like fill-in-the-blanks with our variables, and all you need to do is add a <code>f</code> at the beginning of the string!</p>
