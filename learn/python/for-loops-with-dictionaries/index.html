@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Getting fancy with dictionaries - Python's Not (Just) For Unicorns</title>
+    <title>For loops with dictionaries - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/getting-fancy-with-dictionaries/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/for-loops-with-dictionaries/">
 
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../dictionaries-introduction/"><span class="oi oi-arrow-left"></span> Intro to dictionaries</a>
+          <a href="../getting-fancy-with-dictionaries/"><span class="oi oi-arrow-left"></span> Getting fancy with dictionaries</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href="../for-loops-with-dictionaries/">For loops with dictionaries <span class="oi oi-arrow-right"></span></a>
+          <a href="../f-strings/">f strings <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,22 +233,28 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 23</em></p>
-        <h1 class="display-4">Getting fancy with dictionaries</h1>
+        <p class="subtitle mb-0"><em>Chapter 24</em></p>
+        <h1 class="display-4">For loops with dictionaries</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>Last chapter we learned about <strong>dictionaries</strong>, which are good for two things:</p>
-<p>First off, storing <strong>multiple pieces of information about a single thing</strong>. For example, the age, name and birthplace of a person.</p>
+<p>Remember our good friend for loops? If we have a list, it’s a good way to do something to each element in the list.</p>
 <pre class="facing">
-annie = {
-  'name': 'Annie',
-  'age': 83,
-  'town': 'Cleveland'
-}
+names = ['Brooklyn', 'Manhattan', 'Bronx', 'Staten Island', 'Queens']
+for name in names:
+  print(name, 'is a borough of New York City')
 </pre>
-<p>Secondly, storing <strong>a single piece of information about multiple things</strong>. For example, the population of many different cities.</p>
+<p>Print is a common one, but we can also do math.</p>
+<pre class="facing">
+# These populations are in millions of people
+populations = [2.637, 0.474, 1.645, 2.339, 1.455]
+
+# but we want to display the long long long version!
+for population in populations:
+  print(population * 1000000, "people live... somewhere?")
+</pre>
+<p>For loops are <strong>specific to lists</strong>, but what happens if we try to use them with a dictionary?</p>
 <pre class="facing">
 populations = {
   'Santiago': 7.2,
@@ -256,89 +262,23 @@ populations = {
   'Nara': 1.401,
   'Moscow': 12.19
 }
+for pop in populations:
+  print(pop)
 </pre>
-<h3 id="adding-new-values-to-dictionaries">Adding new values to dictionaries</h3>
-<p>So far we’ve only worked with totally complete dictionaries. It’s easy to add new values, though! Below you’ll see we have population data for Santiago, San Diego, Nara, and Moscow, then we add the data for New York City.</p>
+<p>Huh, weird, it prints out <strong>just the keys</strong>. I honestly had to test out what happened as I was writing that code block, because I seriously didn’t remember!</p>
+<p>I think it makes more sense to be explicit about what we’re looping through. If we want to loop through the keys, <em>we should ask specifically for the keys.</em></p>
 <pre class="facing">
 populations = {
   'Santiago': 7.2,
   'San Diego': 1.407,
   'Nara': 1.401,
   'Moscow': 12.19
-}
-populations['New York City'] = 8.623
-print(populations)
-</pre>
-<p>It’s a lot like a normal variable, where you use an equals sign. The only difference is that instead of a normal variable like <code>city</code> you’ll use the name of the dictionary and the key, like <code>populations['New York City']</code>.</p>
-<p>Now it’s your turn! Try to add scuba diving as a sport that Annie enjoys. <strong>Use the same technique we used above</strong>, giving the key and the <code>=</code>.</p>
-<pre class="facing">
-annie = {
-  'name': 'Annie',
-  'age': 83,
-  'town': 'Cleveland'
-}
-</pre>
-<ul>
-<li>Hint: The key is <code>sport</code> and the value is <code>scuba diving</code></li>
-<li>Hint: Don’t add it as <code>'sport': 'scuba diving'</code>! We want to add it as a new line.</li>
-<li>Hint: <code>annie['sport']</code> is how we’ll access the part of the dictionary we’re interested in. How do we add a value to it?</li>
-<li>Hint: Since scuba diving is a string, remember to put quotes around it</li>
-<li>Hint: Try out <code>annie['sport'] = 'scuba diving'</code></li>
-</ul>
-<h3 id="doing-some-tricks-with-dictionaries">Doing some tricks with dictionaries</h3>
-<pre class="facing">
-populations = {
-  'Santiago': 7.2,
-  'San Diego': 1.407,
-  'Nara': 1.401,
-  'Moscow': 12.19
-}
-</pre>
-<p>Now let’s learn how to talk about dictionaries a little bit better. The things on the left - the words you can use to look up information - are called <strong>keys</strong>. <code>'Santiago'</code>, <code>'San Diego'</code>, <code>'Nara'</code> and <code>'Moscow'</code> are all keys in the example above. The information that you get back are called the <strong>values</strong>. <code>7.2</code>, <code>1.407</code>, etc are all **values.</p>
-<p>If we compare a Python dictionary to a real dictionary, the <strong>key</strong> is the word and the <strong>value</strong> is the definition. I snuck this one by you last chapter by using the proper terms when I asked you to make a dictionary about Earl Scruggs:</p>
-<table>
-<thead>
-<tr class="header">
-<th>key</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>name</td>
-<td>Earl Scruggs</td>
-</tr>
-<tr class="even">
-<td>instrument</td>
-<td>banjo</td>
-</tr>
-<tr class="odd">
-<td>birth</td>
-<td>1924</td>
-</tr>
-<tr class="even">
-<td>city</td>
-<td>Flint Hill, North Carolina</td>
-</tr>
-<tr class="odd">
-<td>genre</td>
-<td>bluegrass</td>
-</tr>
-</tbody>
-</table>
-<p>Sometimes when you have a dictionary, it isn’t one that you made yourself! Maybe it’s from a file, or from somewhere on the internet, and you have <em>no idea</em> what’s hiding inside. Now that we know the terms <strong>key</strong> and <strong>value</strong>, we can ask these sorts of questions.</p>
-<p>If I the <code>annie</code> dictionary about our buddy Annie, I can ask it what kinds of things it knows about her by typing <code>annie.keys()</code>.</p>
-<pre class="facing">
-annie = {
-  'name': 'Annie',
-  'age': 83,
-  'town': 'Cleveland'
 }
 
-print(annie.keys())
+for city in populations.keys():
+  print(city, 'is a city in the world')
 </pre>
-<p>Look at that! All of the keys, laid out for us in a nice little list. Name, age and town. Very nice.</p>
-<p>Now I’m going to throw you into the deep end of the pool without actually giving you the answer: if we have the <code>population</code> dictionary, <strong>how can I get a list of the values?</strong> Make your best guess!</p>
+<p>This works because even though <code>populations</code> is a dictionary, <code>.keys()</code> is a list. What if I wanted to print out each of the numbers? Yup, I’d just use <code>.values()</code> instead!</p>
 <pre class="facing">
 populations = {
   'Santiago': 7.2,
@@ -346,42 +286,31 @@ populations = {
   'Nara': 1.401,
   'Moscow': 12.19
 }
+for pop in populations.values():
+  print(pop, 'is the number of people in the city')
 </pre>
-<ul>
-<li>Hint: You’ll need to print this out using the <code>print()</code> function</li>
-<li>Hint: If you’re cutting and pasting, be sure you’re using <code>populations</code>, not <code>annie</code>!</li>
-<li>Hint: If <code>.keys()</code> gave us the keys, what do you think gives us the values?</li>
-<li>Hint: Try printing out <code>populations.values()</code></li>
-</ul>
-<p>All of the values, right there, as a list! So nice, so beautiful.</p>
-<p>Now that we’ve got that somewhat covered, I’m going to show you one of my <em>favorite sneaky tricks</em>. Last chapter I gave you a dictionary of the boroughs of New York, and told you to add all of them up. You probably did <code>pop['Brooklyn'] + pop['Staten Island'] + pop['Manhattan']....etc</code>, which took a <em>lot of time to type</em>. Is there a faster way to do it?</p>
-<pre class="facing" test="8.55">
-pop = {
-  'Brooklyn': 2.637,
-  'Staten Island': 0.474,
-  'Manhattan': 1.645,
-  'Queens': 2.339,
-  'Bronx': 1.455
+<p>Now this is all good and nice, but the city’s population isn’t very useful without the city’s name, right? How do we loop through <strong>both the keys and the values at the same time?</strong> With our new friend <code>.items()</code>.</p>
+<pre class="facing">
+populations = {
+  'Santiago': 7.2,
+  'San Diego': 1.407,
+  'Nara': 1.401,
+  'Moscow': 12.19
 }
+for key, value in populations.items():
+  print('The city', key, 'has a population of', value)
 </pre>
-<ul>
-<li>Hint: Don’t use <code>pop['Brooklyn']</code>! We’re looking for shortcuts.</li>
-<li>Hint: How do you print out a list of all of the population numbers?</li>
-<li>Hint: Remember, the population numbers are the <em>values</em></li>
-<li>Hint: Try printing out <code>pop.values()</code> to get a list of all of the population numbers</li>
-<li>Hint: Since <code>pop.values()</code> gives you a list, do you know a way to add up all of the numbers in a list?</li>
-<li>Hint: or a way to… sum up the values in a list?</li>
-<li>Hint: <code>sum(...)</code> will add up the elements inside of a list for you</li>
-<li>Hint: Keep track of all of those parentheses!</li>
-<li>Hint: Try <code>sum(pop.values())</code> to add up all of the dictionary values</li>
-</ul>
+<p><strong>Ta-da!</strong> <code>.keys()</code> will give you the keys, <code>.values()</code> will give you the values, and <code>.items()</code> will give you <em>both at the same time</em>.</p>
+<p>The for loop gets a little more exciting, in that you say <code>for key, value</code> and then get to use the key and the value at the same time in the loop.</p>
+<p><strong>Weird fact:</strong> Even though we typed our dictionary in a certain order - Sanitago, San Diego, Nara, Moscow - dictionaries in Python <em>don’t remember that order</em>. Or rather, <em>older</em> versions of Python don’t remember it, and can mix them all up, but <em>newer</em> versions of Python will remember which ones came first.</p>
+<p>If you want specifics: Python 3.6 and earlier versions might forget, but Python 3.7 will remember. It’s probably best to just pretend that</p>
 <h3 id="chapter-summary">Chapter summary</h3>
-<p>We learned about using <code>.keys()</code> and <code>.values()</code> to get specific information out of dictionaries.</p>
+<p>We learned about <strong>looping through dictionaries</strong>. Even though loops are normally just for lists, you can use <code>.keys()</code> or <code>.values()</code> to loop through the keys or values of a dictionary. If we’d like to loop through both at the same time, though, we use <code>.items()</code>.</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="../for-loops-with-dictionaries/">Next up: For loops with dictionaries <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../f-strings/">Next up: f strings <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>

@@ -11,7 +11,7 @@
       gtag('config', 'UA-5541738-26');
     </script>
 
-    <title>Getting fancy with dictionaries - Python's Not (Just) For Unicorns</title>
+    <title>f strings - Python's Not (Just) For Unicorns</title>
 
     <meta charset="UTF-8">
 
@@ -34,7 +34,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta property="og:image" content="http://littlecolumns.com/learn/python/common/snekicorn-big.png">
     <meta property="og:description" content="An interactive introduction to Python, because learning to code isn't just for mythical beasts with magic horns growing out of their foreheads. The most fun we'll have all summer? Probably not, but we'll survive, I guess.">
-    <link rel="canonical" href="http://littlecolumns.com/learn/python/getting-fancy-with-dictionaries/">
+    <link rel="canonical" href="http://littlecolumns.com/learn/python/f-strings/">
 
     <link rel="stylesheet" href="../common/bootstrap.min.css">
     <link href="../common/open-iconic/font/css/open-iconic-bootstrap.css" rel="stylesheet">
@@ -217,7 +217,7 @@
     <div class="container">
       <div class="row">
         <div class="col-sm-5 text-left">
-          <a href="../dictionaries-introduction/"><span class="oi oi-arrow-left"></span> Intro to dictionaries</a>
+          <a href="../for-loops-with-dictionaries/"><span class="oi oi-arrow-left"></span> For loops with dictionaries</a>
           &nbsp;
         </div>
         <div class="col-sm-2 text-center">
@@ -225,7 +225,7 @@
         </div>
         <div class="col-sm-5 text-right">
           &nbsp;
-          <a href="../for-loops-with-dictionaries/">For loops with dictionaries <span class="oi oi-arrow-right"></span></a>
+          <a href="../project-dictionary-moon-measurer/">Project - Moon Measurer with Dictionaries <span class="oi oi-arrow-right"></span></a>
         </div>
       </div>
     </div>
@@ -233,112 +233,50 @@
   <div class="container">
     <div class="row text-center mt-5 mb-5">
       <div class="col-sm">
-        <p class="subtitle mb-0"><em>Chapter 23</em></p>
-        <h1 class="display-4">Getting fancy with dictionaries</h1>
+        <p class="subtitle mb-0"><em>Chapter 25</em></p>
+        <h1 class="display-4">f strings</h1>
       </div>
     </div>
     <div class="row">
       <div class="col-sm">
-<p>Last chapter we learned about <strong>dictionaries</strong>, which are good for two things:</p>
-<p>First off, storing <strong>multiple pieces of information about a single thing</strong>. For example, the age, name and birthplace of a person.</p>
+<p>I have to admit something: Python invented motorcycles a while ago, but <strong>I’ve only been teaching you to ride a bike.</strong> The guilt has finally gotten to me, so I’m coming clean and sharing a secret.</p>
+<p>You know how we’ve been using <code>print</code> to print things out? And putting a comma between the sections?</p>
 <pre class="facing">
-annie = {
-  'name': 'Annie',
-  'age': 83,
-  'town': 'Cleveland'
-}
+name = 'Laksmi'
+print('Hello, my name is', name)
 </pre>
-<p>Secondly, storing <strong>a single piece of information about multiple things</strong>. For example, the population of many different cities.</p>
+<p>It’s definitely not the best way to do it - it’s old school, it’s inflexible, and just… people do it, it works, but it’s just not <em>modern</em>.</p>
+<p>As of Python 3.6, there is a cool fun new thing called <a href="https://realpython.com/python-f-strings/">f strings</a>! It’s the one new feature we <em>might actually use</em>. Instead of using the comma weirdness, we can do this:</p>
 <pre class="facing">
-populations = {
-  'Santiago': 7.2,
-  'San Diego': 1.407,
-  'Nara': 1.401,
-  'Moscow': 12.19
-}
+name = 'Laksmi'
+print(f'Hello, my name is {name}')
 </pre>
-<h3 id="adding-new-values-to-dictionaries">Adding new values to dictionaries</h3>
-<p>So far we’ve only worked with totally complete dictionaries. It’s easy to add new values, though! Below you’ll see we have population data for Santiago, San Diego, Nara, and Moscow, then we add the data for New York City.</p>
-<pre class="facing">
-populations = {
-  'Santiago': 7.2,
-  'San Diego': 1.407,
-  'Nara': 1.401,
-  'Moscow': 12.19
-}
-populations['New York City'] = 8.623
-print(populations)
-</pre>
-<p>It’s a lot like a normal variable, where you use an equals sign. The only difference is that instead of a normal variable like <code>city</code> you’ll use the name of the dictionary and the key, like <code>populations['New York City']</code>.</p>
-<p>Now it’s your turn! Try to add scuba diving as a sport that Annie enjoys. <strong>Use the same technique we used above</strong>, giving the key and the <code>=</code>.</p>
-<pre class="facing">
-annie = {
-  'name': 'Annie',
-  'age': 83,
-  'town': 'Cleveland'
-}
-</pre>
+<p>Two things to notice:</p>
 <ul>
-<li>Hint: The key is <code>sport</code> and the value is <code>scuba diving</code></li>
-<li>Hint: Don’t add it as <code>'sport': 'scuba diving'</code>! We want to add it as a new line.</li>
-<li>Hint: <code>annie['sport']</code> is how we’ll access the part of the dictionary we’re interested in. How do we add a value to it?</li>
-<li>Hint: Since scuba diving is a string, remember to put quotes around it</li>
-<li>Hint: Try out <code>annie['sport'] = 'scuba diving'</code></li>
+<li>The string starts with <code>f'</code>, not just <code>'</code> (<code>f"</code> works too)</li>
+<li>The variable is inside of curly braces <code>{}</code></li>
 </ul>
-<h3 id="doing-some-tricks-with-dictionaries">Doing some tricks with dictionaries</h3>
+<p>It works just like a fill-in-the-blank. The <code>f</code> before the string says “hey, we’re going to put some variables in here!” and the <code>{name}</code> says “put the <code>name</code> variable in here!” and then everyone is happy and we didn’t have to use a hundred commands.</p>
+<p>Python’s f-strings also work with numbers, <em>and even math!</em></p>
 <pre class="facing">
-populations = {
-  'Santiago': 7.2,
-  'San Diego': 1.407,
-  'Nara': 1.401,
-  'Moscow': 12.19
-}
+minutes = 2.5
+print(f'You will have to wait {minutes * 60} seconds')
 </pre>
-<p>Now let’s learn how to talk about dictionaries a little bit better. The things on the left - the words you can use to look up information - are called <strong>keys</strong>. <code>'Santiago'</code>, <code>'San Diego'</code>, <code>'Nara'</code> and <code>'Moscow'</code> are all keys in the example above. The information that you get back are called the <strong>values</strong>. <code>7.2</code>, <code>1.407</code>, etc are all **values.</p>
-<p>If we compare a Python dictionary to a real dictionary, the <strong>key</strong> is the word and the <strong>value</strong> is the definition. I snuck this one by you last chapter by using the proper terms when I asked you to make a dictionary about Earl Scruggs:</p>
-<table>
-<thead>
-<tr class="header">
-<th>key</th>
-<th>value</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td>name</td>
-<td>Earl Scruggs</td>
-</tr>
-<tr class="even">
-<td>instrument</td>
-<td>banjo</td>
-</tr>
-<tr class="odd">
-<td>birth</td>
-<td>1924</td>
-</tr>
-<tr class="even">
-<td>city</td>
-<td>Flint Hill, North Carolina</td>
-</tr>
-<tr class="odd">
-<td>genre</td>
-<td>bluegrass</td>
-</tr>
-</tbody>
-</table>
-<p>Sometimes when you have a dictionary, it isn’t one that you made yourself! Maybe it’s from a file, or from somewhere on the internet, and you have <em>no idea</em> what’s hiding inside. Now that we know the terms <strong>key</strong> and <strong>value</strong>, we can ask these sorts of questions.</p>
-<p>If I the <code>annie</code> dictionary about our buddy Annie, I can ask it what kinds of things it knows about her by typing <code>annie.keys()</code>.</p>
+<p>Instead of calculating a new <code>seconds</code> variable, we just did the math inside of the curly braces! And if you think that’s amazing, maybe you should just skip the next section, because your life is about to change forever.</p>
+<p>When you’re using your variable, you can also add weird little modifiers to tell Python how you want the variable displayed. It’s mostly used with numbres - you can add commas to big numbers, round long decimal numbers, left- or right-align, or a hundred other things!</p>
 <pre class="facing">
-annie = {
-  'name': 'Annie',
-  'age': 83,
-  'town': 'Cleveland'
-}
+years = 65000000
+print(f'Tyrannosaurus rex roamed the earth {years:,} years ago')
 
-print(annie.keys())
+pi_value = 3.14159265
+print(f'The value of pi is roughly {pi_value:.3f}')
+
+id_number = 3
+print(f'Your ID number is {id_number:04}')
 </pre>
-<p>Look at that! All of the keys, laid out for us in a nice little list. Name, age and town. Very nice.</p>
-<p>Now I’m going to throw you into the deep end of the pool without actually giving you the answer: if we have the <code>population</code> dictionary, <strong>how can I get a list of the values?</strong> Make your best guess!</p>
+<p>As long as we always put an <code>f</code> before you start the string, we’ll always be able to use these nice fill-in-the-blanks.</p>
+<p>Okay. Whew. Our minds have been blown out into space, but it might be worth trying this out on our own real quick. Remember when we printed out the populations of the cities last chapter? Let’s try to reproduce it agian, but with f strings.</p>
+<p>Let’s print out the name of the city and the population, but we’ll use the long number and format it with commas. For example, it should start with “Santiago has a population of 7,200,000”.</p>
 <pre class="facing">
 populations = {
   'Santiago': 7.2,
@@ -346,42 +284,29 @@ populations = {
   'Nara': 1.401,
   'Moscow': 12.19
 }
+for key, value in populations.items():
+  print('The city', key, 'has a population of', value)
 </pre>
 <ul>
-<li>Hint: You’ll need to print this out using the <code>print()</code> function</li>
-<li>Hint: If you’re cutting and pasting, be sure you’re using <code>populations</code>, not <code>annie</code>!</li>
-<li>Hint: If <code>.keys()</code> gave us the keys, what do you think gives us the values?</li>
-<li>Hint: Try printing out <code>populations.values()</code></li>
-</ul>
-<p>All of the values, right there, as a list! So nice, so beautiful.</p>
-<p>Now that we’ve got that somewhat covered, I’m going to show you one of my <em>favorite sneaky tricks</em>. Last chapter I gave you a dictionary of the boroughs of New York, and told you to add all of them up. You probably did <code>pop['Brooklyn'] + pop['Staten Island'] + pop['Manhattan']....etc</code>, which took a <em>lot of time to type</em>. Is there a faster way to do it?</p>
-<pre class="facing" test="8.55">
-pop = {
-  'Brooklyn': 2.637,
-  'Staten Island': 0.474,
-  'Manhattan': 1.645,
-  'Queens': 2.339,
-  'Bronx': 1.455
-}
-</pre>
-<ul>
-<li>Hint: Don’t use <code>pop['Brooklyn']</code>! We’re looking for shortcuts.</li>
-<li>Hint: How do you print out a list of all of the population numbers?</li>
-<li>Hint: Remember, the population numbers are the <em>values</em></li>
-<li>Hint: Try printing out <code>pop.values()</code> to get a list of all of the population numbers</li>
-<li>Hint: Since <code>pop.values()</code> gives you a list, do you know a way to add up all of the numbers in a list?</li>
-<li>Hint: or a way to… sum up the values in a list?</li>
-<li>Hint: <code>sum(...)</code> will add up the elements inside of a list for you</li>
-<li>Hint: Keep track of all of those parentheses!</li>
-<li>Hint: Try <code>sum(pop.values())</code> to add up all of the dictionary values</li>
+<li>Hint: You should first change the <code>print</code> statement to use an f-string</li>
+<li>Hint: F-strings need two things - an <code>f</code> at the beginning, and <code>{}</code> around any variables used inside.</li>
+<li>Hint: Yes, it’s okay to have two variables in the same f string</li>
+<li>Hint: It should look like <code>f'The city {key} has a population of {value}'</code></li>
+<li>Hint: You’ll want to multiply the population by <code>1000000</code> to turn it from millions into the “real” number</li>
+<li>Hint: You can make a separate variable for the long version of the population or you can do the math in the <code>{}</code></li>
+<li>Hint: To convert it from millions, you’ll want to do <code>{value * 1000000}</code></li>
+<li>Hint: 7200000 needs some commas! Check the example above to see how we did it when talking about dinosaurs.</li>
+<li>Hint: If you’re doing math in the curly brace, the <code>:,</code> goes before the <code>}</code>, <em>not</em> after the variable name.</li>
+<li>Hint: Try out `{value * 1000000:,}</li>
 </ul>
 <h3 id="chapter-summary">Chapter summary</h3>
-<p>We learned about using <code>.keys()</code> and <code>.values()</code> to get specific information out of dictionaries.</p>
+<p>We learned about <strong>f strings</strong>, which are a nicer way to print and format strings. They work like fill-in-the-blanks with our variables, and all you need to do is add a <code>f</code> at the beginning of the string!</p>
+<p>F-strings also let us do fun tricks like rounding and adding commas if we have long decimals or large numbers.</p>
       </div>
     </div>
     <div class="row mt-3 mb-3">
       <div class="col-sm text-center">
-        <p><a href="../for-loops-with-dictionaries/">Next up: For loops with dictionaries <span class="oi oi-arrow-right"></span></a></p>
+        <p><a href="../project-dictionary-moon-measurer/">Next up: Project - Moon Measurer with Dictionaries <span class="oi oi-arrow-right"></span></a></p>
       </div>
     </div>
   </div>
