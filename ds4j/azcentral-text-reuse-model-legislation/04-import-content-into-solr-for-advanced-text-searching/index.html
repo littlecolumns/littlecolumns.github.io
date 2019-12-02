@@ -1,0 +1,415 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>04-Import content into Solr for advanced text searching</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/azcentral-text-reuse-model-legislation/">Detecting special interest model legislation in state laws</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/azcentral-text-reuse-model-legislation/04-import-content-into-solr-for-advanced-text-searching">04-Import content into Solr for advanced text searching</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Importing-content-in-Solr-for-advanced-text-searching">Importing content in Solr for advanced text searching<a class="anchor-link" href="#Importing-content-in-Solr-for-advanced-text-searching">#</a></h1><p>We've imported over a million pieces of legislation into a postgres database, <strong>but that just isn't good enough!</strong> While our database system can do a lot, we have some <strong>intense text searching</strong> in our future, and postgres just isn't up to the task.</p>
+<p>Instead, we're going to use another Apache product - <a href="https://lucene.apache.org/solr/">Apache Solr</a> - as a search tool that sits next to our postgres database and performs lightning-fast text searches.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/azcentral-text-reuse-model-legislation/04-import-content-into-solr-for-advanced-text-searching">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/azcentral-text-reuse-model-legislation/notebooks/04-Import content into Solr for advanced text searching.ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Why-do-we-need-Solr?">Why do we need Solr?<a class="anchor-link" href="#Why-do-we-need-Solr?">#</a></h2><p>Asking why we need to use Solr for this is an excellent question! With over a million documents, it's going to be very, very, very slow to do the kinds of fancy searches we want to do using Python or postgres. We're going to feed our documents to Solr in order to speed up searching.</p>
+<p>Solr isn't a database, though! We'll just use it to say, "hey, do you recognize any legislation like this one?" and it will give us some bill identifiers in return. We'll take those identifiers back to postgres to find the actual content of the bills.</p>
+<p>What magic can Solr do? For example, take the sentence <strong>Put taxes on fishing</strong>. Even though <strong>PLACE A TAX ON FISH</strong> might <em>seem</em> very similar, even after we ignore punctuation "on" is the only thing technically shared between the two. Solr can do magic like automatically lowercasing, removing boring words like "on," "a," and "and," and <strong>stemming</strong> words like "fish" and "fishes" and "fishing" so they all mean the same thing.</p>
+<p>This sort of pre-processing allows us to get more accurate results more quickly in the next step.</p>
+<h2 id="Create-the-legislation-database">Create the legislation database<a class="anchor-link" href="#Create-the-legislation-database">#</a></h2><p>First we'll need to start solr.</p>
+<p>Because indexing 6-grams is demanding from a hardware point of view, we're going to assign Solr <strong>5GB of RAM</strong>. It won't use all of the RAM the entire time, but if you don't grant it all five gigs it will mysteriously halt partway through the process.</p>
+<p>If you aren't using the ngrams technique you should be able to use the default <code>solr start</code> command (which assigns 512MB of RAM).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Stop solr if it&#39;s running</span>
+<span class="o">!</span>solr stop
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Sending stop command to Solr running on port 8983 ... waiting up to 180 seconds to allow Jetty process 10755 to stop gracefully.
+ [|] [/] [-] [\] [|] [/] [-] [\] [|] [/] [-] [\] [|] [/] [-] [\] [|] [/] [-] [\] [|] [/] [-] [\] [|] [/] [-] [\]  </pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Start solr with 5 gigs of RAM</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>solr start -m 5g
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>*** [WARN] ***  Your Max Processes Limit is currently 2048. 
+ It should be set to 65000 to avoid operational disruption. 
+ If you no longer wish to see this warning, set SOLR_ULIMIT_CHECKS to false in your profile or solr.in.sh
+Waiting up to 180 seconds to see Solr running on port 8983 [|] [/] [-] [\] [|] [/] [-] [\] [|] [/] [-] [\] [|] [/] [-] [\] [|] [/] [-]  
+Started Solr server on port 8983 (pid=11858). Happy searching!
+
+  </pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Are we re-running this to recreate our database? If so, it will destroy the existing <code>legislation</code> database. Otherwise we'll just create a new database called <code>legislation</code>.</p>
+<p>We're also going to use the <code>solrconfig</code> folder as the default configuration. It's faster than trying to set up new columns and imports manually.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Delete index if already exists</span>
+<span class="o">!</span>solr delete -c legislation
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Deleting core &#39;legislation&#39; using command:
+http://localhost:8983/solr/admin/cores?action=UNLOAD&amp;core=legislation&amp;deleteIndex=true&amp;deleteDataDir=true&amp;deleteInstanceDir=true
+
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Use the settings in data/solrconfig to initialize our setup</span>
+<span class="o">!</span>solr create -c legislation -d data/solrconfig
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>
+Created new core &#39;legislation&#39;
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Connect-to-Solr">Connect to Solr<a class="anchor-link" href="#Connect-to-Solr">#</a></h2><p>Let's connect to our Solr database and See if it works. We're going to be using two different ways of talking to solr - the <a href="https://github.com/django-haystack/pysolr">pysolr</a> library when it's convenient and just normal <code>requests</code> when we want to use a feature that pysolr doesn't support.</p>
+<p>In this case, we don't use the library at all. We just want to do a health check below that can't be done with the current version of pysolr!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">pysolr</span>
+
+<span class="c1"># Connecting just so you see what it looks like</span>
+<span class="n">solr_url</span> <span class="o">=</span> <span class="s1">&#39;http://localhost:8983/solr/legislation&#39;</span>
+<span class="n">solr</span> <span class="o">=</span> <span class="n">pysolr</span><span class="o">.</span><span class="n">Solr</span><span class="p">(</span><span class="n">solr_url</span><span class="p">,</span> <span class="n">always_commit</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Health check</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;http://localhost:8983/solr/legislation/admin/ping&#39;</span><span class="p">)</span>
+<span class="n">response</span><span class="o">.</span><span class="n">json</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>{&#39;responseHeader&#39;: {&#39;zkConnected&#39;: None,
+  &#39;status&#39;: 0,
+  &#39;QTime&#39;: 148,
+  &#39;params&#39;: {&#39;q&#39;: &#39;{!lucene}*:*&#39;,
+   &#39;distrib&#39;: &#39;false&#39;,
+   &#39;df&#39;: &#39;_text_&#39;,
+   &#39;rows&#39;: &#39;10&#39;,
+   &#39;echoParams&#39;: &#39;all&#39;}},
+ &#39;status&#39;: &#39;OK&#39;}</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now that solr is set up, we want to do a <strong>data import</strong> from postgres. You can start that by visiting the Solr web interface at <a href="http://localhost:8983/solr/#/legislation/dataimport/">http://localhost:8983/solr/#/legislation/dataimport/</a>. Click <strong>Execute</strong> and we're good to go!</p>
+<p>You could use the API for this, but I find that you can read error messages more easily if you use the web interface (and it's fun to see how quickly things are filling up!).</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Stopping-solr">Stopping solr<a class="anchor-link" href="#Stopping-solr">#</a></h2><p>Once you're done with your import, you can stop solr. When you're ready to do searching you can restart it with the <code>solr start</code> command, without having it tie up 5 gigs of memory.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">!</span>solr stop
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Sending stop command to Solr running on port 8983 ... waiting up to 180 seconds to allow Jetty process 622 to stop gracefully.
+ [|] [/] [-] [\] [|] [/] [-] [\]  </pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

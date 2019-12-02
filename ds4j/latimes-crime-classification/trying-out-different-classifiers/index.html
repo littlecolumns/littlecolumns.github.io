@@ -1,0 +1,2460 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Trying out different classifiers</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/latimes-crime-classification/">Building a crime classification engine</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/latimes-crime-classification/trying-out-different-classifiers">Trying out different classifiers</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Trying-out-different-classifiers">Trying out different classifiers<a class="anchor-link" href="#Trying-out-different-classifiers">#</a></h1><p>When the Los Angeles Times was using machine learning to detect serious assaults that the LAPD had downgraded into simple assaults, they used a combination of two different classification algorithms to find suspicious reports. In the spirit of completeness, let's take a look at how several classifiers perform in the task.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/latimes-crime-classification/trying-out-different-classifiers">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/latimes-crime-classification/notebooks/Trying out different classifiers.ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Imports-and-setup">Imports and setup<a class="anchor-link" href="#Imports-and-setup">#</a></h2><p>First we'll set some options up to make everything display correctly. It's mostly because these assault descriptions can be quite long, and the default is to truncate text after a few words.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_colwidth&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_rows&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Repeat-our-analysis">Repeat our analysis<a class="anchor-link" href="#Repeat-our-analysis">#</a></h1><p>First we'll repeat the majority of our processing and analysis from the first notebook, then we'll get into the critique.</p>
+<h2 id="Read-in-our-data">Read in our data<a class="anchor-link" href="#Read-in-our-data">#</a></h2><p>Our dataset is going to be a database of crimes committed between 2008 and 2012. It will start off with two columns:</p>
+<ul>
+<li><code>CCDESC</code>, what criminal code was violated</li>
+<li><code>DO_NARRATIVE</code>, a short text description of what happened</li>
+</ul>
+<p>We're going to use this description to see if we can separate serious cases of assault compared to non-serious cases of assault.</p>
+<p>We won't be covering the process of vectorizing our dataset and creating our classifier in this notebook. Instead, we're going to focus on analyzing the possible shortcomings of our analysis, both conceptually and technically.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in our dataset</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/2008-2012.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Only use reports classified as types of assault</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">CCDESC</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;ASSAULT&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+
+<span class="c1"># Classify as serious or non-serious</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;serious&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">CCDESC</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AGGRAVATED&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">df</span><span class="o">.</span><span class="n">CCDESC</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;DEADLY&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;serious&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;serious&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+
+<span class="c1"># Downgrade 15% from aggravated to simple assault</span>
+<span class="n">serious_subset</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">serious</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;downgraded&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">serious_subset</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;downgraded&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">serious_subset</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;serious&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Take a sample of 50,000</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">50000</span><span class="p">)</span>
+<span class="c1"># Examine the first few</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CCDESC</th>
+      <th>DO_NARRATIVE</th>
+      <th>serious</th>
+      <th>downgraded</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>405689</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-SUSP PUSHED VICT</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>258993</th>
+      <td>INTIMATE PARTNER - SIMPLE ASSAULT</td>
+      <td>DO-S AND V LIVE TOGETHER HAVE 1 CIC S PUNCHED V IN THE FACE</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>531609</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-DURING AN ARGUMENT SUSP SLAPPED BOTH VICTS</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>365367</th>
+      <td>INTIMATE PARTNER - SIMPLE ASSAULT</td>
+      <td>DO-SUSP PUSHED VICT DURING AN ARGUMENT SUPS THEN THREW A SMALL TABLE AT VICTS LEGS CASING INJURY</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>700699</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO- UNK SUSP HIT VICTS VEH W SUSP VEH WITH INTENTION OF MAKING VICT STOP  UNK SUSP FLED WB ON VALERIO ST TOWARDS VAN NUYS BL</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Vectorize">Vectorize<a class="anchor-link" href="#Vectorize">#</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+
+<span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">SnowballStemmer</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="n">stemmer</span> <span class="o">=</span> <span class="n">SnowballStemmer</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">StemmedTfidfVectorizer</span><span class="p">(</span><span class="n">TfidfVectorizer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">build_analyzer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">analyzer</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">StemmedTfidfVectorizer</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build_analyzer</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">doc</span><span class="p">:(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">analyzer</span><span class="p">(</span><span class="n">doc</span><span class="p">))</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">StemmedTfidfVectorizer</span><span class="p">(</span><span class="n">min_df</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">max_df</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">max_features</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">DO_NARRATIVE</span><span class="p">)</span>
+<span class="n">words_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+<span class="n">words_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 30 s, sys: 967 ms, total: 31 s
+Wall time: 34.4 s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>10</th>
+      <th>11</th>
+      <th>12</th>
+      <th>13</th>
+      <th>15</th>
+      <th>18th</th>
+      <th>1x</th>
+      <th>1yr</th>
+      <th>20</th>
+      <th>2x</th>
+      <th>2yr</th>
+      <th>390</th>
+      <th>3x</th>
+      <th>3yr</th>
+      <th>abdomen</th>
+      <th>abl</th>
+      <th>about</th>
+      <th>abov</th>
+      <th>abras</th>
+      <th>abus</th>
+      <th>abv</th>
+      <th>acceler</th>
+      <th>accus</th>
+      <th>across</th>
+      <th>adn</th>
+      <th>adv</th>
+      <th>advis</th>
+      <th>after</th>
+      <th>again</th>
+      <th>against</th>
+      <th>aggress</th>
+      <th>ago</th>
+      <th>aid</th>
+      <th>air</th>
+      <th>alcohol</th>
+      <th>all</th>
+      <th>alley</th>
+      <th>allow</th>
+      <th>almost</th>
+      <th>along</th>
+      <th>also</th>
+      <th>alt</th>
+      <th>alterc</th>
+      <th>am</th>
+      <th>amount</th>
+      <th>an</th>
+      <th>andpunch</th>
+      <th>anger</th>
+      <th>angri</th>
+      <th>ani</th>
+      <th>...</th>
+      <th>wall</th>
+      <th>want</th>
+      <th>warn</th>
+      <th>was</th>
+      <th>watch</th>
+      <th>water</th>
+      <th>way</th>
+      <th>wb</th>
+      <th>weapon</th>
+      <th>went</th>
+      <th>were</th>
+      <th>west</th>
+      <th>westbound</th>
+      <th>western</th>
+      <th>what</th>
+      <th>wheelchair</th>
+      <th>when</th>
+      <th>where</th>
+      <th>whi</th>
+      <th>which</th>
+      <th>while</th>
+      <th>white</th>
+      <th>who</th>
+      <th>wife</th>
+      <th>will</th>
+      <th>window</th>
+      <th>windshield</th>
+      <th>wit</th>
+      <th>wit1</th>
+      <th>with</th>
+      <th>witha</th>
+      <th>without</th>
+      <th>woke</th>
+      <th>wood</th>
+      <th>wooden</th>
+      <th>word</th>
+      <th>work</th>
+      <th>would</th>
+      <th>wound</th>
+      <th>wrap</th>
+      <th>wrestl</th>
+      <th>wrist</th>
+      <th>wth</th>
+      <th>yard</th>
+      <th>year</th>
+      <th>yell</th>
+      <th>you</th>
+      <th>your</th>
+      <th>yr</th>
+      <th>yrs</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.405713</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.217172</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.00000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.27343</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.111141</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 1000 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">words_df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(50000, 1000)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Classify">Classify<a class="anchor-link" href="#Classify">#</a></h2><p>Previously we stuck to using a LinearSVC classifier. How do other classifiers compare? We'll train each one, then look at their confusion matrix.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="kn">import</span> <span class="n">RandomForestClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+<span class="kn">from</span> <span class="nn">sklearn.naive_bayes</span> <span class="kn">import</span> <span class="n">MultinomialNB</span>
+<span class="kn">from</span> <span class="nn">nltk.classify</span> <span class="kn">import</span> <span class="n">MaxentClassifier</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">words_df</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">serious</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(37500, 1000)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Create-and-train-a-logistic-regression-classifier">Create and train a logistic regression classifier<a class="anchor-link" href="#Create-and-train-a-logistic-regression-classifier">#</a></h3><p>Logistic regression classifiers take a while to train.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># Create and train a logistic regression</span>
+<span class="n">logreg</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1e9</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">,</span> <span class="n">max_iter</span><span class="o">=</span><span class="mi">1000</span><span class="p">)</span>
+<span class="n">logreg</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 42.2 s, sys: 1.07 s, total: 43.3 s
+Wall time: 37 s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>LogisticRegression(C=1000000000.0, class_weight=None, dual=False,
+                   fit_intercept=True, intercept_scaling=1, l1_ratio=None,
+                   max_iter=1000, multi_class=&#39;warn&#39;, n_jobs=None, penalty=&#39;l2&#39;,
+                   random_state=None, solver=&#39;lbfgs&#39;, tol=0.0001, verbose=0,
+                   warm_start=False)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Create-and-train-a-random-forest-classifier">Create and train a random forest classifier<a class="anchor-link" href="#Create-and-train-a-random-forest-classifier">#</a></h3><p>Random forests train pretty slowly, too. If you make them perform better by increasing <code>n_estimators</code> it takes even longer!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># Create and train a random forest classifier</span>
+<span class="n">forest</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">(</span><span class="n">n_estimators</span><span class="o">=</span><span class="mi">50</span><span class="p">)</span>
+<span class="n">forest</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 49.2 s, sys: 821 ms, total: 50 s
+Wall time: 59.4 s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&#39;gini&#39;,
+                       max_depth=None, max_features=&#39;auto&#39;, max_leaf_nodes=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=2,
+                       min_weight_fraction_leaf=0.0, n_estimators=50,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Create-and-train-a-linear-support-vector-classifier-(LinearSVC)">Create and train a linear support vector classifier (LinearSVC)<a class="anchor-link" href="#Create-and-train-a-linear-support-vector-classifier-(LinearSVC)">#</a></h3><p>This one will be nice and quick!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># Create and train a linear support vector classifier (LinearSVC)</span>
+<span class="n">svc</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span>
+<span class="n">svc</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 753 ms, sys: 28.4 ms, total: 781 ms
+Wall time: 1.01 s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>LinearSVC(C=1.0, class_weight=None, dual=True, fit_intercept=True,
+          intercept_scaling=1, loss=&#39;squared_hinge&#39;, max_iter=1000,
+          multi_class=&#39;ovr&#39;, penalty=&#39;l2&#39;, random_state=None, tol=0.0001,
+          verbose=0)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Create-and-train-a-multinomial-naive-bayes-classifier-(MultinomialNB)">Create and train a multinomial naive bayes classifier (MultinomialNB)<a class="anchor-link" href="#Create-and-train-a-multinomial-naive-bayes-classifier-(MultinomialNB)">#</a></h3><p>This one will also train quickly.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+<span class="c1"># Create and train a multinomial naive bayes classifier (MultinomialNB)</span>
+<span class="n">bayes</span> <span class="o">=</span> <span class="n">MultinomialNB</span><span class="p">()</span>
+<span class="n">bayes</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 251 ms, sys: 32.6 ms, total: 284 ms
+Wall time: 312 ms
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>MultinomialNB(alpha=1.0, class_prior=None, fit_prior=True)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Checking-each-classifier's-performance">Checking each classifier's performance<a class="anchor-link" href="#Checking-each-classifier's-performance">#</a></h1><p>We'll use the accuracy score and confusion matrix to see how well each algorithm performs. While we're mostly interested in the confusion matrix, seeing the accuracy score is a good reminder that accuracy is a terrible evaluation metric.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">accuracy_score</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Logistic-Regression">Logistic Regression<a class="anchor-link" href="#Logistic-Regression">#</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_true</span> <span class="o">=</span> <span class="n">y_test</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">logreg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="s1">&#39;positive&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy score 0.86368
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted negative</th>
+      <th>Predicted positive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is negative</th>
+      <td>0.934727</td>
+      <td>0.199805</td>
+    </tr>
+    <tr>
+      <th>Is positive</th>
+      <td>0.115581</td>
+      <td>0.646199</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Random-Forest">Random Forest<a class="anchor-link" href="#Random-Forest">#</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_true</span> <span class="o">=</span> <span class="n">y_test</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">forest</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="s1">&#39;positive&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy score 0.86648
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted negative</th>
+      <th>Predicted positive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is negative</th>
+      <td>0.944704</td>
+      <td>0.169266</td>
+    </tr>
+    <tr>
+      <th>Is positive</th>
+      <td>0.121842</td>
+      <td>0.627031</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="LinearSVC">LinearSVC<a class="anchor-link" href="#LinearSVC">#</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_true</span> <span class="o">=</span> <span class="n">y_test</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="s1">&#39;positive&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy score 0.86544
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted negative</th>
+      <th>Predicted positive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is negative</th>
+      <td>0.937487</td>
+      <td>0.191358</td>
+    </tr>
+    <tr>
+      <th>Is positive</th>
+      <td>0.116005</td>
+      <td>0.644899</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Naive-Bayes">Naive Bayes<a class="anchor-link" href="#Naive-Bayes">#</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_true</span> <span class="o">=</span> <span class="n">y_test</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">bayes</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="s1">&#39;positive&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy score 0.85016
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted negative</th>
+      <th>Predicted positive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is negative</th>
+      <td>0.944385</td>
+      <td>0.170240</td>
+    </tr>
+    <tr>
+      <th>Is positive</th>
+      <td>0.143176</td>
+      <td>0.561728</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Since a good number of our serious crimes have been downgraded to not-serious, a better performance on predicting serious crimes <em>could actually be a problem</em>. <strong>What should we try to measure for our evaluation metric?</strong></p>
+<p>We'll cover it (and measure it) later, but you should think reaaaally hard about it right now.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Making-predictions-to-find-downgraded-crimes">Making predictions to find downgraded crimes<a class="anchor-link" href="#Making-predictions-to-find-downgraded-crimes">#</a></h2><p>To see if our algorithm can find downgraded reports, we'll first ask it to make predictions on each of the descriptions we have. If a report is listed as not serious, but the algorithm thinks it should be serious, we should examine the report further.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Feed the classifier the word counts (X) to have it make the prediction</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;logreg_pred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">logreg</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;forest_pred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">forest</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;svc_pred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">svc</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;bayes_pred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bayes</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CCDESC</th>
+      <th>DO_NARRATIVE</th>
+      <th>serious</th>
+      <th>downgraded</th>
+      <th>logreg_pred</th>
+      <th>forest_pred</th>
+      <th>svc_pred</th>
+      <th>bayes_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>405689</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-SUSP PUSHED VICT</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>258993</th>
+      <td>INTIMATE PARTNER - SIMPLE ASSAULT</td>
+      <td>DO-S AND V LIVE TOGETHER HAVE 1 CIC S PUNCHED V IN THE FACE</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>531609</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-DURING AN ARGUMENT SUSP SLAPPED BOTH VICTS</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>365367</th>
+      <td>INTIMATE PARTNER - SIMPLE ASSAULT</td>
+      <td>DO-SUSP PUSHED VICT DURING AN ARGUMENT SUPS THEN THREW A SMALL TABLE AT VICTS LEGS CASING INJURY</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>700699</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO- UNK SUSP HIT VICTS VEH W SUSP VEH WITH INTENTION OF MAKING VICT STOP  UNK SUSP FLED WB ON VALERIO ST TOWARDS VAN NUYS BL</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Crimes with a <code>1</code> in <strong>serious</strong> are serious, and ones with a <code>1</code> in <strong>downgraded</strong> were downgraded. If either of those columns is <code>1</code>, then <strong>the prediction should have been <code>1</code></strong>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">downgraded</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CCDESC</th>
+      <th>DO_NARRATIVE</th>
+      <th>serious</th>
+      <th>downgraded</th>
+      <th>logreg_pred</th>
+      <th>forest_pred</th>
+      <th>svc_pred</th>
+      <th>bayes_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>575961</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-V WAS APP BY S S PUNCHD V IN FACE S1 PROD KNIFE AND SWUNG KNIFE AT V   CAUSG CUT ABOVE HER LFT EYE</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>137899</th>
+      <td>ASSAULT WITH DEADLY WEAPON ON POLICE OFFICER</td>
+      <td>DO-SUSP THREW GLASS BOTTLE AT VICT FROM THIRD FLOOR APT BALCONY ALMOST HITTING VICT SUSP FLED INTO APT</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>405522</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-V WAS STRUCK IN THE HEAD TWICE WITH BASEBALL BAT BY UNK SUSP V WAS TRANS TO HOSP BY PRIVATE PARTY AND DROPPED DUMPED OFF</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>750347</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-S ENGAGED IN A VERBAL ALTERCATION WITH V  S STRUCK V ON HAND WITH A    STICK  S CHASED V AND STRUCK V A SECOND TIME ON VICTS BACK WITH STICK ARREST</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>173459</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-SUSPECT PICKED UP A 50 GALLON METAL TRASH CAN AND THREW IT AT VICTIM HITTING HER ON HER LEFT LEG</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Combining-classifiers">Combining classifiers<a class="anchor-link" href="#Combining-classifiers">#</a></h3><p>When the LA Times did their analysis, they used <strong>two different classifiers</strong>. We can actually do the same thing!</p>
+<p>Each predictor gave us a <code>0</code> or a <code>1</code>, where <code>1</code> means it thinks the report should be classified as serious. What if we just said hey, did <em>any</em> of you think this report should be serious?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[[</span><span class="s1">&#39;logreg_pred&#39;</span><span class="p">,</span> <span class="s1">&#39;forest_pred&#39;</span><span class="p">,</span> <span class="s1">&#39;svc_pred&#39;</span><span class="p">,</span> <span class="s1">&#39;bayes_pred&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>logreg_pred</th>
+      <th>forest_pred</th>
+      <th>svc_pred</th>
+      <th>bayes_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>405689</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>258993</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>531609</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>365367</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>700699</th>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;combined_pred&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[[</span><span class="s1">&#39;logreg_pred&#39;</span><span class="p">,</span> 
+                          <span class="s1">&#39;forest_pred&#39;</span><span class="p">,</span> 
+                          <span class="s1">&#39;svc_pred&#39;</span><span class="p">,</span> 
+                          <span class="s1">&#39;bayes_pred&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CCDESC</th>
+      <th>DO_NARRATIVE</th>
+      <th>serious</th>
+      <th>downgraded</th>
+      <th>logreg_pred</th>
+      <th>forest_pred</th>
+      <th>svc_pred</th>
+      <th>bayes_pred</th>
+      <th>combined_pred</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>405689</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-SUSP PUSHED VICT</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>258993</th>
+      <td>INTIMATE PARTNER - SIMPLE ASSAULT</td>
+      <td>DO-S AND V LIVE TOGETHER HAVE 1 CIC S PUNCHED V IN THE FACE</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>531609</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-DURING AN ARGUMENT SUSP SLAPPED BOTH VICTS</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>365367</th>
+      <td>INTIMATE PARTNER - SIMPLE ASSAULT</td>
+      <td>DO-SUSP PUSHED VICT DURING AN ARGUMENT SUPS THEN THREW A SMALL TABLE AT VICTS LEGS CASING INJURY</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>700699</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO- UNK SUSP HIT VICTS VEH W SUSP VEH WITH INTENTION OF MAKING VICT STOP  UNK SUSP FLED WB ON VALERIO ST TOWARDS VAN NUYS BL</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_true</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">serious</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">combined_pred</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;negative&#39;</span><span class="p">,</span> <span class="s1">&#39;positive&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span> <span class="o">/</span> <span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy score 0.9241
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted negative</th>
+      <th>Predicted positive</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is negative</th>
+      <td>0.921468</td>
+      <td>0.246544</td>
+    </tr>
+    <tr>
+      <th>Is positive</th>
+      <td>0.021545</td>
+      <td>0.932362</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>AMAZING!!! Incredible!!!</p>
+<p>But again: the accuracy score is a terrible metric and the confusion matrix might not even be that good, as what we're actually interested in is <strong>whether we can detect downgrades.</strong></p>
+<p>Let's try to do that now: out of all of the ones marked not serious - candidates for being secretly downgraded - how many actually were downgraded?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Out all of all the ones actually downgraded</span>
+<span class="n">not_serious</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">serious</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># How many did we think were serious?</span>
+<span class="n">y_true</span> <span class="o">=</span> <span class="n">not_serious</span><span class="o">.</span><span class="n">downgraded</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">not_serious</span><span class="o">.</span><span class="n">combined_pred</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;not serious&#39;</span><span class="p">,</span> <span class="s1">&#39;serious&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy score 0.9444371192742808
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted not serious</th>
+      <th>Predicted serious</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is not serious</th>
+      <td>0.957708</td>
+      <td>0.042292</td>
+    </tr>
+    <tr>
+      <th>Is serious</th>
+      <td>0.287665</td>
+      <td>0.712335</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Okay, not nearly as good as what the confusion matrix said. Using this new metric, how does it compare for LinearSVC, one of our standard classifiers?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Out all of all the ones actually downgraded</span>
+<span class="n">not_serious</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">serious</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># How many did we think were serious?</span>
+<span class="n">y_true</span> <span class="o">=</span> <span class="n">not_serious</span><span class="o">.</span><span class="n">downgraded</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">not_serious</span><span class="o">.</span><span class="n">svc_pred</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">accuracy</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Accuracy score&quot;</span><span class="p">,</span> <span class="n">accuracy</span><span class="p">)</span>
+
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;not serious&#39;</span><span class="p">,</span> <span class="s1">&#39;serious&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span><span class="o">.</span><span class="n">div</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Accuracy score 0.957543313731178
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted not serious</th>
+      <th>Predicted serious</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is not serious</th>
+      <td>0.975802</td>
+      <td>0.024198</td>
+    </tr>
+    <tr>
+      <th>Is serious</th>
+      <td>0.361775</td>
+      <td>0.638225</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The combined one is definitely better, finding about 150 additional cases for our inspection to go through.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Review">Review<a class="anchor-link" href="#Review">#</a></h2><p>We're working on reproducing a Los Angeles Times piece where they uncovered <strong>serious assaults that had been downgraded by the LAPD</strong> to simple assault. They used multiple machine learning classifiers in their investigation, so we tried to see whether we could do the same.</p>
+<p>We used four different kinds of classifiers - a linear support vector classifier, a random forest, a logistic regression, and a naive bayes classifier - and compared their performance. While the classifiers performed roughly similar to one another, some did outperform others. In the end, though, <strong>we combined the predictions of all of our classifiers</strong> to cast the widest net for misclassified crime reports.</p>
+<p>It was also important to determine what our <strong>evaluation metric</strong> should be. While we trained our dataset on everything - both serious assaults, non-serious assaults, and downgraded assaults - we eventually realized all we should measure was how accurate we were in discriminating non-serious assaults from downgraded assaults.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Discussion-topics">Discussion topics<a class="anchor-link" href="#Discussion-topics">#</a></h2><ul>
+<li>Our algorithm had 88% accuracy overall, but only 65% in detecting downgraded crimes. What's the difference here? How important is one score compared to the other?</li>
+<li>We only hit around 65% accuracy in finding downgraded crimes. Is this a useful score? How does it compare to random guessing, or going one-by-one through the crimes marked as non-serious?</li>
+<li>What techniques could we have used to find downgraded crimes if we didn't use machine learning?</li>
+<li>Is there a difference between looking at the prediction - the 0 or 1 - and looking at the output of <code>decision_function</code>?</li>
+<li>What happens if our algorithm errs on the side of calling non-serious crimes serious crimes? What if it errs on the side of calling serious crimes non-serious crimes?</li>
+<li>If we want to find more downgraded cases (but do more work), we'll want to err on the side of examining more potentially-serious cases. Is there a better method than picking random cases?</li>
+<li>One of our first steps was to eliminate all crimes that weren't assaults. How do you think this helped or hindered our analysis?</li>
+<li>Why did we use LinearSVC instead of another classifier such as LogisticRegression, RandomForest or Naive Bayes (MultinomialNB)? Why might we try or not try those?</li>
+<li>You don't work for the LAPD, so you can only be so sure what should and shouldn't be a serious crime. What can you do to help feel confident that a case should be one or the other, or that our algorithm is working as promised?</li>
+<li>In this case, we randomly picked serious crimes to downgrade. Would it be easier or more difficult if the LAPD was systematically downgrading certain types of serious crimes? Can you think of a way to around that sort of trickery?</li>
+<li>Many people say you need to release your data and analysis in order to have people trust what you've done. With something like this dataset, however, you're dealing with real things that happened to real people, many of whom would probably prefer to keep these things private. Is that a reasonable expectation? If it is, what can be done to bridge the gap between releasing all of the original data and keeping our process secret?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

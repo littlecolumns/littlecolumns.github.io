@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>About DS4J : Data Science for Journalism</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="hero">
+  <div class="hero-body">
+    <div class="content">
+      <h1>About DS4J</h1>
+    </div>
+  </div>
+</div>
+<div class="content">
+  <p>For the past five years, the <a href="http://ledeprogram.com/">Lede Program</a> at Columbia's Journalism School has hosted a course called <strong>Algorithms</strong>. In Algorithms, freshly-minted programmers learn the two sides of the machine learning coin - both how to make decisions through tools like scikit-learn, as well as how to understand the way that algorithms make decisions all around us (e.g. filter bubbles, driverless cars, advertising, predictive policing, etc).</p>
+<p>After watching a handful of different instructors teach the course (and teaching it myself!), it was very clear there were a hundred and one different possible angles, as well as a hundred and one different feelings on what was appropriate and responsible in terms of foundations and the teaching framework. Should students understand Bayes' Theorem to use a Bayesian classifier? Should they go the data science route of irises and Titanic survivors, or eschew that for something less tried but more journalistic? Can the practice of machine learning even be responsibly taught to someone who just started coding seven weeks ago?</p>
+<p>This site is dedicated to one particular approach: practice-first, soft on math and theory but hard on self-questioning and how to understand the things that could go wrong.</p>
+</div>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

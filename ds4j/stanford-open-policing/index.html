@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Stanford Open Policing Data</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="hero">
+    <div class="hero-body">
+        <div class="content">
+            <h1>Stanford Open Policing Data</h1>
+            <p>A giant dataset of standardized data policing data across different states</p>
+            
+        </div>
+    </div>
+</div>
+<div class="chapter-nav bg-secondary">
+    <div class="content">
+        
+        <a href="../boston-globe-tickets/">&larr;&nbsp;Investigating who gets a ticket and who gets a warning</a>
+        
+        
+        <a href="../buzzfeed-spy-planes/">Uncovering surveillance planes with Buzzfeed&nbsp;&rarr;</a>
+        
+    </div>
+</div>
+<section class="section">
+    <div class="content">
+
+        <div class="columns">
+            <div class="column col-5 col-md-12 readings">
+                <h3>Readings and links</h3>
+                <ul>
+<li><a href="https://openpolicing.stanford.edu/tutorials/">Stanford Open Policing Project</a></li>
+<li><a href="https://openpolicing.stanford.edu/data/">Their data</a> and <a href="https://openpolicing.stanford.edu/findings/">some findings</a></li>
+<li><a href="https://openpolicing.stanford.edu/publications/">Publication using the data</a></li>
+<li><a href="https://openpolicing.stanford.edu/tutorials/">Excellent tutorial(s) on how to use the data</a></li>
+<li><a href="https://github.com/stanford-policylab/opp/blob/master/data_readme.md">Best practices with the data</a></li>
+<li><a href="https://www.kxan.com/investigations/texas-troopers-ticketing-hispanic-drivers-as-white/">Texas troopers ticketing Hispanic drivers as white</a>, which was not done with this dataset but is relevant</li>
+</ul>
+            </div>
+            <div class="column col-7 col-md-12">
+                <h3>Summary</h3>
+                <p>From their site: "the Stanford Open Policing Project is collecting and standardizing data on vehicle and pedestrian stops from law enforcement departments across the country — and we’re making that information freely available. We’ve already gathered over 200 million records from dozens of state and local police departments across the country."</p>
+<p>The Stanford Open Policing project is an excellent example of a data source, through the power of standardizing and collecting disparate data sources. But the most exciting part to me, by far, is <em>how far they go in explaining how to use the data and the pitfalls hiding inside</em>. [Take a look here](https://github.com/stanford-policylab/opp/blob/master/data_readme.md</p>
+            </div>
+        </div>
+
+        
+
+        
+    </div>
+</section>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

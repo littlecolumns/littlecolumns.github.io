@@ -1,0 +1,8 @@
+[
+["index.html", "1 Introduction", " 1 Introduction "],
+["preface.html", "1.1 Preface", " 1.1 Preface We can start with the question: “if schools are all from different neighborhoods, how can we successfully compare them?” If you wanted to sound a little more technical, you might ask for something like “controlling for X, Y, and Z, how are these schools performing?” 1.1.1 The original story This piece doesn’t actually use regression as something they published, but they used it in the research part. Additionally, there’s a critique of the piece that relies heavily on regression. 1.1.2 More stuff here? Blah blah "],
+["turning-our-question-into-measureables.html", "1.2 Turning our question into measureables", " 1.2 Turning our question into measureables First, we’ll need to break this question down into something measureable, then figure out where we can get the necessary information. 1.2.1 Data: School performance As we’ve covered before, standardized tests are the typical way to judge schools against one another. Despite their flaws, they’re usually the best bet. When we were analyzing cheating at Texas schools we had raw scores for each school, but in Florida’s case we do not. Instead, our measurement will be the number of students at each school who passed the test. This data is publicly available. 1.2.2 Data: Race Socioeconomics etc etc race 1.2.3 Data: Poverty Poverty as a proxy to poverty "],
+["combining-our-datasets.html", "1.3 Combining our datasets", " 1.3 Combining our datasets "],
+["prep-for-analysis.html", "1.4 Prep for analysis", " 1.4 Prep for analysis "],
+["linear-regression.html", "1.5 Linear Regression", " 1.5 Linear Regression "]
+]

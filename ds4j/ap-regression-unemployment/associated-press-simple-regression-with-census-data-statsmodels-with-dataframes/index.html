@@ -1,0 +1,1933 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Associated Press - Simple regression with census data (statsmodels with dataframes)</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/ap-regression-unemployment/">Examining life expectancy at the local level</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/ap-regression-unemployment/associated-press-simple-regression-with-census-data-statsmodels-with-dataframes">Associated Press - Simple regression with census data (statsmodels with dataframes)</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="The-Associated-Press-and-Life-Expectancy">The Associated Press and Life Expectancy<a class="anchor-link" href="#The-Associated-Press-and-Life-Expectancy">#</a></h1><p><strong>Story:</strong> <a href="https://www.apnews.com/66ac44186b6249709501f07a7eab36da">AP analysis: Unemployment, income affect life expectancy</a></p>
+<p><strong>Author:</strong> Nicky Forster, Associated Press</p>
+<p><strong>Topics:</strong> Census Data, Linear Regression</p>
+<p><strong>Datasets</strong></p>
+<ul>
+<li><strong>R12221544_SL140.csv:</strong> ACS 2015 5-year, tract level, from <a href="https://www.socialexplorer.com">Social Explorer</a><ul>
+<li>Table B23025: Employment Status</li>
+<li><strong>R12221544.txt</strong> is the data dictionary</li>
+</ul>
+</li>
+<li><strong>R12221550_SL140.csv:</strong> ACS 2015 5-year, tract level, from <a href="https://www.socialexplorer.com">Social Explorer</a><ul>
+<li>Table B23025: Employment Status</li>
+<li>Table B06009: Educational Attainment</li>
+<li>Table B03002: Race</li>
+<li>Table B19013: Median income</li>
+<li>Table C17002: Ratio of income to poverty level</li>
+<li><strong>R12221550.txt</strong> is the data dictionary</li>
+</ul>
+</li>
+<li><strong>US_A.CSV:</strong> life expectancy by census tract, from <a href="https://www.cdc.gov/nchs/nvss/usaleep/usaleep.html">USALEEP</a><ul>
+<li><strong>Record_Layout_CensusTract_Life_Expectancy.pdf</strong> is data dictionary</li>
+</ul>
+</li>
+</ul>
+<h1 id="What's-the-story?">What's the story?<a class="anchor-link" href="#What's-the-story?">#</a></h1><p>We're trying to figure out how the <strong>life expectancy in a census tract</strong> is related to other factors like unemployment, income, and others.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/ap-regression-unemployment/associated-press-simple-regression-with-census-data-statsmodels-with-dataframes">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/ap-regression-unemployment/notebooks/Associated Press - Simple regression with census data (statsmodels with dataframes).ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Imports">Imports<a class="anchor-link" href="#Imports">#</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Reading-in-our-data">Reading in our data<a class="anchor-link" href="#Reading-in-our-data">#</a></h2><h3 id="Read-in-USA_A.CSV">Read in <code>USA_A.CSV</code><a class="anchor-link" href="#Read-in-USA_A.CSV">#</a></h3><p>We're going to rename a few columns so they make a little more sense.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">life_expec</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/US_A.CSV&quot;</span><span class="p">)</span>
+<span class="n">life_expec</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;tract_id&#39;</span><span class="p">,</span> <span class="s1">&#39;STATE2KX&#39;</span><span class="p">,</span><span class="s1">&#39;CNTY2KX&#39;</span><span class="p">,</span> <span class="s1">&#39;TRACT2KX&#39;</span><span class="p">,</span> <span class="s1">&#39;life_expectancy&#39;</span><span class="p">,</span> 
+                      <span class="s1">&#39;life_expectancy_std_err&#39;</span><span class="p">,</span> <span class="s1">&#39;flag&#39;</span><span class="p">]</span>
+<span class="n">life_expec</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tract_id</th>
+      <th>STATE2KX</th>
+      <th>CNTY2KX</th>
+      <th>TRACT2KX</th>
+      <th>life_expectancy</th>
+      <th>life_expectancy_std_err</th>
+      <th>flag</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001020100</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20100</td>
+      <td>73.1</td>
+      <td>2.2348</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1001020200</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20200</td>
+      <td>76.9</td>
+      <td>3.3453</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1001020400</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20400</td>
+      <td>75.4</td>
+      <td>1.0216</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1001020500</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20500</td>
+      <td>79.4</td>
+      <td>1.1768</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1001020600</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20600</td>
+      <td>73.1</td>
+      <td>1.5519</td>
+      <td>3</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Open-R12221544_SL140.csv">Open <code>R12221544_SL140.csv</code><a class="anchor-link" href="#Open-R12221544_SL140.csv">#</a></h3><p>We'll keep the original names here - we'll just need to keep an eye on the codebook later.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Geo_FIPS&#39;</span><span class="p">,</span> <span class="s1">&#39;ACS15_5yr_B23025001&#39;</span><span class="p">,</span> <span class="s1">&#39;ACS15_5yr_B23025002&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;ACS15_5yr_B23025003&#39;</span><span class="p">,</span> <span class="s1">&#39;ACS15_5yr_B23025004&#39;</span><span class="p">,</span> <span class="s1">&#39;ACS15_5yr_B23025005&#39;</span><span class="p">,</span> 
+            <span class="s1">&#39;ACS15_5yr_B23025006&#39;</span><span class="p">,</span> <span class="s1">&#39;ACS15_5yr_B23025007&#39;</span><span class="p">]</span>
+<span class="n">employment</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/R12221544_SL140.csv&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="n">columns</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span>
+<span class="n">employment</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Geo_FIPS</th>
+      <th>ACS15_5yr_B23025001</th>
+      <th>ACS15_5yr_B23025002</th>
+      <th>ACS15_5yr_B23025003</th>
+      <th>ACS15_5yr_B23025004</th>
+      <th>ACS15_5yr_B23025005</th>
+      <th>ACS15_5yr_B23025006</th>
+      <th>ACS15_5yr_B23025007</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001020100</td>
+      <td>1554</td>
+      <td>997</td>
+      <td>997</td>
+      <td>943</td>
+      <td>54</td>
+      <td>0</td>
+      <td>557</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1001020200</td>
+      <td>1731</td>
+      <td>884</td>
+      <td>869</td>
+      <td>753</td>
+      <td>116</td>
+      <td>15</td>
+      <td>847</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1001020300</td>
+      <td>2462</td>
+      <td>1472</td>
+      <td>1464</td>
+      <td>1373</td>
+      <td>91</td>
+      <td>8</td>
+      <td>990</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1001020400</td>
+      <td>3424</td>
+      <td>2013</td>
+      <td>1998</td>
+      <td>1782</td>
+      <td>216</td>
+      <td>15</td>
+      <td>1411</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1001020500</td>
+      <td>8198</td>
+      <td>5461</td>
+      <td>5258</td>
+      <td>5037</td>
+      <td>221</td>
+      <td>203</td>
+      <td>2737</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h4 id="Create-a-new-column-for-percent-unemployment">Create a new column for percent unemployment<a class="anchor-link" href="#Create-a-new-column-for-percent-unemployment">#</a></h4><p>We'll be using the total population in the census tract as the baseline for employment.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">employment</span><span class="p">[</span><span class="s1">&#39;pct_unemployment&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">employment</span><span class="p">[</span><span class="s1">&#39;ACS15_5yr_B23025005&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">employment</span><span class="p">[</span><span class="s1">&#39;ACS15_5yr_B23025001&#39;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+<span class="n">employment</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Geo_FIPS</th>
+      <th>ACS15_5yr_B23025001</th>
+      <th>ACS15_5yr_B23025002</th>
+      <th>ACS15_5yr_B23025003</th>
+      <th>ACS15_5yr_B23025004</th>
+      <th>ACS15_5yr_B23025005</th>
+      <th>ACS15_5yr_B23025006</th>
+      <th>ACS15_5yr_B23025007</th>
+      <th>pct_unemployment</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001020100</td>
+      <td>1554</td>
+      <td>997</td>
+      <td>997</td>
+      <td>943</td>
+      <td>54</td>
+      <td>0</td>
+      <td>557</td>
+      <td>3.474903</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1001020200</td>
+      <td>1731</td>
+      <td>884</td>
+      <td>869</td>
+      <td>753</td>
+      <td>116</td>
+      <td>15</td>
+      <td>847</td>
+      <td>6.701329</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1001020300</td>
+      <td>2462</td>
+      <td>1472</td>
+      <td>1464</td>
+      <td>1373</td>
+      <td>91</td>
+      <td>8</td>
+      <td>990</td>
+      <td>3.696182</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1001020400</td>
+      <td>3424</td>
+      <td>2013</td>
+      <td>1998</td>
+      <td>1782</td>
+      <td>216</td>
+      <td>15</td>
+      <td>1411</td>
+      <td>6.308411</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1001020500</td>
+      <td>8198</td>
+      <td>5461</td>
+      <td>5258</td>
+      <td>5037</td>
+      <td>221</td>
+      <td>203</td>
+      <td>2737</td>
+      <td>2.695779</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-in-R12221550_SL140.csv">Read in <code>R12221550_SL140.csv</code><a class="anchor-link" href="#Read-in-R12221550_SL140.csv">#</a></h3><p>It's also from the Census, and has many, many, many more columns with impossible names.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">census</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/R12221550_SL140.csv&quot;</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;latin-1&#39;</span><span class="p">)</span>
+<span class="n">census</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Geo_FIPS</th>
+      <th>Geo_GEOID</th>
+      <th>Geo_NAME</th>
+      <th>Geo_QName</th>
+      <th>Geo_STUSAB</th>
+      <th>Geo_SUMLEV</th>
+      <th>Geo_GEOCOMP</th>
+      <th>Geo_FILEID</th>
+      <th>Geo_LOGRECNO</th>
+      <th>Geo_US</th>
+      <th>Geo_REGION</th>
+      <th>Geo_DIVISION</th>
+      <th>Geo_STATECE</th>
+      <th>Geo_STATE</th>
+      <th>Geo_COUNTY</th>
+      <th>Geo_COUSUB</th>
+      <th>Geo_PLACE</th>
+      <th>Geo_PLACESE</th>
+      <th>Geo_TRACT</th>
+      <th>Geo_BLKGRP</th>
+      <th>Geo_CONCIT</th>
+      <th>Geo_AIANHH</th>
+      <th>Geo_AIANHHFP</th>
+      <th>Geo_AIHHTLI</th>
+      <th>Geo_AITSCE</th>
+      <th>Geo_AITS</th>
+      <th>Geo_ANRC</th>
+      <th>Geo_CBSA</th>
+      <th>Geo_CSA</th>
+      <th>Geo_METDIV</th>
+      <th>Geo_MACC</th>
+      <th>Geo_MEMI</th>
+      <th>Geo_NECTA</th>
+      <th>Geo_CNECTA</th>
+      <th>Geo_NECTADIV</th>
+      <th>Geo_UA</th>
+      <th>Geo_UACP</th>
+      <th>Geo_CDCURR</th>
+      <th>Geo_SLDU</th>
+      <th>Geo_SLDL</th>
+      <th>Geo_VTD</th>
+      <th>Geo_ZCTA3</th>
+      <th>Geo_ZCTA5</th>
+      <th>Geo_SUBMCD</th>
+      <th>Geo_SDELM</th>
+      <th>Geo_SDSEC</th>
+      <th>Geo_SDUNI</th>
+      <th>Geo_UR</th>
+      <th>Geo_PCI</th>
+      <th>Geo_TAZ</th>
+      <th>...</th>
+      <th>ACS15_5yr_B06009013s</th>
+      <th>ACS15_5yr_B06009014s</th>
+      <th>ACS15_5yr_B06009015s</th>
+      <th>ACS15_5yr_B06009016s</th>
+      <th>ACS15_5yr_B06009017s</th>
+      <th>ACS15_5yr_B06009018s</th>
+      <th>ACS15_5yr_B06009019s</th>
+      <th>ACS15_5yr_B06009020s</th>
+      <th>ACS15_5yr_B06009021s</th>
+      <th>ACS15_5yr_B06009022s</th>
+      <th>ACS15_5yr_B06009023s</th>
+      <th>ACS15_5yr_B06009024s</th>
+      <th>ACS15_5yr_B06009025s</th>
+      <th>ACS15_5yr_B06009026s</th>
+      <th>ACS15_5yr_B06009027s</th>
+      <th>ACS15_5yr_B06009028s</th>
+      <th>ACS15_5yr_B06009029s</th>
+      <th>ACS15_5yr_B06009030s</th>
+      <th>ACS15_5yr_C17002001</th>
+      <th>ACS15_5yr_C17002002</th>
+      <th>ACS15_5yr_C17002003</th>
+      <th>ACS15_5yr_C17002004</th>
+      <th>ACS15_5yr_C17002005</th>
+      <th>ACS15_5yr_C17002006</th>
+      <th>ACS15_5yr_C17002007</th>
+      <th>ACS15_5yr_C17002008</th>
+      <th>ACS15_5yr_C17002001s</th>
+      <th>ACS15_5yr_C17002002s</th>
+      <th>ACS15_5yr_C17002003s</th>
+      <th>ACS15_5yr_C17002004s</th>
+      <th>ACS15_5yr_C17002005s</th>
+      <th>ACS15_5yr_C17002006s</th>
+      <th>ACS15_5yr_C17002007s</th>
+      <th>ACS15_5yr_C17002008s</th>
+      <th>ACS15_5yr_B19013001</th>
+      <th>ACS15_5yr_B19013001s</th>
+      <th>ACS15_5yr_B23025001</th>
+      <th>ACS15_5yr_B23025002</th>
+      <th>ACS15_5yr_B23025003</th>
+      <th>ACS15_5yr_B23025004</th>
+      <th>ACS15_5yr_B23025005</th>
+      <th>ACS15_5yr_B23025006</th>
+      <th>ACS15_5yr_B23025007</th>
+      <th>ACS15_5yr_B23025001s</th>
+      <th>ACS15_5yr_B23025002s</th>
+      <th>ACS15_5yr_B23025003s</th>
+      <th>ACS15_5yr_B23025004s</th>
+      <th>ACS15_5yr_B23025005s</th>
+      <th>ACS15_5yr_B23025006s</th>
+      <th>ACS15_5yr_B23025007s</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001020100</td>
+      <td>14000US01001020100</td>
+      <td>Census Tract 201, Autauga County, Alabama</td>
+      <td>Census Tract 201, Autauga County, Alabama</td>
+      <td>al</td>
+      <td>140</td>
+      <td>0</td>
+      <td>ACSSF</td>
+      <td>1760</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>20100</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>67.878788</td>
+      <td>24.848485</td>
+      <td>51.515152</td>
+      <td>17.575758</td>
+      <td>23.636364</td>
+      <td>24.242424</td>
+      <td>18.787879</td>
+      <td>5.454545</td>
+      <td>6.666667</td>
+      <td>17.575758</td>
+      <td>6.666667</td>
+      <td>6.666667</td>
+      <td>18.181818</td>
+      <td>12.727273</td>
+      <td>4.242424</td>
+      <td>6.666667</td>
+      <td>6.666667</td>
+      <td>11.515152</td>
+      <td>1948</td>
+      <td>26</td>
+      <td>132</td>
+      <td>81</td>
+      <td>101</td>
+      <td>125</td>
+      <td>16</td>
+      <td>1467</td>
+      <td>123.030303</td>
+      <td>18.787879</td>
+      <td>60.606061</td>
+      <td>40.606061</td>
+      <td>58.181818</td>
+      <td>60.000000</td>
+      <td>10.909091</td>
+      <td>127.272727</td>
+      <td>61838.0</td>
+      <td>7212.121212</td>
+      <td>1554</td>
+      <td>997</td>
+      <td>997</td>
+      <td>943</td>
+      <td>54</td>
+      <td>0</td>
+      <td>557</td>
+      <td>92.121212</td>
+      <td>85.454545</td>
+      <td>85.454545</td>
+      <td>83.636364</td>
+      <td>18.787879</td>
+      <td>6.666667</td>
+      <td>67.878788</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1001020200</td>
+      <td>14000US01001020200</td>
+      <td>Census Tract 202, Autauga County, Alabama</td>
+      <td>Census Tract 202, Autauga County, Alabama</td>
+      <td>al</td>
+      <td>140</td>
+      <td>0</td>
+      <td>ACSSF</td>
+      <td>1761</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>20200</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>33.939394</td>
+      <td>22.424242</td>
+      <td>26.060606</td>
+      <td>20.000000</td>
+      <td>13.939394</td>
+      <td>9.696970</td>
+      <td>9.090909</td>
+      <td>6.666667</td>
+      <td>6.666667</td>
+      <td>9.090909</td>
+      <td>6.666667</td>
+      <td>6.666667</td>
+      <td>28.484848</td>
+      <td>18.181818</td>
+      <td>20.000000</td>
+      <td>6.666667</td>
+      <td>4.848485</td>
+      <td>6.666667</td>
+      <td>1983</td>
+      <td>185</td>
+      <td>320</td>
+      <td>232</td>
+      <td>58</td>
+      <td>34</td>
+      <td>25</td>
+      <td>1129</td>
+      <td>155.151515</td>
+      <td>110.909091</td>
+      <td>74.545455</td>
+      <td>88.484848</td>
+      <td>25.454545</td>
+      <td>18.181818</td>
+      <td>16.969697</td>
+      <td>144.848485</td>
+      <td>32303.0</td>
+      <td>8204.848485</td>
+      <td>1731</td>
+      <td>884</td>
+      <td>869</td>
+      <td>753</td>
+      <td>116</td>
+      <td>15</td>
+      <td>847</td>
+      <td>143.030303</td>
+      <td>115.151515</td>
+      <td>114.545455</td>
+      <td>107.272727</td>
+      <td>38.181818</td>
+      <td>14.545455</td>
+      <td>86.666667</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1001020300</td>
+      <td>14000US01001020300</td>
+      <td>Census Tract 203, Autauga County, Alabama</td>
+      <td>Census Tract 203, Autauga County, Alabama</td>
+      <td>al</td>
+      <td>140</td>
+      <td>0</td>
+      <td>ACSSF</td>
+      <td>1762</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>20300</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>112.121212</td>
+      <td>34.545455</td>
+      <td>59.393939</td>
+      <td>64.848485</td>
+      <td>33.939394</td>
+      <td>28.484848</td>
+      <td>20.000000</td>
+      <td>6.666667</td>
+      <td>6.666667</td>
+      <td>8.484848</td>
+      <td>17.575758</td>
+      <td>6.666667</td>
+      <td>26.666667</td>
+      <td>16.969697</td>
+      <td>13.939394</td>
+      <td>6.666667</td>
+      <td>6.666667</td>
+      <td>6.666667</td>
+      <td>2968</td>
+      <td>164</td>
+      <td>213</td>
+      <td>148</td>
+      <td>207</td>
+      <td>82</td>
+      <td>520</td>
+      <td>1634</td>
+      <td>244.848485</td>
+      <td>138.181818</td>
+      <td>70.303030</td>
+      <td>60.606061</td>
+      <td>78.181818</td>
+      <td>39.393939</td>
+      <td>189.090909</td>
+      <td>175.151515</td>
+      <td>44922.0</td>
+      <td>3411.515152</td>
+      <td>2462</td>
+      <td>1472</td>
+      <td>1464</td>
+      <td>1373</td>
+      <td>91</td>
+      <td>8</td>
+      <td>990</td>
+      <td>169.090909</td>
+      <td>132.121212</td>
+      <td>134.545455</td>
+      <td>123.030303</td>
+      <td>31.515152</td>
+      <td>8.484848</td>
+      <td>120.606061</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1001020400</td>
+      <td>14000US01001020400</td>
+      <td>Census Tract 204, Autauga County, Alabama</td>
+      <td>Census Tract 204, Autauga County, Alabama</td>
+      <td>al</td>
+      <td>140</td>
+      <td>0</td>
+      <td>ACSSF</td>
+      <td>1763</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>20400</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>107.272727</td>
+      <td>36.969697</td>
+      <td>89.090909</td>
+      <td>56.969697</td>
+      <td>38.787879</td>
+      <td>37.575758</td>
+      <td>17.575758</td>
+      <td>6.666667</td>
+      <td>6.060606</td>
+      <td>16.363636</td>
+      <td>6.666667</td>
+      <td>6.666667</td>
+      <td>58.181818</td>
+      <td>60.000000</td>
+      <td>17.575758</td>
+      <td>12.121212</td>
+      <td>6.666667</td>
+      <td>12.727273</td>
+      <td>4423</td>
+      <td>18</td>
+      <td>74</td>
+      <td>141</td>
+      <td>182</td>
+      <td>583</td>
+      <td>201</td>
+      <td>3224</td>
+      <td>298.787879</td>
+      <td>17.575758</td>
+      <td>41.818182</td>
+      <td>53.333333</td>
+      <td>58.181818</td>
+      <td>188.484848</td>
+      <td>140.000000</td>
+      <td>331.515152</td>
+      <td>54329.0</td>
+      <td>4244.242424</td>
+      <td>3424</td>
+      <td>2013</td>
+      <td>1998</td>
+      <td>1782</td>
+      <td>216</td>
+      <td>15</td>
+      <td>1411</td>
+      <td>197.575758</td>
+      <td>157.575758</td>
+      <td>161.818182</td>
+      <td>132.121212</td>
+      <td>58.787879</td>
+      <td>14.545455</td>
+      <td>127.878788</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1001020500</td>
+      <td>14000US01001020500</td>
+      <td>Census Tract 205, Autauga County, Alabama</td>
+      <td>Census Tract 205, Autauga County, Alabama</td>
+      <td>al</td>
+      <td>140</td>
+      <td>0</td>
+      <td>ACSSF</td>
+      <td>1764</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>20500</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>...</td>
+      <td>283.636364</td>
+      <td>82.424242</td>
+      <td>120.606061</td>
+      <td>210.303030</td>
+      <td>152.121212</td>
+      <td>157.575758</td>
+      <td>58.787879</td>
+      <td>10.909091</td>
+      <td>14.545455</td>
+      <td>38.181818</td>
+      <td>26.666667</td>
+      <td>23.636364</td>
+      <td>93.939394</td>
+      <td>27.272727</td>
+      <td>69.696970</td>
+      <td>10.909091</td>
+      <td>29.090909</td>
+      <td>10.909091</td>
+      <td>10563</td>
+      <td>251</td>
+      <td>952</td>
+      <td>256</td>
+      <td>1064</td>
+      <td>289</td>
+      <td>89</td>
+      <td>7662</td>
+      <td>369.696970</td>
+      <td>94.545455</td>
+      <td>521.212121</td>
+      <td>113.333333</td>
+      <td>385.454545</td>
+      <td>162.424242</td>
+      <td>52.121212</td>
+      <td>641.818182</td>
+      <td>51965.0</td>
+      <td>4203.030303</td>
+      <td>8198</td>
+      <td>5461</td>
+      <td>5258</td>
+      <td>5037</td>
+      <td>221</td>
+      <td>203</td>
+      <td>2737</td>
+      <td>321.818182</td>
+      <td>339.393939</td>
+      <td>356.969697</td>
+      <td>369.090909</td>
+      <td>89.090909</td>
+      <td>103.030303</td>
+      <td>273.939394</td>
+    </tr>
+  </tbody>
+</table>
+<p>5 rows × 189 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Feature-engineering">Feature engineering<a class="anchor-link" href="#Feature-engineering">#</a></h1><p>Instead of raw population numbers, we're curious about percentages. What percent of people are certain races? What percent of people have not finished high school?</p>
+<p>We're also adjusting the median income to be <strong>tens of thousands</strong>, because it reads better when we're understanding our final regression output.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">census_features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;Geo_FIPS&#39;</span><span class="p">:</span> <span class="n">census</span><span class="o">.</span><span class="n">Geo_FIPS</span><span class="p">,</span>
+    <span class="s1">&#39;pct_black&#39;</span><span class="p">:</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B03002004</span> <span class="o">/</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B03002001</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">&#39;pct_white&#39;</span><span class="p">:</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B03002003</span> <span class="o">/</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B03002001</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">&#39;pct_hispanic&#39;</span><span class="p">:</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B03002012</span> <span class="o">/</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B03002001</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">&#39;pct_less_than_hs&#39;</span><span class="p">:</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B06009002</span> <span class="o">/</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B06009001</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">&#39;pct_1_15_poverty&#39;</span><span class="p">:</span> <span class="p">(</span><span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_C17002004</span> <span class="o">+</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_C17002005</span><span class="p">)</span> <span class="o">/</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_C17002001</span> <span class="o">*</span> <span class="mi">100</span><span class="p">,</span>
+    <span class="s1">&#39;income_10k&#39;</span><span class="p">:</span> <span class="n">census</span><span class="o">.</span><span class="n">ACS15_5yr_B19013001</span> <span class="o">/</span> <span class="mi">10000</span><span class="p">,</span>
+<span class="p">})</span>
+<span class="n">census_features</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Geo_FIPS</th>
+      <th>pct_black</th>
+      <th>pct_white</th>
+      <th>pct_hispanic</th>
+      <th>pct_less_than_hs</th>
+      <th>pct_1_15_poverty</th>
+      <th>income_10k</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001020100</td>
+      <td>7.700205</td>
+      <td>87.422998</td>
+      <td>0.872690</td>
+      <td>14.802896</td>
+      <td>9.342916</td>
+      <td>6.1838</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1001020200</td>
+      <td>53.293135</td>
+      <td>40.445269</td>
+      <td>0.788497</td>
+      <td>25.483178</td>
+      <td>14.624307</td>
+      <td>3.2303</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1001020300</td>
+      <td>18.564690</td>
+      <td>74.528302</td>
+      <td>0.000000</td>
+      <td>10.655738</td>
+      <td>11.960916</td>
+      <td>4.4922</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1001020400</td>
+      <td>3.662672</td>
+      <td>82.794483</td>
+      <td>10.490617</td>
+      <td>11.693687</td>
+      <td>7.302736</td>
+      <td>5.4329</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1001020500</td>
+      <td>24.844374</td>
+      <td>68.456750</td>
+      <td>0.743287</td>
+      <td>4.445082</td>
+      <td>12.496450</td>
+      <td>5.1965</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Merging-the-data">Merging the data<a class="anchor-link" href="#Merging-the-data">#</a></h2><p>Merge the dataframes together based on their census tract.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">merged</span> <span class="o">=</span> <span class="n">life_expec</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">employment</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;tract_id&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;Geo_FIPS&#39;</span><span class="p">)</span>
+<span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">census_features</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;Geo_FIPS&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;Geo_FIPS&#39;</span><span class="p">)</span>
+<span class="n">merged</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>tract_id</th>
+      <th>STATE2KX</th>
+      <th>CNTY2KX</th>
+      <th>TRACT2KX</th>
+      <th>life_expectancy</th>
+      <th>life_expectancy_std_err</th>
+      <th>flag</th>
+      <th>Geo_FIPS</th>
+      <th>ACS15_5yr_B23025001</th>
+      <th>ACS15_5yr_B23025002</th>
+      <th>ACS15_5yr_B23025003</th>
+      <th>ACS15_5yr_B23025004</th>
+      <th>ACS15_5yr_B23025005</th>
+      <th>ACS15_5yr_B23025006</th>
+      <th>ACS15_5yr_B23025007</th>
+      <th>pct_unemployment</th>
+      <th>pct_black</th>
+      <th>pct_white</th>
+      <th>pct_hispanic</th>
+      <th>pct_less_than_hs</th>
+      <th>pct_1_15_poverty</th>
+      <th>income_10k</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1001020100</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20100</td>
+      <td>73.1</td>
+      <td>2.2348</td>
+      <td>3</td>
+      <td>1001020100</td>
+      <td>1554</td>
+      <td>997</td>
+      <td>997</td>
+      <td>943</td>
+      <td>54</td>
+      <td>0</td>
+      <td>557</td>
+      <td>3.474903</td>
+      <td>7.700205</td>
+      <td>87.422998</td>
+      <td>0.872690</td>
+      <td>14.802896</td>
+      <td>9.342916</td>
+      <td>6.1838</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1001020200</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20200</td>
+      <td>76.9</td>
+      <td>3.3453</td>
+      <td>3</td>
+      <td>1001020200</td>
+      <td>1731</td>
+      <td>884</td>
+      <td>869</td>
+      <td>753</td>
+      <td>116</td>
+      <td>15</td>
+      <td>847</td>
+      <td>6.701329</td>
+      <td>53.293135</td>
+      <td>40.445269</td>
+      <td>0.788497</td>
+      <td>25.483178</td>
+      <td>14.624307</td>
+      <td>3.2303</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1001020400</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20400</td>
+      <td>75.4</td>
+      <td>1.0216</td>
+      <td>3</td>
+      <td>1001020400</td>
+      <td>3424</td>
+      <td>2013</td>
+      <td>1998</td>
+      <td>1782</td>
+      <td>216</td>
+      <td>15</td>
+      <td>1411</td>
+      <td>6.308411</td>
+      <td>3.662672</td>
+      <td>82.794483</td>
+      <td>10.490617</td>
+      <td>11.693687</td>
+      <td>7.302736</td>
+      <td>5.4329</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>1001020500</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20500</td>
+      <td>79.4</td>
+      <td>1.1768</td>
+      <td>1</td>
+      <td>1001020500</td>
+      <td>8198</td>
+      <td>5461</td>
+      <td>5258</td>
+      <td>5037</td>
+      <td>221</td>
+      <td>203</td>
+      <td>2737</td>
+      <td>2.695779</td>
+      <td>24.844374</td>
+      <td>68.456750</td>
+      <td>0.743287</td>
+      <td>4.445082</td>
+      <td>12.496450</td>
+      <td>5.1965</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>1001020600</td>
+      <td>1</td>
+      <td>1</td>
+      <td>20600</td>
+      <td>73.1</td>
+      <td>1.5519</td>
+      <td>3</td>
+      <td>1001020600</td>
+      <td>2855</td>
+      <td>1802</td>
+      <td>1750</td>
+      <td>1560</td>
+      <td>190</td>
+      <td>52</td>
+      <td>1053</td>
+      <td>6.654991</td>
+      <td>11.918982</td>
+      <td>72.916126</td>
+      <td>13.061542</td>
+      <td>17.487267</td>
+      <td>10.854324</td>
+      <td>6.3092</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Select-our-feature-columns-and-remove-missing-data">Select our feature columns and remove missing data<a class="anchor-link" href="#Select-our-feature-columns-and-remove-missing-data">#</a></h2><p>We're only interested in a few columns, so we'll keep those and discard the rest. Note that we're including <strong>our features as well as our target column, <code>life_expectancy</code>.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features</span> <span class="o">=</span> <span class="n">merged</span><span class="p">[[</span><span class="s1">&#39;pct_black&#39;</span><span class="p">,</span> <span class="s1">&#39;pct_white&#39;</span><span class="p">,</span> <span class="s1">&#39;pct_hispanic&#39;</span><span class="p">,</span> <span class="s1">&#39;pct_less_than_hs&#39;</span><span class="p">,</span> <span class="s1">&#39;pct_1_15_poverty&#39;</span><span class="p">,</span>
+                   <span class="s1">&#39;income_10k&#39;</span><span class="p">,</span> <span class="s1">&#39;pct_unemployment&#39;</span><span class="p">,</span> <span class="s1">&#39;life_expectancy&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">features</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>pct_black</th>
+      <th>pct_white</th>
+      <th>pct_hispanic</th>
+      <th>pct_less_than_hs</th>
+      <th>pct_1_15_poverty</th>
+      <th>income_10k</th>
+      <th>pct_unemployment</th>
+      <th>life_expectancy</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>7.700205</td>
+      <td>87.422998</td>
+      <td>0.872690</td>
+      <td>14.802896</td>
+      <td>9.342916</td>
+      <td>6.1838</td>
+      <td>3.474903</td>
+      <td>73.1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>53.293135</td>
+      <td>40.445269</td>
+      <td>0.788497</td>
+      <td>25.483178</td>
+      <td>14.624307</td>
+      <td>3.2303</td>
+      <td>6.701329</td>
+      <td>76.9</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3.662672</td>
+      <td>82.794483</td>
+      <td>10.490617</td>
+      <td>11.693687</td>
+      <td>7.302736</td>
+      <td>5.4329</td>
+      <td>6.308411</td>
+      <td>75.4</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>24.844374</td>
+      <td>68.456750</td>
+      <td>0.743287</td>
+      <td>4.445082</td>
+      <td>12.496450</td>
+      <td>5.1965</td>
+      <td>2.695779</td>
+      <td>79.4</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>11.918982</td>
+      <td>72.916126</td>
+      <td>13.061542</td>
+      <td>17.487267</td>
+      <td>10.854324</td>
+      <td>6.3092</td>
+      <td>6.654991</td>
+      <td>73.1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Check how many rows we have, then how many we have after removing missing data.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(65662, 8)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">features</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(65656, 8)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Running-the-regression">Running the regression<a class="anchor-link" href="#Running-the-regression">#</a></h2><p>Using the <code>statsmodels</code> package, we'll run a linear regression to find the coefficient relating life expectancy and all of our feature columns from above. We're doing this in the <strong>dataframe method</strong>, as opposed to the <strong>formula method</strong>, which is covered in another notebook.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.api</span> <span class="k">as</span> <span class="nn">sm</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s1">&#39;life_expectancy&#39;</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">life_expectancy</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">sm</span><span class="o">.</span><span class="n">OLS</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">sm</span><span class="o">.</span><span class="n">add_constant</span><span class="p">(</span><span class="n">X</span><span class="p">))</span>
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>     <td>life_expectancy</td> <th>  R-squared:         </th>  <td>   0.490</td>  
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th>  <td>   0.490</td>  
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th>  <td>   8997.</td>  
+</tr>
+<tr>
+  <th>Date:</th>             <td>Thu, 07 Nov 2019</td> <th>  Prob (F-statistic):</th>   <td>  0.00</td>   
+</tr>
+<tr>
+  <th>Time:</th>                 <td>12:26:41</td>     <th>  Log-Likelihood:    </th> <td>-1.6208e+05</td>
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td> 65656</td>      <th>  AIC:               </th>  <td>3.242e+05</td> 
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td> 65648</td>      <th>  BIC:               </th>  <td>3.243e+05</td> 
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     7</td>      <th>                     </th>      <td> </td>     
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>      <td> </td>     
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+          <td></td>            <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>const</th>            <td>   81.2365</td> <td>    0.122</td> <td>  665.628</td> <td> 0.000</td> <td>   80.997</td> <td>   81.476</td>
+</tr>
+<tr>
+  <th>pct_black</th>        <td>   -0.0666</td> <td>    0.001</td> <td>  -56.960</td> <td> 0.000</td> <td>   -0.069</td> <td>   -0.064</td>
+</tr>
+<tr>
+  <th>pct_white</th>        <td>   -0.0386</td> <td>    0.001</td> <td>  -36.707</td> <td> 0.000</td> <td>   -0.041</td> <td>   -0.037</td>
+</tr>
+<tr>
+  <th>pct_hispanic</th>     <td>    0.0131</td> <td>    0.001</td> <td>   10.298</td> <td> 0.000</td> <td>    0.011</td> <td>    0.016</td>
+</tr>
+<tr>
+  <th>pct_less_than_hs</th> <td>   -0.0862</td> <td>    0.002</td> <td>  -48.979</td> <td> 0.000</td> <td>   -0.090</td> <td>   -0.083</td>
+</tr>
+<tr>
+  <th>pct_1_15_poverty</th> <td>   -0.0596</td> <td>    0.003</td> <td>  -21.738</td> <td> 0.000</td> <td>   -0.065</td> <td>   -0.054</td>
+</tr>
+<tr>
+  <th>income_10k</th>       <td>    0.4825</td> <td>    0.006</td> <td>   83.217</td> <td> 0.000</td> <td>    0.471</td> <td>    0.494</td>
+</tr>
+<tr>
+  <th>pct_unemployment</th> <td>   -0.1490</td> <td>    0.004</td> <td>  -33.408</td> <td> 0.000</td> <td>   -0.158</td> <td>   -0.140</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>2114.193</td> <th>  Durbin-Watson:     </th> <td>   1.520</td>
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th>  <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>4788.035</td>
+</tr>
+<tr>
+  <th>Skew:</th>           <td> 0.183</td>  <th>  Prob(JB):          </th> <td>    0.00</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>       <td> 4.271</td>  <th>  Cond. No.          </th> <td>    790.</td>
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Translate that into the form <strong>"every X percentage point change in unemployment translates to a Y change in life expectancy"</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Every 1 point change in unemployment translates to a half-year decrease in life expectancy</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Translate some of your coefficients into the form <strong>"every X percentage point change in unemployment translates to a Y change in life expectancy."</strong> Do this with numbers that are meaningful, and in a way that is easily understandable to your reader.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># A 1 percentage point increase in unemployment translates to a 0.15 year decrease in life expectancy</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># A 10 percentage point increase in unemployment translates to a 1.5 year decrease in life expectancy</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<blockquote><p>Do your numbers seem off? Things too big, or too small? Make sure your percentages are percentage points between 0 and 100, not fractions between 0 and 1.</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

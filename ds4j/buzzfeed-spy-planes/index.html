@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Uncovering surveillance planes with Buzzfeed</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="hero">
+    <div class="hero-body">
+        <div class="content">
+            <h1>Uncovering surveillance planes with Buzzfeed</h1>
+            <p>From a list of points along a flight's path, how can you say "this looks like a surveillance plane?" And once you've found them, what do you do with the results?</p>
+            
+            <p>
+                
+                <a href="/ds4j/logistic-regression" class="chip">logistic regression</a>
+                
+                <a href="/ds4j/feature-engineering" class="chip">feature engineering</a>
+                
+                <a href="/ds4j/publishing-ethics" class="chip">publishing ethics</a>
+                
+            </p>
+            
+        </div>
+    </div>
+</div>
+<div class="chapter-nav bg-secondary">
+    <div class="content">
+        
+        <a href="../stanford-open-policing/">&larr;&nbsp;Stanford Open Policing Data</a>
+        
+        
+        <a href="../reveal-mortgages/">Analyzing mortgage rejections for racial bias&nbsp;&rarr;</a>
+        
+    </div>
+</div>
+<section class="section">
+    <div class="content">
+
+        <div class="columns">
+            <div class="column col-5 col-md-12 readings">
+                <h3>Readings and links</h3>
+                <ul>
+<li><a href="https://www.buzzfeednews.com/article/peteraldhous/hidden-spy-planes">We Trained A Computer To Search For Hidden Spy Planes. This Is What It Found.</a></li>
+<li><a href="https://buzzfeednews.github.io/2017-08-spy-plane-finder/">GitHub repo</a> for the above story</li>
+<li><a href="https://www.buzzfeednews.com/article/peteraldhous/spies-in-the-skies">Spies in the Skies - See Maps Showing Where FBI Planes Are Watching From Above</a></li>
+<li><a href="https://github.com/BuzzFeedNews/2016-04-federal-surveillance-planes">GitHub repo</a> for the above story</li>
+</ul>
+            </div>
+            <div class="column col-7 col-md-12">
+                <h3>Summary</h3>
+                <p>In 2016, Buzzfeed News published a piece <a href="https://www.buzzfeednews.com/article/peteraldhous/spies-in-the-skies">exploring government surveillance planes</a>, which they found by combining a federal plane database with flight tracking information. One year later they followed this investigation up with <a href="https://www.buzzfeednews.com/article/peteraldhous/hidden-spy-planes">another piece</a> that used machine learning to uncover potential surveillance planes that weren't listed in the registry.</p>
+<p>In this chapter we will dig deep into the process of feature engineering, the process of creating new ways of describing your data that improve the performance of your machine learning algorithms. We'll also explore the difference between using yes/no predictions as compared to probabilities. Most exciting of all, we'll make maps of flight paths!</p>
+            </div>
+        </div>
+
+        
+        <h3>Notebooks, Assignments, and Walkthroughs</h3>
+        
+
+        
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/buzzfeed-spy-planes/feature-engineering-buzzfeed-spy-planes">Feature engineering - BuzzFeed spy planes</a></h4>
+        <p>Flight paths come as a series of individual measurements. How do you combine them together to create a profile of the way an individual plane typically flies?</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/buzzfeed-spy-planes/feature-engineering-buzzfeed-spy-planes/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/buzzfeed-spy-planes/notebooks/Feature engineering - Buzzfeed spy planes.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/buzzfeed-spy-planes/notebooks/Feature engineering - Buzzfeed spy planes.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/buzzfeed-spy-planes/drawing-flight-paths-on-maps-with-cartopy">Drawing flight paths on maps with cartopy</a></h4>
+        <p>After all this analysis, it&#39;s time for a break! Take the suspicious flight paths and draw them on a map.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/buzzfeed-spy-planes/drawing-flight-paths-on-maps-with-cartopy/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/buzzfeed-spy-planes/notebooks/Drawing flight paths on maps with cartopy.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/buzzfeed-spy-planes/notebooks/Drawing flight paths on maps with cartopy.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/buzzfeed-spy-planes/homework-buzzfeed-surveillance-planes-random-forests-completed">BuzzFeed Surveillance Planes Random Forests (Homework, completed)</a></h4>
+        <p>After the feature engineering has been completed, use a random forest classifier to detect spy planes.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/buzzfeed-spy-planes/homework-buzzfeed-surveillance-planes-random-forests-completed/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/buzzfeed-spy-planes/notebooks/Homework - Buzzfeed Surveillance Planes Random Forests (Completed).ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/buzzfeed-spy-planes/notebooks/Homework - Buzzfeed Surveillance Planes Random Forests (Completed).ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/buzzfeed-spy-planes/homework-buzzfeed-surveillance-planes-random-forests">BuzzFeed Surveillance Planes Random Forests (Homework, incomplete)</a></h4>
+        <p>After the feature engineering has been completed, use a random forest classifier to detect spy planes. (homework version, incomplete)</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/buzzfeed-spy-planes/homework-buzzfeed-surveillance-planes-random-forests/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/buzzfeed-spy-planes/notebooks/Homework - Buzzfeed Surveillance Planes Random Forests.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/buzzfeed-spy-planes/notebooks/Homework - Buzzfeed Surveillance Planes Random Forests.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        
+        
+
+        
+    </div>
+</section>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

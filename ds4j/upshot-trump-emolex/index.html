@@ -1,0 +1,263 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Analyzing the tone of Trump&#39;s speeches</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="hero">
+    <div class="hero-body">
+        <div class="content">
+            <h1>Analyzing the tone of Trump&#39;s speeches</h1>
+            <p>Standard sentiment analysis scores a document on a positive-vs-negative scale. Using the Emotional Lexicon, though, you can add unique emotional measurements like anger, joy, surprise, or fear.</p>
+            
+            <p>
+                
+                <a href="/ds4j/text-analysis" class="chip">text analysis</a>
+                
+                <a href="/ds4j/emotional-lexicon" class="chip">emotional lexicon</a>
+                
+            </p>
+            
+        </div>
+    </div>
+</div>
+<div class="chapter-nav bg-secondary">
+    <div class="content">
+        
+        <a href="../wapo-app-reviews/">&larr;&nbsp;Analyzing online safety through app store reviews</a>
+        
+        
+        <a href="../azcentral-text-reuse-model-legislation/">Detecting special interest model legislation in state laws&nbsp;&rarr;</a>
+        
+    </div>
+</div>
+<section class="section">
+    <div class="content">
+
+        <div class="columns">
+            <div class="column col-5 col-md-12 readings">
+                <h3>Readings and links</h3>
+                <ul>
+<li><a href="https://www.nytimes.com/interactive/2017/02/28/upshot/trump-sounds-different-tone-in-first-address-to-congress.html">Trump Sounds a Different Tone in First Address to Congress</a></li>
+<li><a href="https://saifmohammad.com/WebPages/NRC-Emotion-Lexicon.htm">NRC Emotional Lexicon</a>, the words-emotions database that was used for the analysis</li>
+</ul>
+            </div>
+            <div class="column col-7 col-md-12">
+                <h3>Summary</h3>
+                <p>Using a dataset of words marked with differente motions (anger, surprise, happiness, etc), The UpShot compares the emotional tone of Trump's campaign speeches, his 2017 address to Congress, and previous presidents' State of the Union addresses.</p>
+<p>While we're happy to claim that sentiment analysis is a generally flawed technique, this piece is fun to reproduce as well as provides an interesting launchpad for critique of emotional analysis of text. Leaning on academic work as a beacon of truth might be a tempting thought, but it should receive just as much critique as anything else.</p>
+<blockquote>
+<p>Fair warning: even after you find the flaws in this process, you'll be incredibly tempted to use it. As mentioned above, it's <em>really fun</em>.</p>
+</blockquote>
+            </div>
+        </div>
+
+        
+        <h3>Notebooks, Assignments, and Walkthroughs</h3>
+        
+
+        
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/upshot-trump-emolex/nrc-emotional-lexicon">An introduction to the NRC Emotional Lexicon</a></h4>
+        <p>From its source site, the &#34;NRC Emotion Lexicon is a list of English words and their associations with eight basic emotions (anger, fear, anticipation, trust, surprise, sadness, joy, and disgust) and two sentiments (negative and positive).&#34; Learn to basics of interacting with this dataset.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/upshot-trump-emolex/nrc-emotional-lexicon/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/upshot-trump-emolex/notebooks/NRC Emotional Lexicon.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/upshot-trump-emolex/notebooks/NRC Emotional Lexicon.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/upshot-trump-emolex/trump-vs-state-of-the-union-addresses">Reproducing FiveThirtyEight&#39;s Trump State of the Union visualization</a></h4>
+        <p>After combining several datasets of speeches - both by Trump and previous presidents - we&#39;ll be able to reproduce the main graphic from The UpShot&#39;s piece.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/upshot-trump-emolex/trump-vs-state-of-the-union-addresses/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/upshot-trump-emolex/notebooks/Trump vs State of the Union addresses.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/upshot-trump-emolex/notebooks/Trump vs State of the Union addresses.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        
+        
+
+        
+    </div>
+</section>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

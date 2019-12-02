@@ -1,0 +1,1762 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>In The Dark - Combining datasets and cleaning the data</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/apm-reports-jury-bias/">Bias in the jury selection process</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/apm-reports-jury-bias/in-the-dark-combining-datasets-and-cleaning-the-data">In The Dark - Combining datasets and cleaning the data</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Combining-datasets-and-cleaning-data-for-jury-selection-analysis">Combining datasets and cleaning data for jury selection analysis<a class="anchor-link" href="#Combining-datasets-and-cleaning-data-for-jury-selection-analysis">#</a></h1><p>Before we perform our logistic regression on jury selection data, we'll need to do a bit of cleaning.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/apm-reports-jury-bias/in-the-dark-combining-datasets-and-cleaning-the-data">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/apm-reports-jury-bias/notebooks/In The Dark - Combining datasets and cleaning the data.ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_rows&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.width&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Read-in-the-files">Read in the files<a class="anchor-link" href="#Read-in-the-files">#</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">jurors</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/jurors.csv&quot;</span><span class="p">)</span>
+<span class="n">jurors</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>trial</th>
+      <th>trial__id</th>
+      <th>race</th>
+      <th>gender</th>
+      <th>race_source</th>
+      <th>gender_source</th>
+      <th>struck_by</th>
+      <th>strike_eligibility</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>35</td>
+      <td>1993-9826--Terry L. Landingham</td>
+      <td>1</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck for cause</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>38</td>
+      <td>1993-9826--Terry L. Landingham</td>
+      <td>1</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck for cause</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">answers</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/voir_dire_answers.csv&quot;</span><span class="p">)</span>
+<span class="n">answers</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>juror_id</th>
+      <th>juror_id__trial__id</th>
+      <th>no_responses</th>
+      <th>married</th>
+      <th>children</th>
+      <th>religious</th>
+      <th>education</th>
+      <th>leans_state</th>
+      <th>leans_defense</th>
+      <th>leans_ambi</th>
+      <th>moral_hardship</th>
+      <th>job_hardship</th>
+      <th>caretaker</th>
+      <th>communication</th>
+      <th>medical</th>
+      <th>employed</th>
+      <th>social</th>
+      <th>prior_jury</th>
+      <th>crime_victim</th>
+      <th>fam_crime_victim</th>
+      <th>accused</th>
+      <th>fam_accused</th>
+      <th>eyewitness</th>
+      <th>fam_eyewitness</th>
+      <th>military</th>
+      <th>law_enforcement</th>
+      <th>fam_law_enforcement</th>
+      <th>premature_verdict</th>
+      <th>premature_guilt</th>
+      <th>premature_innocence</th>
+      <th>def_race</th>
+      <th>vic_race</th>
+      <th>def_gender</th>
+      <th>vic_gender</th>
+      <th>def_social</th>
+      <th>vic_social</th>
+      <th>def_age</th>
+      <th>vic_age</th>
+      <th>def_sexpref</th>
+      <th>vic_sexpref</th>
+      <th>def_incarcerated</th>
+      <th>vic_incarcerated</th>
+      <th>beliefs</th>
+      <th>other_biases</th>
+      <th>innocence</th>
+      <th>take_stand</th>
+      <th>arrest_is_guilt</th>
+      <th>cant_decide</th>
+      <th>cant_affirm</th>
+      <th>cant_decide_evidence</th>
+      <th>cant_follow</th>
+      <th>know_def</th>
+      <th>know_vic</th>
+      <th>know_wit</th>
+      <th>know_attny</th>
+      <th>civil_plantiff</th>
+      <th>civil_def</th>
+      <th>civil_witness</th>
+      <th>witness_defense</th>
+      <th>witness_state</th>
+      <th>prior_info</th>
+      <th>death_hesitation</th>
+      <th>no_death</th>
+      <th>no_life</th>
+      <th>no_cops</th>
+      <th>yes_cops</th>
+      <th>legally_disqualified</th>
+      <th>witness_ambi</th>
+      <th>notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1521</td>
+      <td>107.0</td>
+      <td>3.0</td>
+      <td>False</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1524</td>
+      <td>108.0</td>
+      <td>3.0</td>
+      <td>False</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">trials</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/trials.csv&quot;</span><span class="p">)</span>
+<span class="n">trials</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>defendant_name</th>
+      <th>cause_number</th>
+      <th>state_strikes</th>
+      <th>defense_strikes</th>
+      <th>county</th>
+      <th>defendant_race</th>
+      <th>second_defendant_race</th>
+      <th>third_defendant_race</th>
+      <th>fourth_defendant_race</th>
+      <th>more_than_four_defendants</th>
+      <th>judge</th>
+      <th>prosecutor_1</th>
+      <th>prosecutor_2</th>
+      <th>prosecutor_3</th>
+      <th>prosecutors_more_than_three</th>
+      <th>def_attny_1</th>
+      <th>def_attny_2</th>
+      <th>def_attny_3</th>
+      <th>def_attnys_more_than_three</th>
+      <th>offense_code_1</th>
+      <th>offense_title_1</th>
+      <th>offense_code_2</th>
+      <th>offense_title_2</th>
+      <th>offense_code_3</th>
+      <th>offense_title_3</th>
+      <th>offense_code_4</th>
+      <th>offense_title_4</th>
+      <th>offense_code_5</th>
+      <th>offense_title_5</th>
+      <th>offense_code_6</th>
+      <th>offense_title_6</th>
+      <th>more_than_six</th>
+      <th>verdict</th>
+      <th>case_appealed</th>
+      <th>batson_claim_by_defense</th>
+      <th>batson_claim_by_state</th>
+      <th>voir_dire_present</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Terry L. Landingham</td>
+      <td>1993-9826</td>
+      <td>False</td>
+      <td>False</td>
+      <td>Attala</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>Joseph Loper, Jr</td>
+      <td>Kevin Horan</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>James H. Powell, III</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>97-3-7(2)(b)</td>
+      <td>Aggravated Assault</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>Guilty on at least one offense</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Donovan Johnson</td>
+      <td>2009-0023</td>
+      <td>False</td>
+      <td>True</td>
+      <td>Attala</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>Joseph Loper, Jr</td>
+      <td>Ryan M. Berry</td>
+      <td>Mike Howie</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>Rosalind H. Jordan</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>Guilty on at least one offense</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Combine">Combine<a class="anchor-link" href="#Combine">#</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">answers</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">jurors</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;juror_id&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">merge</span><span class="p">(</span><span class="n">trials</span><span class="p">,</span> <span class="n">left_on</span><span class="o">=</span><span class="s1">&#39;trial__id&#39;</span><span class="p">,</span> <span class="n">right_on</span><span class="o">=</span><span class="s1">&#39;id&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id_x</th>
+      <th>juror_id</th>
+      <th>juror_id__trial__id</th>
+      <th>no_responses</th>
+      <th>married</th>
+      <th>children</th>
+      <th>religious</th>
+      <th>education</th>
+      <th>leans_state</th>
+      <th>leans_defense</th>
+      <th>leans_ambi</th>
+      <th>moral_hardship</th>
+      <th>job_hardship</th>
+      <th>caretaker</th>
+      <th>communication</th>
+      <th>medical</th>
+      <th>employed</th>
+      <th>social</th>
+      <th>prior_jury</th>
+      <th>crime_victim</th>
+      <th>fam_crime_victim</th>
+      <th>accused</th>
+      <th>fam_accused</th>
+      <th>eyewitness</th>
+      <th>fam_eyewitness</th>
+      <th>military</th>
+      <th>law_enforcement</th>
+      <th>fam_law_enforcement</th>
+      <th>premature_verdict</th>
+      <th>premature_guilt</th>
+      <th>premature_innocence</th>
+      <th>def_race</th>
+      <th>vic_race</th>
+      <th>def_gender</th>
+      <th>vic_gender</th>
+      <th>def_social</th>
+      <th>vic_social</th>
+      <th>def_age</th>
+      <th>vic_age</th>
+      <th>def_sexpref</th>
+      <th>vic_sexpref</th>
+      <th>def_incarcerated</th>
+      <th>vic_incarcerated</th>
+      <th>beliefs</th>
+      <th>other_biases</th>
+      <th>innocence</th>
+      <th>take_stand</th>
+      <th>arrest_is_guilt</th>
+      <th>cant_decide</th>
+      <th>cant_affirm</th>
+      <th>cant_decide_evidence</th>
+      <th>cant_follow</th>
+      <th>know_def</th>
+      <th>know_vic</th>
+      <th>know_wit</th>
+      <th>know_attny</th>
+      <th>civil_plantiff</th>
+      <th>civil_def</th>
+      <th>civil_witness</th>
+      <th>witness_defense</th>
+      <th>witness_state</th>
+      <th>prior_info</th>
+      <th>death_hesitation</th>
+      <th>no_death</th>
+      <th>no_life</th>
+      <th>no_cops</th>
+      <th>yes_cops</th>
+      <th>legally_disqualified</th>
+      <th>witness_ambi</th>
+      <th>notes</th>
+      <th>id_y</th>
+      <th>trial</th>
+      <th>trial__id</th>
+      <th>race</th>
+      <th>gender</th>
+      <th>race_source</th>
+      <th>gender_source</th>
+      <th>struck_by</th>
+      <th>strike_eligibility</th>
+      <th>id</th>
+      <th>defendant_name</th>
+      <th>cause_number</th>
+      <th>state_strikes</th>
+      <th>defense_strikes</th>
+      <th>county</th>
+      <th>defendant_race</th>
+      <th>second_defendant_race</th>
+      <th>third_defendant_race</th>
+      <th>fourth_defendant_race</th>
+      <th>more_than_four_defendants</th>
+      <th>judge</th>
+      <th>prosecutor_1</th>
+      <th>prosecutor_2</th>
+      <th>prosecutor_3</th>
+      <th>prosecutors_more_than_three</th>
+      <th>def_attny_1</th>
+      <th>def_attny_2</th>
+      <th>def_attny_3</th>
+      <th>def_attnys_more_than_three</th>
+      <th>offense_code_1</th>
+      <th>offense_title_1</th>
+      <th>offense_code_2</th>
+      <th>offense_title_2</th>
+      <th>offense_code_3</th>
+      <th>offense_title_3</th>
+      <th>offense_code_4</th>
+      <th>offense_title_4</th>
+      <th>offense_code_5</th>
+      <th>offense_title_5</th>
+      <th>offense_code_6</th>
+      <th>offense_title_6</th>
+      <th>more_than_six</th>
+      <th>verdict</th>
+      <th>case_appealed</th>
+      <th>batson_claim_by_defense</th>
+      <th>batson_claim_by_state</th>
+      <th>voir_dire_present</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1521</td>
+      <td>107.0</td>
+      <td>3.0</td>
+      <td>False</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>107</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck by the defense</td>
+      <td>Both State and Defense</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>True</td>
+      <td>True</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>Guilty on at least one offense</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1524</td>
+      <td>108.0</td>
+      <td>3.0</td>
+      <td>False</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>NaN</td>
+      <td>108</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck by the state</td>
+      <td>State</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>True</td>
+      <td>True</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>False</td>
+      <td>Guilty on at least one offense</td>
+      <td>True</td>
+      <td>False</td>
+      <td>False</td>
+      <td>True</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Filter">Filter<a class="anchor-link" href="#Filter">#</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[(</span><span class="n">df</span><span class="o">.</span><span class="n">strike_eligibility</span> <span class="o">==</span> <span class="s1">&#39;Both State and Defense&#39;</span><span class="p">)</span> <span class="o">|</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">strike_eligibility</span> <span class="o">==</span> <span class="s1">&#39;State&#39;</span><span class="p">)]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">state_strikes</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    1647
+1     648
+Name: state_strikes, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;struck_by_state&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">struck_by</span> <span class="o">==</span> <span class="s1">&#39;Struck by the state&#39;</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">struck_by_state</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>False    1722
+True      573
+Name: struck_by_state, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Turn-into-numbers">Turn into numbers<a class="anchor-link" href="#Turn-into-numbers">#</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span>
+    <span class="kc">True</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="kc">False</span><span class="p">:</span> <span class="mi">0</span>
+<span class="p">})</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id_x</th>
+      <th>juror_id</th>
+      <th>juror_id__trial__id</th>
+      <th>no_responses</th>
+      <th>married</th>
+      <th>children</th>
+      <th>religious</th>
+      <th>education</th>
+      <th>leans_state</th>
+      <th>leans_defense</th>
+      <th>leans_ambi</th>
+      <th>moral_hardship</th>
+      <th>job_hardship</th>
+      <th>caretaker</th>
+      <th>communication</th>
+      <th>medical</th>
+      <th>employed</th>
+      <th>social</th>
+      <th>prior_jury</th>
+      <th>crime_victim</th>
+      <th>fam_crime_victim</th>
+      <th>accused</th>
+      <th>fam_accused</th>
+      <th>eyewitness</th>
+      <th>fam_eyewitness</th>
+      <th>military</th>
+      <th>law_enforcement</th>
+      <th>fam_law_enforcement</th>
+      <th>premature_verdict</th>
+      <th>premature_guilt</th>
+      <th>premature_innocence</th>
+      <th>def_race</th>
+      <th>vic_race</th>
+      <th>def_gender</th>
+      <th>vic_gender</th>
+      <th>def_social</th>
+      <th>vic_social</th>
+      <th>def_age</th>
+      <th>vic_age</th>
+      <th>def_sexpref</th>
+      <th>vic_sexpref</th>
+      <th>def_incarcerated</th>
+      <th>vic_incarcerated</th>
+      <th>beliefs</th>
+      <th>other_biases</th>
+      <th>innocence</th>
+      <th>take_stand</th>
+      <th>arrest_is_guilt</th>
+      <th>cant_decide</th>
+      <th>cant_affirm</th>
+      <th>cant_decide_evidence</th>
+      <th>cant_follow</th>
+      <th>know_def</th>
+      <th>know_vic</th>
+      <th>know_wit</th>
+      <th>know_attny</th>
+      <th>civil_plantiff</th>
+      <th>civil_def</th>
+      <th>civil_witness</th>
+      <th>witness_defense</th>
+      <th>witness_state</th>
+      <th>prior_info</th>
+      <th>death_hesitation</th>
+      <th>no_death</th>
+      <th>no_life</th>
+      <th>no_cops</th>
+      <th>yes_cops</th>
+      <th>legally_disqualified</th>
+      <th>witness_ambi</th>
+      <th>notes</th>
+      <th>id_y</th>
+      <th>trial</th>
+      <th>trial__id</th>
+      <th>race</th>
+      <th>gender</th>
+      <th>race_source</th>
+      <th>gender_source</th>
+      <th>struck_by</th>
+      <th>strike_eligibility</th>
+      <th>id</th>
+      <th>defendant_name</th>
+      <th>cause_number</th>
+      <th>state_strikes</th>
+      <th>defense_strikes</th>
+      <th>county</th>
+      <th>defendant_race</th>
+      <th>second_defendant_race</th>
+      <th>third_defendant_race</th>
+      <th>fourth_defendant_race</th>
+      <th>more_than_four_defendants</th>
+      <th>judge</th>
+      <th>prosecutor_1</th>
+      <th>prosecutor_2</th>
+      <th>prosecutor_3</th>
+      <th>prosecutors_more_than_three</th>
+      <th>def_attny_1</th>
+      <th>def_attny_2</th>
+      <th>def_attny_3</th>
+      <th>def_attnys_more_than_three</th>
+      <th>offense_code_1</th>
+      <th>offense_title_1</th>
+      <th>offense_code_2</th>
+      <th>offense_title_2</th>
+      <th>offense_code_3</th>
+      <th>offense_title_3</th>
+      <th>offense_code_4</th>
+      <th>offense_title_4</th>
+      <th>offense_code_5</th>
+      <th>offense_title_5</th>
+      <th>offense_code_6</th>
+      <th>offense_title_6</th>
+      <th>more_than_six</th>
+      <th>verdict</th>
+      <th>case_appealed</th>
+      <th>batson_claim_by_defense</th>
+      <th>batson_claim_by_state</th>
+      <th>voir_dire_present</th>
+      <th>struck_by_state</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1521</td>
+      <td>107.0</td>
+      <td>3.0</td>
+      <td>0</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>107</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck by the defense</td>
+      <td>Both State and Defense</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>Guilty on at least one offense</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1524</td>
+      <td>108.0</td>
+      <td>3.0</td>
+      <td>0</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>108</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck by the state</td>
+      <td>State</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>Guilty on at least one offense</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>1525</td>
+      <td>109.0</td>
+      <td>3.0</td>
+      <td>1</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>109</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Juror chosen to serve on jury</td>
+      <td>Both State and Defense</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>Guilty on at least one offense</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Save">Save<a class="anchor-link" href="#Save">#</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="s2">&quot;data/jury-cleaned.csv&quot;</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

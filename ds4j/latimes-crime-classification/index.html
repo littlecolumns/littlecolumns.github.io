@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Building a crime classification engine</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="hero">
+    <div class="hero-body">
+        <div class="content">
+            <h1>Building a crime classification engine</h1>
+            <p>Using machine learning as an investigative tool to cast light on years of underreporting by the Los Angeles Police Department.</p>
+            
+            <p>
+                
+                <a href="/ds4j/evaluation-metrics" class="chip">evaluation metrics</a>
+                
+                <a href="/ds4j/stemming" class="chip">stemming</a>
+                
+                <a href="/ds4j/tf-idf" class="chip">TF-IDF</a>
+                
+                <a href="/ds4j/sparse-data" class="chip">sparse data</a>
+                
+                <a href="/ds4j/support-vector-machines" class="chip">support vector machines</a>
+                
+                <a href="/ds4j/classification" class="chip">classification</a>
+                
+                <a href="/ds4j/natural-language-processing" class="chip">natural language processing</a>
+                
+            </p>
+            
+        </div>
+    </div>
+</div>
+<div class="chapter-nav bg-secondary">
+    <div class="content">
+        
+        <a href="../ajc-doctors-abuse/">&larr;&nbsp;Uncovering abusive doctors that were allowed to continue practicing</a>
+        
+        
+        <a href="../wapo-app-reviews/">Analyzing online safety through app store reviews&nbsp;&rarr;</a>
+        
+    </div>
+</div>
+<section class="section">
+    <div class="content">
+
+        <div class="columns">
+            <div class="column col-5 col-md-12 readings">
+                <h3>Readings and links</h3>
+                <ul>
+<li><a href="https://www.latimes.com/local/cityhall/la-me-crime-stats-20151015-story.html">LAPD underreported serious assaults, skewing crime stats for 8 years</a></li>
+<li><a href="https://www.latimes.com/local/la-me-crimestats-lapd-20140810-story.html">Times Investigation: LAPD misclassified nearly 1,200 violent crimes as minor offenses</a></li>
+<li><a href="https://www.latimes.com/local/cityhall/la-me-crime-stats-side-20151015-story.html">How we reported this story</a>, a writeup from the LA Times</li>
+<li><a href="https://github.com/datadesk/lapd-crime-classification-analysis">The LA Times' GitHub repo for this project</a></li>
+</ul>
+            </div>
+            <div class="column col-7 col-md-12">
+                <h3>Summary</h3>
+                <p>The Los Angeles Police Department underreported serious assaults for years, classifying them as lower-level crimes instead. In a series of separate pieces, the Los Angeles Times analyzes crime reports first by hand and then using machine learning. They eventually uncovered more than 14,000 serious assaults that had been classified as lower-level simple assaults.</p>
+<p>Working from a selection of assaults labeled as either serious or simple, we'll train a classifier to detect which is which based on words included on police reports. We'll then turn this classifier back on the dataset itself, seeing if it can detect incorrectly categorized assaults.</p>
+<p>This chapter builds on the simple text-analysis techniques learned in the previous chapters, moving to more advanced skills like using all of the words instead of a selection, and using "term-frequency inverse-document-frequeny" (TF-IDF) to ignore common words.</p>
+            </div>
+        </div>
+
+        
+        <h3>Notebooks, Assignments, and Walkthroughs</h3>
+        
+        
+        <div class="columns">
+  <div class="column col-8 col-sm-12">
+    <h4><a href="/ds4j/latimes-crime-classification/walkthrough/">Complete walkthrough</a></strong></h4>
+    <p>This walkthrough goes through the start-to-finish process of tracking down misclassified crimes. Be warned that dataset contains multiple descriptions of assaults.</p>
+  </div>
+  <div class="column col-4 col-sm-12">
+    
+    
+    
+    
+    <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/latimes-crime-classification/walkthrough/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Multi-page walkthrough
+            </small>
+    </div>
+</div>
+
+    
+    
+    
+    <!--
+      <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-user fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/latimes-crime-classification/walkthrough/">Read online, no code</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Multi-page walkthrough
+            </small>
+    </div>
+</div>
+    -->
+  </div>
+</div>
+        <div class="divider"></div>
+        
+        
+
+        
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/latimes-crime-classification/actual-analysis">Predicting downgraded assaults with machine learning</a></h4>
+        <p>Using LAPD summaries of 160,000 cases of assault, we&#39;ll build a classification engine to detect when a report has been downgraded from aggravated assault to simple assault.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/latimes-crime-classification/actual-analysis/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/latimes-crime-classification/notebooks/Actual analysis.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/latimes-crime-classification/notebooks/Actual analysis.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/latimes-crime-classification/inspecting-classifications">Taking a closer look at our classifier and its misclassifications</a></h4>
+        <p>While our classifier performed well, how did it work? Let&#39;s examine how our classifier succeeds and fails, and see how that may impact our investigation.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/latimes-crime-classification/inspecting-classifications/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/latimes-crime-classification/notebooks/Inspecting classifications.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/latimes-crime-classification/notebooks/Inspecting classifications.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/latimes-crime-classification/trying-out-different-classifiers">Trying out different classifiers</a></h4>
+        <p>The LA Times used two different classifiers that they felt complemented each other in the investigation. Let&#39;s see how different machine learning algorithms compare.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/latimes-crime-classification/trying-out-different-classifiers/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/latimes-crime-classification/notebooks/Trying out different classifiers.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/latimes-crime-classification/notebooks/Trying out different classifiers.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        
+        
+
+        
+        <div class="columns">
+            <div class="column col-sm-8">
+                <h3>Discussion topics</h3>
+                <p><strong>Basic data-driven story questions</strong></p>
+<ul>
+<li>What editorial decisions did we make when cleaning or data or putting together this analysis?</li>
+<li>If you wanted to criticize this analysis, what approaches might you take?</li>
+</ul>
+<p><strong>Different classifiers provided different results - we tried random forests, logistic regression, and a support vector machine. None of these results matched exactly!</strong></p>
+<ul>
+<li>Which classifier did we have the most faith in, and why?</li>
+<li>How comfortable should we/can we be with our results if we don't have an understanding of the math or technology behind the processes? </li>
+<li>Should/does that lack of understanding limit what we can/should do with our results?</li>
+<li>If we don't have much of an understanding of the lower-level processes, how can we protect ourselves from being wrong?</li>
+</ul>
+<p><strong>We've been predicting whether a crime has potentially been misclassified as something of a lower severity. This won't be perfect - no matter how good we get, we'll definitely be wrong with our guesses sometimes.</strong> For these questions, it's important to think about what we are doing with these results.</p>
+<ul>
+<li>What are the consequences of us misclassifying crimes? How about for the LAPD?</li>
+<li>What are the consequences of predicting "minor" for a crime that should actually have been classified as "major?"</li>
+<li>Is that different from predicting "major" for a crime that should actually have been classified as "minor?"</li>
+<li>Are there processes are in place that might limit the negative repercussions of incorrect assessments? If not, what could be done?</li>
+</ul>
+<p><strong>With publishing this analysis, we're releasing a lot of somewhat detailed crime reports.</strong></p>
+<ul>
+<li>Are there any ethical concerns with publishing this dataset?</li>
+<li>If so, what steps could be taken to limit the unintended consequences of publishing this data? </li>
+</ul>
+            </div>
+        </div> 
+    </div>
+</section>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

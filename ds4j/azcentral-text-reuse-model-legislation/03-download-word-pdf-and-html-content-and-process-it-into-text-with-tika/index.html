@@ -1,0 +1,721 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>03-Download Word, PDF and HTML content and process it into text with Tika</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/azcentral-text-reuse-model-legislation/">Detecting special interest model legislation in state laws</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/azcentral-text-reuse-model-legislation/03-download-word-pdf-and-html-content-and-process-it-into-text-with-tika">03-Download Word, PDF and HTML content and process it into text with Tika</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Download-bill-content-from-the-web-and-process-into-our-database-with-Tika">Download bill content from the web and process into our database with Tika<a class="anchor-link" href="#Download-bill-content-from-the-web-and-process-into-our-database-with-Tika">#</a></h1><p>When we're dealing with bill content, it comes in many many types of documents. Word, PDF, web pages - it's an impossible mix!</p>
+<p>Fortunately, there's a great tool called <a href="https://tika.apache.org/">Apache Tika</a> that takes almost any type of document and converts it into text. It even does OCR on image-based PDFs! Tika is a dream.</p>
+<h2 id="How-many-have-been-processed?">How many have been processed?<a class="anchor-link" href="#How-many-have-been-processed?">#</a></h2><p>Since you might run this notebook a few times, we'll start off by seeing how many of the rows we've processed so far.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/azcentral-text-reuse-model-legislation/03-download-word-pdf-and-html-content-and-process-it-into-text-with-tika">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/azcentral-text-reuse-model-legislation/notebooks/03-Download Word, PDF and HTML content and process it into text with Tika.ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">create_engine</span>
+
+<span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;postgresql://localhost:5432/legislation&#39;</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;AUTOCOMMIT&quot;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT</span>
+<span class="s2">        COUNT(bill_id) - COUNT(processed_at) AS unprocessed,</span>
+<span class="s2">        COUNT(processed_at) as processed,</span>
+<span class="s2">        COUNT(processed_at) / COUNT(id)::decimal as processed_pct</span>
+<span class="s2">    FROM bills;</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>unprocessed</th>
+      <th>processed</th>
+      <th>processed_pct</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1198810</td>
+      <td>54592</td>
+      <td>0.043555</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Let's-look-at-the-processed-rows">Let's look at the processed rows<a class="anchor-link" href="#Let's-look-at-the-processed-rows">#</a></h2><p>While we're at it, let's take a look at the rows that have been processed. This can help you make sure the <code>content</code> column is being filled up, and that <code>error</code> shows up here or there.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">pd</span><span class="o">.</span><span class="n">read_sql</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    SELECT * from bills where processed_at is not null limit 5</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">engine</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id</th>
+      <th>bill_id</th>
+      <th>code</th>
+      <th>bill_number</th>
+      <th>title</th>
+      <th>description</th>
+      <th>state</th>
+      <th>session</th>
+      <th>filename</th>
+      <th>status</th>
+      <th>status_date</th>
+      <th>url</th>
+      <th>error</th>
+      <th>content</th>
+      <th>processed_at</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>56</td>
+      <td>307787</td>
+      <td>H0454</td>
+      <td>H0454</td>
+      <td>An Act Relating To The Administration And Issu...</td>
+      <td>An Act Relating To The Administration And Issu...</td>
+      <td>VT</td>
+      <td>2011-2012 Session</td>
+      <td>bill_data/VT/2011-2012_Regular_Session/bill/H0...</td>
+      <td>1</td>
+      <td>2011-04-19</td>
+      <td>http://www.leg.state.vt.us/docs/2012/bills/Hou...</td>
+      <td>None</td>
+      <td>Microsoft Word - BillTemp.doc\n\n\nBILL AS PAS...</td>
+      <td>2019-11-17 20:16:24.520099+00:00</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>18</td>
+      <td>267749</td>
+      <td>H0229</td>
+      <td>H0229</td>
+      <td>An Act Relating To Requiring That Certain Surg...</td>
+      <td>An Act Relating To Requiring That Certain Surg...</td>
+      <td>VT</td>
+      <td>2011-2012 Session</td>
+      <td>bill_data/VT/2011-2012_Regular_Session/bill/H0...</td>
+      <td>1</td>
+      <td>2011-02-11</td>
+      <td>http://www.leg.state.vt.us/docs/2012/bills/Int...</td>
+      <td>None</td>
+      <td>Microsoft Word - GENERAL-#264910-v1-Dr_11-777;...</td>
+      <td>2019-11-17 20:39:25.924196+00:00</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>55</td>
+      <td>247704</td>
+      <td>H0141</td>
+      <td>H0141</td>
+      <td>An Act Relating To Improving Transparency In G...</td>
+      <td>An Act Relating To Improving Transparency In G...</td>
+      <td>VT</td>
+      <td>2011-2012 Session</td>
+      <td>bill_data/VT/2011-2012_Regular_Session/bill/H0...</td>
+      <td>1</td>
+      <td>2011-01-28</td>
+      <td>http://www.leg.state.vt.us/docs/2012/bills/Int...</td>
+      <td>None</td>
+      <td>Microsoft Word - GENERAL-#262040-v5A-H_141_-_2...</td>
+      <td>2019-11-17 20:39:27.023591+00:00</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>37</td>
+      <td>271790</td>
+      <td>HCR047</td>
+      <td>HCR047</td>
+      <td>House Concurrent Resolution Honoring The Town ...</td>
+      <td>House Concurrent Resolution Honoring The Town ...</td>
+      <td>VT</td>
+      <td>2011-2012 Session</td>
+      <td>bill_data/VT/2011-2012_Regular_Session/bill/HC...</td>
+      <td>4</td>
+      <td>2011-02-15</td>
+      <td>http://www.leg.state.vt.us/docs/2012/Acts/ACTR...</td>
+      <td>None</td>
+      <td>Microsoft Word - GENERAL-#266635-v1-Act_No__R-...</td>
+      <td>2019-11-17 20:16:24.720864+00:00</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>83</td>
+      <td>417770</td>
+      <td>HCR315</td>
+      <td>HCR315</td>
+      <td>House Concurrent Resolution Congratulating The...</td>
+      <td>House Concurrent Resolution Congratulating The...</td>
+      <td>VT</td>
+      <td>2011-2012 Session</td>
+      <td>bill_data/VT/2011-2012_Regular_Session/bill/HC...</td>
+      <td>4</td>
+      <td>2012-03-23</td>
+      <td>http://www.leg.state.vt.us/docs/2012/Acts/ACTR...</td>
+      <td>None</td>
+      <td>Microsoft Word - GENERAL-#279477-v1-Act_No__R-...</td>
+      <td>2019-11-17 20:27:44.197148+00:00</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Use-Tika-to-process-the-bills-into-text">Use Tika to process the bills into text<a class="anchor-link" href="#Use-Tika-to-process-the-bills-into-text">#</a></h1><p>Now we'll go through the entries in the postgres database. For all of the unprocessed rows, we'll pull down the URL and try to convert whatever it's pointing at (PDF, Word doc, HTML page, etc) into some text. If it's successful, we'll save that into the <code>contents</code> column. If we fail, we'll try to update the <code>error</code> column instead.</p>
+<p>This use of Tika is a little overly complex - it uses a class, saves to a database, all sorts of magic. There's another simpler notebook if you're just interested in seeing how Tika works.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">requests</span>
+<span class="kn">import</span> <span class="nn">tika</span>
+<span class="kn">from</span> <span class="nn">tika</span> <span class="kn">import</span> <span class="n">parser</span>
+
+<span class="c1"># Should we use OCR if normal processing fails?</span>
+<span class="n">USE_OCR</span> <span class="o">=</span> <span class="kc">False</span>
+
+<span class="k">class</span> <span class="nc">Bill</span><span class="p">:</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">id</span><span class="p">,</span> <span class="n">url</span><span class="p">,</span> <span class="n">conn</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">id</span> <span class="o">=</span> <span class="nb">id</span><span class="p">,</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="n">url</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># A little cleaning for URLs that have moved domains</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;www.rilin.state.ri.us&quot;</span><span class="p">,</span> <span class="s2">&quot;webserver.rilin.state.ri.us&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">url</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;legis.sd.gov&#39;</span><span class="p">,</span> <span class="s1">&#39;sdlegislature.gov&#39;</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span> <span class="o">=</span> <span class="n">conn</span>
+
+    <span class="k">def</span> <span class="nf">update_content</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;User-Agent&#39;</span><span class="p">:</span> <span class="s1">&#39;Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36&#39;</span><span class="p">}</span>
+            <span class="n">response</span> <span class="o">=</span> <span class="n">requests</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">url</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">,</span> <span class="n">allow_redirects</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+            <span class="c1"># Send to tika</span>
+            <span class="n">tika_output</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">from_buffer</span><span class="p">(</span><span class="n">response</span><span class="p">)</span>
+
+            <span class="c1"># If we get nothing back, try OCR</span>
+            <span class="k">if</span> <span class="n">USE_OCR</span> <span class="ow">and</span> <span class="p">(</span><span class="s1">&#39;content&#39;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tika_output</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">tika_output</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]):</span>
+                <span class="c1"># headers = { &#39;X-Tika-PDFOcrStrategy&#39;: &#39;ocr_only&#39; }</span>
+                <span class="n">headers</span> <span class="o">=</span> <span class="p">{</span> <span class="s1">&#39;X-Tika-PDFextractInlineImages&#39;</span><span class="p">:</span> <span class="s1">&#39;true&#39;</span> <span class="p">}</span>
+                <span class="n">tika_output</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">from_buffer</span><span class="p">(</span><span class="n">response</span><span class="p">,</span> <span class="n">headers</span><span class="o">=</span><span class="n">headers</span><span class="p">)</span>
+
+            <span class="k">if</span> <span class="s1">&#39;content&#39;</span> <span class="ow">in</span> <span class="n">tika_output</span> <span class="ow">and</span> <span class="n">tika_output</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">content</span> <span class="o">=</span> <span class="n">tika_output</span><span class="p">[</span><span class="s1">&#39;content&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>        
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;tika&#39;</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">MissingSchema</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;bad_url&#39;</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">Timeout</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;timeout&#39;</span>
+        <span class="k">except</span> <span class="n">requests</span><span class="o">.</span><span class="n">exceptions</span><span class="o">.</span><span class="n">ConnectionError</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">error</span> <span class="o">=</span> <span class="s1">&#39;connection&#39;</span>
+        
+        <span class="bp">self</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+        
+    <span class="k">def</span> <span class="nf">save</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            UPDATE bills SET content=(</span><span class="si">%s</span><span class="s2">), error=(</span><span class="si">%s</span><span class="s2">), processed_at=NOW()</span>
+<span class="s2">            WHERE id = (</span><span class="si">%s</span><span class="s2">)</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">content</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">error</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">id</span><span class="p">));</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="nb">id</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT id, url</span>
+<span class="s2">            FROM bills</span>
+<span class="s2">            WHERE id = (</span><span class="si">%s</span><span class="s2">)</span>
+<span class="s2">            LIMIT 1;</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="nb">id</span><span class="p">))</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">results</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">Bill</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">conn</span><span class="p">)</span>
+        
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">unprocessed</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">results</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">            SELECT id, url</span>
+<span class="s2">            FROM bills</span>
+<span class="s2">            TABLESAMPLE BERNOULLI (1)</span>
+<span class="s2">            WHERE processed_at is null</span>
+<span class="s2">            LIMIT (</span><span class="si">%s</span><span class="s2">);</span>
+<span class="s2">        &quot;&quot;&quot;</span><span class="p">,</span> <span class="p">(</span><span class="n">limit</span><span class="p">))</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">Bill</span><span class="p">(</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">conn</span><span class="p">)</span> <span class="k">for</span> <span class="n">result</span> <span class="ow">in</span> <span class="n">results</span><span class="p">]</span>
+    
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">process_queue</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">conn</span><span class="p">,</span> <span class="n">limit</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+        <span class="n">todo</span> <span class="o">=</span> <span class="n">Bill</span><span class="o">.</span><span class="n">unprocessed</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="n">limit</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">bill</span> <span class="ow">in</span> <span class="n">todo</span><span class="p">:</span>
+            <span class="n">bill</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="k">def</span> <span class="nf">connect_and_update</span><span class="p">(</span><span class="n">_</span><span class="p">):</span>
+    <span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;postgresql://localhost:5432/legislation&#39;</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;AUTOCOMMIT&quot;</span><span class="p">)</span>
+    <span class="n">conn</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+    <span class="n">Bill</span><span class="o">.</span><span class="n">process_queue</span><span class="p">(</span><span class="n">conn</span><span class="p">)</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="n">engine</span><span class="o">.</span><span class="n">dispose</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Make-sure-Tika-is-started-up">Make sure Tika is started up<a class="anchor-link" href="#Make-sure-Tika-is-started-up">#</a></h2><p>We need to make sure Tika is started and running and working before we get down to business, so we'll pick one of the documents to give it a try.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">engine</span> <span class="o">=</span> <span class="n">create_engine</span><span class="p">(</span><span class="s1">&#39;postgresql://localhost:5432/legislation&#39;</span><span class="p">,</span> <span class="n">isolation_level</span><span class="o">=</span><span class="s2">&quot;AUTOCOMMIT&quot;</span><span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="k">except</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">bill</span> <span class="o">=</span> <span class="n">Bill</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">conn</span><span class="p">,</span> <span class="mi">1137554</span><span class="p">)</span>
+<span class="n">bill</span><span class="o">.</span><span class="n">update_content</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Done&quot;</span><span class="p">)</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Done
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Run-many">Run many<a class="anchor-link" href="#Run-many">#</a></h1><p>Now we'll process them all! We process them in baches of 10, so we need to see how many more batches to perform.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">math</span>
+
+<span class="n">conn</span> <span class="o">=</span> <span class="n">engine</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="s2">&quot;SELECT COUNT(id) - COUNT(processed_at) AS unprocessed FROM bills&quot;</span><span class="p">)</span>
+<span class="n">remaining</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">result</span><span class="p">)[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+
+<span class="n">batches</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">remaining</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">batches</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>119881</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Tika loves to display warning messages, and I haven't figured out how to suppress them. I run this JavaScript code to make the millions of warnings disappear off of the page.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%</span><span class="nx">javascript</span>
+<span class="nx">setInterval</span><span class="p">(()</span> <span class="p">=&gt;</span> <span class="p">[...</span><span class="nb">document</span><span class="p">.</span><span class="nx">querySelectorAll</span><span class="p">(</span><span class="s1">&#39;.output_stderr&#39;</span><span class="p">)].</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">e</span> <span class="p">=&gt;</span> <span class="nx">e</span><span class="p">.</span><span class="nx">remove</span><span class="p">()),</span> <span class="mi">5000</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+<div id="6e2ebf7b-2179-4843-9c1a-ac7a7af0ee29"></div>
+<div class="output_subarea output_javascript ">
+<script type="text/javascript">
+var element = $('#6e2ebf7b-2179-4843-9c1a-ac7a7af0ee29');
+setInterval(() => [...document.querySelectorAll('.output_stderr')].forEach(e => e.remove()), 5000)
+
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Here goes! Let's go grab all those documents and insert their contents into our database. <strong>If our notebook crashes, no problem - we can just start all this again and it'll resume from where it left off.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%capture</span> --no-display --no-stdout
+
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Pool</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>
+
+<span class="n">tasks</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="n">batches</span><span class="p">))</span>
+
+<span class="n">pool</span> <span class="o">=</span> <span class="n">Pool</span><span class="p">(</span><span class="n">processes</span><span class="o">=</span><span class="mi">30</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">tqdm_notebook</span><span class="p">(</span><span class="n">pool</span><span class="o">.</span><span class="n">imap_unordered</span><span class="p">(</span><span class="n">connect_and_update</span><span class="p">,</span> <span class="n">tasks</span><span class="p">),</span> <span class="n">total</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">tasks</span><span class="p">)):</span>
+    <span class="k">pass</span>
+
+<span class="n">pool</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span class="n">pool</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+
+ 
+ 
+<div id="016ad4b4-a63e-4dd0-a1e3-0629993b32c5"></div>
+<div class="output_subarea output_widget_view ">
+<script type="text/javascript">
+var element = $('#016ad4b4-a63e-4dd0-a1e3-0629993b32c5');
+</script>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "7cffc947070c4350b7c8a2840a912a97", "version_major": 2, "version_minor": 0}
+</script>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After a <strong>long long long while:</strong> we're all set! And if it gets interrupted partway through, don't worry: we can just restart this notebook, run from the top, and it'll resume from where we left off.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

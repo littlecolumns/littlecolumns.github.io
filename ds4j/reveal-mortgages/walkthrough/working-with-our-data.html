@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>1.5 Working with our data | _main.utf8.md</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="1.5 Working with our data | _main.utf8.md" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="1.5 Working with our data | _main.utf8.md" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="obtaining-our-data.html"/>
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>1.1</b> Preface</a><ul>
+<li class="chapter" data-level="1.1.1" data-path="preface.html"><a href="preface.html#the-original-story"><i class="fa fa-check"></i><b>1.1.1</b> The original story</a></li>
+<li class="chapter" data-level="1.1.2" data-path="preface.html"><a href="preface.html#more-stuff-here"><i class="fa fa-check"></i><b>1.1.2</b> More stuff here?</a></li>
+</ul></li>
+<li class="chapter" data-level="1.2" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html"><i class="fa fa-check"></i><b>1.2</b> Turning our question into measureables</a><ul>
+<li class="chapter" data-level="1.2.1" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html#data-race"><i class="fa fa-check"></i><b>1.2.1</b> Data: Race</a></li>
+</ul></li>
+<li class="chapter" data-level="1.3" data-path="refining-our-question.html"><a href="refining-our-question.html"><i class="fa fa-check"></i><b>1.3</b> Refining our question</a></li>
+<li class="chapter" data-level="1.4" data-path="obtaining-our-data.html"><a href="obtaining-our-data.html"><i class="fa fa-check"></i><b>1.4</b> Obtaining our data</a><ul>
+<li class="chapter" data-level="1.4.1" data-path="obtaining-our-data.html"><a href="obtaining-our-data.html#downloading-hmda-data-science-kit"><i class="fa fa-check"></i><b>1.4.1</b> Downloading HMDA Data Science Kit</a></li>
+<li class="chapter" data-level="1.4.2" data-path="obtaining-our-data.html"><a href="obtaining-our-data.html#importing-data-into-postgres"><i class="fa fa-check"></i><b>1.4.2</b> Importing data into Postgres</a></li>
+</ul></li>
+<li class="chapter" data-level="1.5" data-path="working-with-our-data.html"><a href="working-with-our-data.html"><i class="fa fa-check"></i><b>1.5</b> Working with our data</a><ul>
+<li class="chapter" data-level="1.5.1" data-path="working-with-our-data.html"><a href="working-with-our-data.html#connecting-to-the-database"><i class="fa fa-check"></i><b>1.5.1</b> Connecting to the database</a></li>
+<li class="chapter" data-level="1.5.2" data-path="working-with-our-data.html"><a href="working-with-our-data.html#understanding-our-data"><i class="fa fa-check"></i><b>1.5.2</b> Understanding our data</a></li>
+<li class="chapter" data-level="1.5.3" data-path="working-with-our-data.html"><a href="working-with-our-data.html#following-the-whitepaper"><i class="fa fa-check"></i><b>1.5.3</b> Following the whitepaper</a></li>
+</ul></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="working-with-our-data" class="section level2">
+<h2><span class="header-section-number">1.5</span> Working with our data</h2>
+<div id="connecting-to-the-database" class="section level3">
+<h3><span class="header-section-number">1.5.1</span> Connecting to the database</h3>
+<p>We’ll start with a few imports. Even though we typically use pandas to read in CSV and Excel files, it also conveniently can read in data from a Postgres database the (almost) exact same way.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="working-with-our-data.html#cb5-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb5-2"><a href="working-with-our-data.html#cb5-2"></a><span class="im">import</span> psycopg2</span>
+<span id="cb5-3"><a href="working-with-our-data.html#cb5-3"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb5-4"><a href="working-with-our-data.html#cb5-4"></a><span class="im">import</span> numpy <span class="im">as</span> np</span></code></pre></div>
+<p>In order to connect to the database, we’ll need to provide a connection string. You might need to chance the username and password, although this is the default on an OS X postgres installation.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="working-with-our-data.html#cb6-1"></a>conn_str <span class="op">=</span> <span class="st">&quot;host=&#39;localhost&#39; dbname=&#39;hmda&#39; user=&#39;postgres&#39; password=&#39;&#39;&quot;</span></span>
+<span id="cb6-2"><a href="working-with-our-data.html#cb6-2"></a>conn <span class="op">=</span> psycopg2.<span class="ex">connect</span>(conn_str)</span></code></pre></div>
+<p>Now that we’ve connected to the database, let’s try a sample query. We’ll just take the first 10 rows from the 2015 LAR dataset.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="working-with-our-data.html#cb7-1"></a>df <span class="op">=</span> pd.read_sql(<span class="st">&#39;select * from hmda_public.lar_2015 limit 10&#39;</span>, con<span class="op">=</span>conn)</span>
+<span id="cb7-2"><a href="working-with-our-data.html#cb7-2"></a>df</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+activity_year
+</th>
+<th style="text-align:left;">
+respondent_id
+</th>
+<th style="text-align:left;">
+agency_code
+</th>
+<th style="text-align:left;">
+loan_type
+</th>
+<th style="text-align:left;">
+property_type
+</th>
+<th style="text-align:left;">
+loan_purpose
+</th>
+<th style="text-align:left;">
+occupancy
+</th>
+<th style="text-align:left;">
+loan_amount
+</th>
+<th style="text-align:left;">
+preapproval
+</th>
+<th style="text-align:left;">
+action_type
+</th>
+<th style="text-align:left;">
+msa
+</th>
+<th style="text-align:left;">
+state_code
+</th>
+<th style="text-align:left;">
+county_code
+</th>
+<th style="text-align:left;">
+census_tract
+</th>
+<th style="text-align:left;">
+applicant_ethnicity
+</th>
+<th style="text-align:left;">
+co_applicant_ethnicity
+</th>
+<th style="text-align:left;">
+applicant_race_1
+</th>
+<th style="text-align:left;">
+applicant_race_2
+</th>
+<th style="text-align:left;">
+applicant_race_3
+</th>
+<th style="text-align:left;">
+applicant_race_4
+</th>
+<th style="text-align:left;">
+applicant_race_5
+</th>
+<th style="text-align:left;">
+co_applicant_race_1
+</th>
+<th style="text-align:left;">
+co_applicant_race_2
+</th>
+<th style="text-align:left;">
+co_applicant_race_3
+</th>
+<th style="text-align:left;">
+co_applicant_race_4
+</th>
+<th style="text-align:left;">
+co_applicant_race_5
+</th>
+<th style="text-align:left;">
+applicant_sex
+</th>
+<th style="text-align:left;">
+co_applicant_sex
+</th>
+<th style="text-align:left;">
+income
+</th>
+<th style="text-align:left;">
+purchaser_type
+</th>
+<th style="text-align:left;">
+denial_1
+</th>
+<th style="text-align:left;">
+denial_2
+</th>
+<th style="text-align:left;">
+denial_3
+</th>
+<th style="text-align:left;">
+rate_spread
+</th>
+<th style="text-align:left;">
+hoepa_status
+</th>
+<th style="text-align:left;">
+lien_status
+</th>
+<th style="text-align:left;">
+edit_status
+</th>
+<th style="text-align:left;">
+sequence_num
+</th>
+<th style="text-align:left;">
+population
+</th>
+<th style="text-align:left;">
+minority_population_percent
+</th>
+<th style="text-align:left;">
+ffiec_median_income
+</th>
+<th style="text-align:left;">
+tract_to_msa_income_percent
+</th>
+<th style="text-align:left;">
+owner_occupied_units
+</th>
+<th style="text-align:left;">
+one_to_four_units
+</th>
+<th style="text-align:left;">
+app_date_indicator
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000000319
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+00010
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+020
+</td>
+<td style="text-align:left;">
+0026.02
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0076
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000049
+</td>
+<td style="text-align:left;">
+00005805
+</td>
+<td style="text-align:left;">
+041.05
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+117.41
+</td>
+<td style="text-align:left;">
+00001588
+</td>
+<td style="text-align:left;">
+00001849
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001040
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+00198
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+170
+</td>
+<td style="text-align:left;">
+0010.01
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+0185
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000602
+</td>
+<td style="text-align:left;">
+00003458
+</td>
+<td style="text-align:left;">
+017.35
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+112.09
+</td>
+<td style="text-align:left;">
+00000998
+</td>
+<td style="text-align:left;">
+00001268
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001281
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+00222
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+170
+</td>
+<td style="text-align:left;">
+0010.04
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0115
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000343
+</td>
+<td style="text-align:left;">
+00004831
+</td>
+<td style="text-align:left;">
+017.93
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+117.52
+</td>
+<td style="text-align:left;">
+00001374
+</td>
+<td style="text-align:left;">
+00001797
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001281
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+00188
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+170
+</td>
+<td style="text-align:left;">
+0011.00
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0115
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000345
+</td>
+<td style="text-align:left;">
+00005364
+</td>
+<td style="text-align:left;">
+016.63
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+111.23
+</td>
+<td style="text-align:left;">
+00001593
+</td>
+<td style="text-align:left;">
+00001754
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001281
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+00216
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+020
+</td>
+<td style="text-align:left;">
+0005.00
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0230
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000509
+</td>
+<td style="text-align:left;">
+00001988
+</td>
+<td style="text-align:left;">
+052.31
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+058.72
+</td>
+<td style="text-align:left;">
+00000149
+</td>
+<td style="text-align:left;">
+00000327
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001281
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+00219
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+170
+</td>
+<td style="text-align:left;">
+0010.01
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0145
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000630
+</td>
+<td style="text-align:left;">
+00003458
+</td>
+<td style="text-align:left;">
+017.35
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+112.09
+</td>
+<td style="text-align:left;">
+00000998
+</td>
+<td style="text-align:left;">
+00001268
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001281
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+00188
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+170
+</td>
+<td style="text-align:left;">
+0011.00
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0145
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000635
+</td>
+<td style="text-align:left;">
+00005364
+</td>
+<td style="text-align:left;">
+016.63
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+111.23
+</td>
+<td style="text-align:left;">
+00001593
+</td>
+<td style="text-align:left;">
+00001754
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001281
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+00533
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+020
+</td>
+<td style="text-align:left;">
+0013.00
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0134
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000713
+</td>
+<td style="text-align:left;">
+00003059
+</td>
+<td style="text-align:left;">
+015.20
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+170.10
+</td>
+<td style="text-align:left;">
+00001113
+</td>
+<td style="text-align:left;">
+00001306
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001281
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+00203
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+020
+</td>
+<td style="text-align:left;">
+0013.00
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0136
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0000714
+</td>
+<td style="text-align:left;">
+00003059
+</td>
+<td style="text-align:left;">
+015.20
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+170.10
+</td>
+<td style="text-align:left;">
+00001113
+</td>
+<td style="text-align:left;">
+00001306
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2015
+</td>
+<td style="text-align:left;">
+0000001281
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+00275
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+11260
+</td>
+<td style="text-align:left;">
+02
+</td>
+<td style="text-align:left;">
+020
+</td>
+<td style="text-align:left;">
+0015.00
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+8
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+0139
+</td>
+<td style="text-align:left;">
+7
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+</td>
+<td style="text-align:left;">
+NA
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+6
+</td>
+<td style="text-align:left;">
+0001097
+</td>
+<td style="text-align:left;">
+00005104
+</td>
+<td style="text-align:left;">
+028.62
+</td>
+<td style="text-align:left;">
+00089600
+</td>
+<td style="text-align:left;">
+151.23
+</td>
+<td style="text-align:left;">
+00001474
+</td>
+<td style="text-align:left;">
+00001942
+</td>
+<td style="text-align:left;">
+0
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>That’s a lot of columns! What are they all, again?</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="working-with-our-data.html#cb8-1"></a>df.columns</span></code></pre></div>
+<pre><code>## Index([&#39;activity_year&#39;, &#39;respondent_id&#39;, &#39;agency_code&#39;, &#39;loan_type&#39;,
+##        &#39;property_type&#39;, &#39;loan_purpose&#39;, &#39;occupancy&#39;, &#39;loan_amount&#39;,
+##        &#39;preapproval&#39;, &#39;action_type&#39;, &#39;msa&#39;, &#39;state_code&#39;, &#39;county_code&#39;,
+##        &#39;census_tract&#39;, &#39;applicant_ethnicity&#39;, &#39;co_applicant_ethnicity&#39;,
+##        &#39;applicant_race_1&#39;, &#39;applicant_race_2&#39;, &#39;applicant_race_3&#39;,
+##        &#39;applicant_race_4&#39;, &#39;applicant_race_5&#39;, &#39;co_applicant_race_1&#39;,
+##        &#39;co_applicant_race_2&#39;, &#39;co_applicant_race_3&#39;, &#39;co_applicant_race_4&#39;,
+##        &#39;co_applicant_race_5&#39;, &#39;applicant_sex&#39;, &#39;co_applicant_sex&#39;, &#39;income&#39;,
+##        &#39;purchaser_type&#39;, &#39;denial_1&#39;, &#39;denial_2&#39;, &#39;denial_3&#39;, &#39;rate_spread&#39;,
+##        &#39;hoepa_status&#39;, &#39;lien_status&#39;, &#39;edit_status&#39;, &#39;sequence_num&#39;,
+##        &#39;population&#39;, &#39;minority_population_percent&#39;, &#39;ffiec_median_income&#39;,
+##        &#39;tract_to_msa_income_percent&#39;, &#39;owner_occupied_units&#39;,
+##        &#39;one_to_four_units&#39;, &#39;app_date_indicator&#39;],
+##       dtype=&#39;object&#39;)</code></pre>
+</div>
+<div id="understanding-our-data" class="section level3">
+<h3><span class="header-section-number">1.5.2</span> Understanding our data</h3>
+<p>We’ll need to read definitions from both the documentation and the whitepaper so we can understand what the different columns mean.</p>
+<p>For the documentation, you’ll use <a href="https://www.ffiec.gov/hmdarawdata/FORMATS/2015HMDACodeSheet.pdf">this file here</a>.</p>
+<p>For the <a href="https://s3-us-west-2.amazonaws.com/revealnews.org/uploads/lending_disparities_whitepaper_180214.pdf">whitepaper</a>, you’ll want to scroll down to the <strong>HMDA variables</strong> section.</p>
+</div>
+<div id="following-the-whitepaper" class="section level3">
+<h3><span class="header-section-number">1.5.3</span> Following the whitepaper</h3>
+<p>We’ll need to translate the terms used in the whitepaper into what we’ll be doing with the SQL database.</p>
+<blockquote>
+<p><strong>Loan type</strong></p>
+<p>While we recognize the substantial presence of applicants of color in the FHA market, we focused on conventional home loans for several reasons.</p>
+</blockquote>
+<p><code>loan_type = '1'</code></p>
+<blockquote>
+<p><strong>Property type</strong></p>
+<p>Prospective borrowers submit loan applications for various types of structures: one- to four-unit properties, multifamily properties and manufactured homes. For this analysis, we focused on one- to four-unit properties.</p>
+</blockquote>
+<p><code>property_type = '1'</code></p>
+<blockquote>
+<p><strong>Occupancy</strong></p>
+<p>We included only borrowers who said they planned to live in the house they were looking to buy. We did this to exclude developers or individuals who were buying property as an investment or to subsequently flip it.</p>
+</blockquote>
+<p><code>occupancy = '1'</code></p>
+<blockquote>
+<p><strong>Action Type</strong></p>
+<p>We wanted to look at the reasons lending institutions deny people a mortgage. After conversations with former officials at HUD, we decided to include only those applications that resulted in originations (action type 1) or denials (action type 3)</p>
+</blockquote>
+<p><code>(action_type = '1' OR action_type = '3')</code></p>
+<blockquote>
+<p>An applicant’s income isn’t always reported in the data. In other cases, the data cuts off any incomes over $9.9 million and any loan amounts over $99.9 million, meaning there’s a value in the database, but it’s not precise. We focused only on those records where income and loan amount have an accurate estimation. This meant discarding about 1 percent of all conventional home loans in the country for 2016.</p>
+</blockquote>
+<p><code>income != '9999' AND loan_amount != '99999'</code></p>
+<blockquote>
+<p>When we plotted the number of applicants, how much money they made and the size of the loan, we found that it skewed to the left, meaning the majority of applicants were clustered on the lower end of the income and loan amount scales. This was especially true for applicants of color. We took the logarithm transformation of income and loan amount to normalize the distribution of those variables and limit the effect of extreme outliers.</p>
+</blockquote>
+<p><code>LOG(income)</code></p>
+<blockquote>
+<p>We included all cases in our analysis regardless of lien status.</p>
+</blockquote>
+<p>Nothing to do.</p>
+<blockquote>
+<p>At first, we looked at race separate from ethnicity, but that approach introduced too many instances in which​ ​either the ethnicity or race was unknown. So we decided to combine race and ethnicity. Applicants who marked their ethnicity as Hispanic were grouped together as Hispanic/Latino regardless of race. Non-Hispanic applicants, as well as those who didn’t provide an ethnicity, were grouped together by race: non-Hispanic white, non-Hispanic black, etc.</p>
+</blockquote>
+<p><code>(IF applicant_ethnicity = '1' THEN '99' ELSE applicant_race_1 END IF) AS custom_race</code></p>
+<blockquote>
+<p>We decided to look at home purchase, home improvement and refinance loans separately from each other.</p>
+</blockquote>
+<p><code>loan_purpose = '1'</code></p>
+
+</div>
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="obtaining-our-data.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 1
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

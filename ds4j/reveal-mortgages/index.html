@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Analyzing mortgage rejections for racial bias</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="hero">
+    <div class="hero-body">
+        <div class="content">
+            <h1>Analyzing mortgage rejections for racial bias</h1>
+            <p>Based on government-mandated data collection on mortgage granting, are certain banks or areas discriminatory in their lending practices?</p>
+            
+            <p>
+                
+                <a href="/ds4j/logistic-regression" class="chip">logistic regression</a>
+                
+                <a href="/ds4j/classification" class="chip">classification</a>
+                
+                <a href="/ds4j/odds-ratio-log-odds-ratio" class="chip">odds ratio/log odds ratio</a>
+                
+                <a href="/ds4j/home-mortgage-disclosure-act" class="chip">Home Mortgage Disclosure Act</a>
+                
+                <a href="/ds4j/race" class="chip">race</a>
+                
+            </p>
+            
+        </div>
+    </div>
+</div>
+<div class="chapter-nav bg-secondary">
+    <div class="content">
+        
+        <a href="../buzzfeed-spy-planes/">&larr;&nbsp;Uncovering surveillance planes with Buzzfeed</a>
+        
+        
+        <a href="../apm-reports-jury-bias/">Bias in the jury selection process&nbsp;&rarr;</a>
+        
+    </div>
+</div>
+<section class="section">
+    <div class="content">
+
+        <div class="columns">
+            <div class="column col-5 col-md-12 readings">
+                <h3>Readings and links</h3>
+                <ul>
+<li><a href="https://www.revealnews.org/article/for-people-of-color-banks-are-shutting-the-door-to-homeownership/">For people of color, banks are shutting the door to homeownership</a></li>
+<li><a href="https://s3-us-west-2.amazonaws.com/revealnews.org/uploads/lending_disparities_whitepaper_180214.pdf">Whitepaper</a> for the data analysis</li>
+<li><a href="https://www.revealnews.org/article/how-we-identified-lending-disparities-in-federal-mortgage-data/">Less formal writeup</a></li>
+<li><a href="https://www.ffiec.gov/hmda/hmdaproducts.htm">Home Mortgage Disclosure Act data products</a></li>
+</ul>
+            </div>
+            <div class="column col-7 col-md-12">
+                <h3>Summary</h3>
+                
+            </div>
+        </div>
+
+        
+        <h3>Notebooks, Assignments, and Walkthroughs</h3>
+        
+        
+        <div class="columns">
+  <div class="column col-8 col-sm-12">
+    <h4><a href="/ds4j/reveal-mortgages/walkthrough/">Complete walkthrough</a></strong></h4>
+    <p>Start-to-finish walkthrough of a reproduction of the Reveal analysis. Requires a bit of technical heavy lifting.</p>
+  </div>
+  <div class="column col-4 col-sm-12">
+    
+    
+    
+    
+    <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/walkthrough/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Multi-page walkthrough
+            </small>
+    </div>
+</div>
+
+    
+    
+    
+    <!--
+      <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-user fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/walkthrough/">Read online, no code</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Multi-page walkthrough
+            </small>
+    </div>
+</div>
+    -->
+  </div>
+</div>
+        <div class="divider"></div>
+        
+        
+
+        
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/reveal-mortgages/reveal-mortgage-analysis-cleaning-and-combining-data">Cleaning and combining data for the Reveal Mortgage Analysis</a></h4>
+        <p>A full logistic regression using lending data and demographic data, following the whitepaper published by Reveal.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/reveal-mortgage-analysis-cleaning-and-combining-data/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/notebooks/Reveal Mortgage Analysis - Cleaning and combining data.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/reveal-mortgages/notebooks/Reveal Mortgage Analysis - Cleaning and combining data.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/reveal-mortgages/reveal-mortgage-analysis-wild-formulas-in-statsmodels-using-patsy-short-version">Wild formulas in statsmodels using Patsy (short version)</a></h4>
+        <p>Using R-style/Patsy formulas in statsmodels opens up a lot of interesting opportunities for tweaking your regression at execution time.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/reveal-mortgage-analysis-wild-formulas-in-statsmodels-using-patsy-short-version/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/notebooks/Reveal Mortgage Analysis - Wild formulas in statsmodels using Patsy (short version).ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/reveal-mortgages/notebooks/Reveal Mortgage Analysis - Wild formulas in statsmodels using Patsy (short version).ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/reveal-mortgages/homework-reveal-mortgage-analysis-logistic-regression-using-statsmodels-formulas">Homework - Reveal Mortgage Analysis - Logistic Regression using statsmodels formulas</a></h4>
+        <p>An introduction to using R-style/Patsy formulas in statsmodels, along with specially-created columns in your dataframe.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/homework-reveal-mortgage-analysis-logistic-regression-using-statsmodels-formulas/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/notebooks/Homework - Reveal Mortgage Analysis - Logistic Regression using statsmodels formulas.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/reveal-mortgages/notebooks/Homework - Reveal Mortgage Analysis - Logistic Regression using statsmodels formulas.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/reveal-mortgages/homework-reveal-mortgage-analysis-logistic-regression-completed">Reveal Mortgage Analysis - Logistic Regression (Homework, completed)</a></h4>
+        <p>Use logistic regression to investigate lending disparties. Completed homework version.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/homework-reveal-mortgage-analysis-logistic-regression-completed/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/notebooks/Homework - Reveal Mortgage Analysis - Logistic Regression (Completed).ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/reveal-mortgages/notebooks/Homework - Reveal Mortgage Analysis - Logistic Regression (Completed).ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/reveal-mortgages/homework-reveal-mortgage-analysis-logistic-regression">Homework - Reveal Mortgage Analysis - Logistic Regression.ipynb</a></h4>
+        <p>Use logistic regression to investigate lending disparties. Incomplete homework version.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/homework-reveal-mortgage-analysis-logistic-regression/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/reveal-mortgages/notebooks/Homework - Reveal Mortgage Analysis - Logistic Regression.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/reveal-mortgages/notebooks/Homework - Reveal Mortgage Analysis - Logistic Regression.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        
+        
+
+        
+    </div>
+</section>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

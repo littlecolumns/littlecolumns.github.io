@@ -1,0 +1,1219 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3.3 Data: Suspicious airbag issues | _main.utf8.md</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3.3 Data: Suspicious airbag issues | _main.utf8.md" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3.3 Data: Suspicious airbag issues | _main.utf8.md" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-car-issue-issues.html"/>
+<link rel="next" href="preparing-our-data.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>2</b> Preface</a><ul>
+<li class="chapter" data-level="2.0.1" data-path="preface.html"><a href="preface.html#the-original-story"><i class="fa fa-check"></i><b>2.0.1</b> The original story</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="the-data.html"><a href="the-data.html"><i class="fa fa-check"></i><b>3</b> The Data</a><ul>
+<li class="chapter" data-level="3.1" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html"><i class="fa fa-check"></i><b>3.1</b> Turning our question into measureables</a></li>
+<li class="chapter" data-level="3.2" data-path="data-car-issue-issues.html"><a href="data-car-issue-issues.html"><i class="fa fa-check"></i><b>3.2</b> Data: Car issue issues</a></li>
+<li class="chapter" data-level="3.3" data-path="data-suspicious-airbag-issues.html"><a href="data-suspicious-airbag-issues.html"><i class="fa fa-check"></i><b>3.3</b> Data: Suspicious airbag issues</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="data-suspicious-airbag-issues.html"><a href="data-suspicious-airbag-issues.html#extracting-a-sample-of-complaints"><i class="fa fa-check"></i><b>3.3.1</b> Extracting a sample of complaints</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data-suspicious-airbag-issues.html"><a href="data-suspicious-airbag-issues.html#labeling-our-sample-of-complaints"><i class="fa fa-check"></i><b>3.3.2</b> Labeling our sample of complaints</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="preparing-our-data.html"><a href="preparing-our-data.html"><i class="fa fa-check"></i><b>4</b> Preparing our data</a><ul>
+<li class="chapter" data-level="4.1" data-path="designing-our-features.html"><a href="designing-our-features.html"><i class="fa fa-check"></i><b>4.1</b> Designing our features</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="designing-our-features.html"><a href="designing-our-features.html#selecting-our-features"><i class="fa fa-check"></i><b>4.1.1</b> Selecting our features</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="classification.html"><a href="classification.html"><i class="fa fa-check"></i><b>4.2</b> Classification</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="classification.html"><a href="classification.html#training-data"><i class="fa fa-check"></i><b>4.2.1</b> Training data</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="analyzing-our-data.html"><a href="analyzing-our-data.html"><i class="fa fa-check"></i><b>5</b> Analyzing our data</a><ul>
+<li class="chapter" data-level="5.1" data-path="building-a-classifier.html"><a href="building-a-classifier.html"><i class="fa fa-check"></i><b>5.1</b> Building a classifier</a></li>
+<li class="chapter" data-level="5.2" data-path="interpreting-our-classifier.html"><a href="interpreting-our-classifier.html"><i class="fa fa-check"></i><b>5.2</b> Interpreting our classifier</a></li>
+<li class="chapter" data-level="5.3" data-path="using-our-classifier.html"><a href="using-our-classifier.html"><i class="fa fa-check"></i><b>5.3</b> Using our classifier</a></li>
+<li class="chapter" data-level="5.4" data-path="testing-our-classifier.html"><a href="testing-our-classifier.html"><i class="fa fa-check"></i><b>5.4</b> Testing our classifier</a><ul>
+<li class="chapter" data-level="5.4.1" data-path="testing-our-classifier.html"><a href="testing-our-classifier.html#test-train-split"><i class="fa fa-check"></i><b>5.4.1</b> Test-train split</a></li>
+<li class="chapter" data-level="5.4.2" data-path="testing-our-classifier.html"><a href="testing-our-classifier.html#the-confusion-matrix"><i class="fa fa-check"></i><b>5.4.2</b> The confusion matrix</a></li>
+</ul></li>
+<li class="chapter" data-level="5.5" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>5.5</b> Conclusion</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-suspicious-airbag-issues" class="section level2">
+<h2><span class="header-section-number">3.3</span> Data: Suspicious airbag issues</h2>
+<p>Our end goal is going to be help a computer understand what a suspicious airbag comment looks like. In order to teach our computer what a suspicious airbag comment looks like, we need to read through a few ourselves first. We’ll mark which ones are suspicious and which aren’t suspicious, which will give the computer an idea of which complaints belong in which category.</p>
+<p>We’ll need to do this low-tech style: we’ll open up the complaints database, take out some complaints (some about airbags, some not) and manually read them. We’ll do this using pandas, a Python data analysis library, but you can use most any technique to pull out a handful.</p>
+<div id="extracting-a-sample-of-complaints" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Extracting a sample of complaints</h3>
+<p>There are many, many columns in this dataset, so we’re going to ask pandas to display lots and lots of columns. The description column can be pretty long, so we’ll also tell pandas to display up to 100 characters in a single column.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="data-suspicious-airbag-issues.html#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="data-suspicious-airbag-issues.html#cb1-2"></a></span>
+<span id="cb1-3"><a href="data-suspicious-airbag-issues.html#cb1-3"></a>pd.set_option(<span class="st">&quot;display.max_columns&quot;</span>, <span class="dv">100</span>)</span>
+<span id="cb1-4"><a href="data-suspicious-airbag-issues.html#cb1-4"></a>pd.set_option(<span class="st">&quot;display.max_colwidth&quot;</span>, <span class="dv">100</span>)</span></code></pre></div>
+<p>Now we’ll open <code>FLAT_CMPL.txt</code>, our complaints file form the NHSTA. Programming things to notice:</p>
+<ul>
+<li>It’s tab-separated instead of comma-separated, so we use <code>sep='\t'</code></li>
+<li>We need <code>encoding=latin-1</code> because it’s written <a href="http://jonathansoma.com/projects/charsets">just for English-language data</a></li>
+<li>Some of the lines are bad, but we’ll just throw them out with <code>error_bad_lines=False</code></li>
+<li>There’s no header row, so we’ve pulled out all of the column names from <code>CMPL.txt</code></li>
+<li>Since here are a lot of codes that might have leading zeroes we’re reading in all columns as strings</li>
+<li>We’re only interested in complaints from before 2015</li>
+</ul>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="data-suspicious-airbag-issues.html#cb2-1"></a>column_names <span class="op">=</span> [<span class="st">&#39;CMPLID&#39;</span>, <span class="st">&#39;ODINO&#39;</span>, <span class="st">&#39;MFR_NAME&#39;</span>, <span class="st">&#39;MAKETXT&#39;</span>, <span class="st">&#39;MODELTXT&#39;</span>, <span class="st">&#39;YEARTXT&#39;</span>, <span class="st">&#39;CRASH&#39;</span>, <span class="st">&#39;FAILDATE&#39;</span>, <span class="st">&#39;FIRE&#39;</span>, <span class="st">&#39;INJURED&#39;</span>, <span class="st">&#39;DEATHS&#39;</span>, <span class="st">&#39;COMPDESC&#39;</span>, <span class="st">&#39;CITY&#39;</span>, <span class="st">&#39;STATE&#39;</span>, <span class="st">&#39;VIN&#39;</span>, <span class="st">&#39;DATEA&#39;</span>, <span class="st">&#39;LDATE&#39;</span>, <span class="st">&#39;MILES&#39;</span>, <span class="st">&#39;OCCURENCES&#39;</span>, <span class="st">&#39;CDESCR&#39;</span>, <span class="st">&#39;CMPL_TYPE&#39;</span>, <span class="st">&#39;POLICE_RPT_YN&#39;</span>, <span class="st">&#39;PURCH_DT&#39;</span>, <span class="st">&#39;ORIG_OWNER_YN&#39;</span>, <span class="st">&#39;ANTI_BRAKES_YN&#39;</span>, <span class="st">&#39;CRUISE_CONT_YN&#39;</span>, <span class="st">&#39;NUM_CYLS&#39;</span>, <span class="st">&#39;DRIVE_TRAIN&#39;</span>, <span class="st">&#39;FUEL_SYS&#39;</span>, <span class="st">&#39;FUEL_TYPE&#39;</span>, <span class="st">&#39;TRANS_TYPE&#39;</span>, <span class="st">&#39;VEH_SPEED&#39;</span>, <span class="st">&#39;DOT&#39;</span>, <span class="st">&#39;TIRE_SIZE&#39;</span>, <span class="st">&#39;LOC_OF_TIRE&#39;</span>, <span class="st">&#39;TIRE_FAIL_TYPE&#39;</span>, <span class="st">&#39;ORIG_EQUIP_YN&#39;</span>, <span class="st">&#39;MANUF_DT&#39;</span>, <span class="st">&#39;SEAT_TYPE&#39;</span>, <span class="st">&#39;RESTRAINT_TYPE&#39;</span>, <span class="st">&#39;DEALER_NAME&#39;</span>, <span class="st">&#39;DEALER_TEL&#39;</span>, <span class="st">&#39;DEALER_CITY&#39;</span>, <span class="st">&#39;DEALER_STATE&#39;</span>, <span class="st">&#39;DEALER_ZIP&#39;</span>, <span class="st">&#39;PROD_TYPE&#39;</span>, <span class="st">&#39;REPAIRED_YN&#39;</span>, <span class="st">&#39;MEDICAL_ATTN&#39;</span>, <span class="st">&#39;VEHICLES_TOWED_YN&#39;</span>]</span>
+<span id="cb2-2"><a href="data-suspicious-airbag-issues.html#cb2-2"></a></span>
+<span id="cb2-3"><a href="data-suspicious-airbag-issues.html#cb2-3"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/FLAT_CMPL.txt&quot;</span>,</span>
+<span id="cb2-4"><a href="data-suspicious-airbag-issues.html#cb2-4"></a>                 sep<span class="op">=</span><span class="st">&#39;</span><span class="ch">\t</span><span class="st">&#39;</span>,</span>
+<span id="cb2-5"><a href="data-suspicious-airbag-issues.html#cb2-5"></a>                 dtype<span class="op">=</span><span class="st">&#39;str&#39;</span>,</span>
+<span id="cb2-6"><a href="data-suspicious-airbag-issues.html#cb2-6"></a>                 header<span class="op">=</span><span class="va">None</span>,</span>
+<span id="cb2-7"><a href="data-suspicious-airbag-issues.html#cb2-7"></a>                 error_bad_lines<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb2-8"><a href="data-suspicious-airbag-issues.html#cb2-8"></a>                 encoding<span class="op">=</span><span class="st">&#39;latin-1&#39;</span>,</span>
+<span id="cb2-9"><a href="data-suspicious-airbag-issues.html#cb2-9"></a>                 names<span class="op">=</span>column_names)</span>
+<span id="cb2-10"><a href="data-suspicious-airbag-issues.html#cb2-10"></a></span>
+<span id="cb2-11"><a href="data-suspicious-airbag-issues.html#cb2-11"></a><span class="co"># We&#39;re only interested in pre-2015</span></span>
+<span id="cb2-12"><a href="data-suspicious-airbag-issues.html#cb2-12"></a>df <span class="op">=</span> df[df.DATEA <span class="op">&lt;</span> <span class="st">&#39;2015&#39;</span>]</span>
+<span id="cb2-13"><a href="data-suspicious-airbag-issues.html#cb2-13"></a></span>
+<span id="cb2-14"><a href="data-suspicious-airbag-issues.html#cb2-14"></a>df.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+CMPLID
+</th>
+<th style="text-align:left;">
+ODINO
+</th>
+<th style="text-align:left;">
+MFR_NAME
+</th>
+<th style="text-align:left;">
+MAKETXT
+</th>
+<th style="text-align:left;">
+MODELTXT
+</th>
+<th style="text-align:left;">
+YEARTXT
+</th>
+<th style="text-align:left;">
+CRASH
+</th>
+<th style="text-align:left;">
+FAILDATE
+</th>
+<th style="text-align:left;">
+FIRE
+</th>
+<th style="text-align:left;">
+INJURED
+</th>
+<th style="text-align:left;">
+DEATHS
+</th>
+<th style="text-align:left;">
+COMPDESC
+</th>
+<th style="text-align:left;">
+CITY
+</th>
+<th style="text-align:left;">
+STATE
+</th>
+<th style="text-align:left;">
+VIN
+</th>
+<th style="text-align:left;">
+DATEA
+</th>
+<th style="text-align:left;">
+LDATE
+</th>
+<th style="text-align:left;">
+MILES
+</th>
+<th style="text-align:left;">
+OCCURENCES
+</th>
+<th style="text-align:left;">
+CDESCR
+</th>
+<th style="text-align:left;">
+CMPL_TYPE
+</th>
+<th style="text-align:left;">
+POLICE_RPT_YN
+</th>
+<th style="text-align:left;">
+PURCH_DT
+</th>
+<th style="text-align:left;">
+ORIG_OWNER_YN
+</th>
+<th style="text-align:left;">
+ANTI_BRAKES_YN
+</th>
+<th style="text-align:left;">
+CRUISE_CONT_YN
+</th>
+<th style="text-align:left;">
+NUM_CYLS
+</th>
+<th style="text-align:left;">
+DRIVE_TRAIN
+</th>
+<th style="text-align:left;">
+FUEL_SYS
+</th>
+<th style="text-align:left;">
+FUEL_TYPE
+</th>
+<th style="text-align:left;">
+TRANS_TYPE
+</th>
+<th style="text-align:left;">
+VEH_SPEED
+</th>
+<th style="text-align:left;">
+DOT
+</th>
+<th style="text-align:left;">
+TIRE_SIZE
+</th>
+<th style="text-align:left;">
+LOC_OF_TIRE
+</th>
+<th style="text-align:left;">
+TIRE_FAIL_TYPE
+</th>
+<th style="text-align:left;">
+ORIG_EQUIP_YN
+</th>
+<th style="text-align:left;">
+MANUF_DT
+</th>
+<th style="text-align:left;">
+SEAT_TYPE
+</th>
+<th style="text-align:left;">
+RESTRAINT_TYPE
+</th>
+<th style="text-align:left;">
+DEALER_NAME
+</th>
+<th style="text-align:left;">
+DEALER_TEL
+</th>
+<th style="text-align:left;">
+DEALER_CITY
+</th>
+<th style="text-align:left;">
+DEALER_STATE
+</th>
+<th style="text-align:left;">
+DEALER_ZIP
+</th>
+<th style="text-align:left;">
+PROD_TYPE
+</th>
+<th style="text-align:left;">
+REPAIRED_YN
+</th>
+<th style="text-align:left;">
+MEDICAL_ATTN
+</th>
+<th style="text-align:left;">
+VEHICLES_TOWED_YN
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+958173
+</td>
+<td style="text-align:left;">
+Ford Motor Company
+</td>
+<td style="text-align:left;">
+LINCOLN
+</td>
+<td style="text-align:left;">
+TOWN CAR
+</td>
+<td style="text-align:left;">
+1994
+</td>
+<td style="text-align:left;">
+Y
+</td>
+<td style="text-align:left;">
+19941222
+</td>
+<td style="text-align:left;">
+N
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+SERVICE BRAKES, HYDRAULIC:PEDALS AND LINKAGES
+</td>
+<td style="text-align:left;">
+HIGH LAND PA
+</td>
+<td style="text-align:left;">
+MI
+</td>
+<td style="text-align:left;">
+1LNLM82W8RY
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+BRAKE PEDAL PUSH ROD RETAINER WAS NOT PROPERLY INSTALLED, CAUSING BRAKES TO FAIL, RESULTING IN AN ACCIDENT AFTER RECALL REPAIRS (94V-129). *AK
+</td>
+<td style="text-align:left;">
+EVOQ
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+V
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+958146
+</td>
+<td style="text-align:left;">
+General Motors LLC
+</td>
+<td style="text-align:left;">
+GMC
+</td>
+<td style="text-align:left;">
+SONOMA
+</td>
+<td style="text-align:left;">
+1995
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+19941215
+</td>
+<td style="text-align:left;">
+N
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+SERVICE BRAKES, HYDRAULIC:FOUNDATION COMPONENTS
+</td>
+<td style="text-align:left;">
+MOBILE
+</td>
+<td style="text-align:left;">
+AL
+</td>
+<td style="text-align:left;">
+1GTCS19W3S8
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+VEHICLE STALLS AT HIGH SPEED, RESULTING IN LOSS OF STEERING AND BRAKING ABILITY. TT
+</td>
+<td style="text-align:left;">
+EVOQ
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+V
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+958127
+</td>
+<td style="text-align:left;">
+Ford Motor Company
+</td>
+<td style="text-align:left;">
+FORD
+</td>
+<td style="text-align:left;">
+RANGER
+</td>
+<td style="text-align:left;">
+1994
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+N
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+ENGINE AND ENGINE COOLING:EXHAUST SYSTEM
+</td>
+<td style="text-align:left;">
+N. LAUDERDAL
+</td>
+<td style="text-align:left;">
+FL
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+EXHAUST SYSTEM FAILS; PLEASE DESCRIBE DETAILS. TT
+</td>
+<td style="text-align:left;">
+EVOQ
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+V
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+958170
+</td>
+<td style="text-align:left;">
+Ford Motor Company
+</td>
+<td style="text-align:left;">
+MERCURY
+</td>
+<td style="text-align:left;">
+COUGAR
+</td>
+<td style="text-align:left;">
+1995
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+19950101
+</td>
+<td style="text-align:left;">
+N
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+SERVICE BRAKES, HYDRAULIC:FOUNDATION COMPONENTS
+</td>
+<td style="text-align:left;">
+CORRAL SPRIN
+</td>
+<td style="text-align:left;">
+FL
+</td>
+<td style="text-align:left;">
+1MELM62W5SH
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+BRAKING SYSTEM FAILURE WITHOUT ABS BRAKES. TT
+</td>
+<td style="text-align:left;">
+EVOQ
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+V
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+5
+</td>
+<td style="text-align:left;">
+958149
+</td>
+<td style="text-align:left;">
+Nissan North America, Inc. 
+</td>
+<td style="text-align:left;">
+NISSAN
+</td>
+<td style="text-align:left;">
+MAXIMA
+</td>
+<td style="text-align:left;">
+1987
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+19941223
+</td>
+<td style="text-align:left;">
+N
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+VISIBILITY:SUN ROOF ASSEMBLY
+</td>
+<td style="text-align:left;">
+COLUMBUS
+</td>
+<td style="text-align:left;">
+OH
+</td>
+<td style="text-align:left;">
+JN1HU11P3HX
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+19950103
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+VEHICLES SUN ROOF GLASS FLEW OFF WHILE DRIVING. TT
+</td>
+<td style="text-align:left;">
+EVOQ
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+V
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+<td style="text-align:left;">
+NaN
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>We aren’t really concerned with the data itself just now, as we’re only going to take a sample. Again, most will be about airbags, some will not. We’re only going to save the complaint description because that’s all we really care about!</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="data-suspicious-airbag-issues.html#cb3-1"></a></span>
+<span id="cb3-2"><a href="data-suspicious-airbag-issues.html#cb3-2"></a><span class="co"># Take a random sample of rows</span></span>
+<span id="cb3-3"><a href="data-suspicious-airbag-issues.html#cb3-3"></a>sampled <span class="op">=</span> df.sample(<span class="dv">50</span>)</span>
+<span id="cb3-4"><a href="data-suspicious-airbag-issues.html#cb3-4"></a></span>
+<span id="cb3-5"><a href="data-suspicious-airbag-issues.html#cb3-5"></a><span class="co"># Take a sample involving airbags</span></span>
+<span id="cb3-6"><a href="data-suspicious-airbag-issues.html#cb3-6"></a>airbag_df <span class="op">=</span> df[df.CDESCR.<span class="bu">str</span>.contains(<span class="st">&quot;AIR ?BAG&quot;</span>, na<span class="op">=</span><span class="va">False</span>)]</span>
+<span id="cb3-7"><a href="data-suspicious-airbag-issues.html#cb3-7"></a>airbag_df <span class="op">=</span> airbag_df.sample(<span class="dv">300</span>)</span>
+<span id="cb3-8"><a href="data-suspicious-airbag-issues.html#cb3-8"></a></span>
+<span id="cb3-9"><a href="data-suspicious-airbag-issues.html#cb3-9"></a><span class="co"># Combine them so we have all sorts for the machine to learn about</span></span>
+<span id="cb3-10"><a href="data-suspicious-airbag-issues.html#cb3-10"></a>sampled <span class="op">=</span> pd.concat([sampled, airbag_df])</span>
+<span id="cb3-11"><a href="data-suspicious-airbag-issues.html#cb3-11"></a></span>
+<span id="cb3-12"><a href="data-suspicious-airbag-issues.html#cb3-12"></a><span class="co"># We don&#39;t know whether they&#39;re suspicious or not</span></span>
+<span id="cb3-13"><a href="data-suspicious-airbag-issues.html#cb3-13"></a>sampled[<span class="st">&#39;is_suspicious&#39;</span>] <span class="op">=</span> <span class="st">&#39;&#39;</span></span>
+<span id="cb3-14"><a href="data-suspicious-airbag-issues.html#cb3-14"></a></span>
+<span id="cb3-15"><a href="data-suspicious-airbag-issues.html#cb3-15"></a><span class="co"># We only want a few columns</span></span>
+<span id="cb3-16"><a href="data-suspicious-airbag-issues.html#cb3-16"></a>sampled <span class="op">=</span> sampled[[<span class="st">&#39;is_suspicious&#39;</span>, <span class="st">&#39;CDESCR&#39;</span>]]</span>
+<span id="cb3-17"><a href="data-suspicious-airbag-issues.html#cb3-17"></a></span>
+<span id="cb3-18"><a href="data-suspicious-airbag-issues.html#cb3-18"></a><span class="co"># Save them</span></span>
+<span id="cb3-19"><a href="data-suspicious-airbag-issues.html#cb3-19"></a>sampled.to_csv(<span class="st">&quot;data/sampled-unlabeled.csv&quot;</span>, index<span class="op">=</span><span class="va">False</span>)</span></code></pre></div>
+</div>
+<div id="labeling-our-sample-of-complaints" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Labeling our sample of complaints</h3>
+<p>Now comes the fun part: opening up <code>sampled-unlabeled.csv</code> and filling in labels for each and every one of those hundreds of rows. We’ll use <code>1</code> if it’s suspicious, <code>0</code> if it isn’t.</p>
+<p>For example, this complaint isn’t suspicious because it’s about an air bag not deploying:</p>
+<pre><code>DURING AN  ACCIDENT  AIR BAG&#39;S DID NOT DEPLOY.  DEALER HAS BEEN CONTACTED.  *AK  </code></pre>
+<p>This next one isn’t suspicious either, because it isn’t even about airbags!</p>
+<pre><code>DRIVERS SEAT BACK COLLAPSED AND BENT WHEN REAR ENDED. PLEASE DESCRIBE DETAILS.  TT</code></pre>
+<p>But if something involving explosions or shrapnel happens, it’s probably worth marking as suspicious:</p>
+<pre><code>I WAS DRIVEN IN A SCHOOL ZONE STREET AND THE LIGHTS OF AIRBAG ON AND APROX. 2 MINUTES THE AIR BAGS EXPLODED IN MY FACE, THE DRIVE AND PASSENGERS SIDE, THEN I STOPPED THE JEEP, IT SMELL LIKE SOMETHING IS BURNING AND HOT, I DID NOT SEE FIRE.  *TR</code></pre>
+<p>We’ll just go down the left-hand column in Excel, filling them in as <code>0</code> or <code>1</code>. You’ll probably want to turn on <strong>Wrap Text</strong> in Excel so you don’t have to scroll left and right so much.</p>
+</div>
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-car-issue-issues.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="preparing-our-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 1
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

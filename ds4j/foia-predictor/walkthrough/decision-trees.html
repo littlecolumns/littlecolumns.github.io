@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>5.2 Decision Trees | _main.utf8.md</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="5.2 Decision Trees | _main.utf8.md" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="5.2 Decision Trees | _main.utf8.md" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="logisic-regression.html"/>
+<link rel="next" href="random-forest.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>2</b> Preface</a><ul>
+<li class="chapter" data-level="2.1" data-path="the-original-story.html"><a href="the-original-story.html"><i class="fa fa-check"></i><b>2.1</b> The original story</a></li>
+<li class="chapter" data-level="2.2" data-path="what-it-does.html"><a href="what-it-does.html"><i class="fa fa-check"></i><b>2.2</b> What it does</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="our-data.html"><a href="our-data.html"><i class="fa fa-check"></i><b>3</b> Our data</a><ul>
+<li class="chapter" data-level="3.1" data-path="data-foia-requests.html"><a href="data-foia-requests.html"><i class="fa fa-check"></i><b>3.1</b> Data: FOIA Requests</a></li>
+<li class="chapter" data-level="3.2" data-path="success-metrics-editorial-choice.html"><a href="success-metrics-editorial-choice.html"><i class="fa fa-check"></i><b>3.2</b> Success metrics (editorial choice)</a></li>
+<li class="chapter" data-level="3.3" data-path="features-editorial-choice.html"><a href="features-editorial-choice.html"><i class="fa fa-check"></i><b>3.3</b> Features (editorial choice)</a></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="analysis.html"><a href="analysis.html"><i class="fa fa-check"></i><b>4</b> Analysis</a><ul>
+<li class="chapter" data-level="4.1" data-path="designing-our-model.html"><a href="designing-our-model.html"><i class="fa fa-check"></i><b>4.1</b> Designing our model</a><ul>
+<li class="chapter" data-level="4.1.1" data-path="designing-our-model.html"><a href="designing-our-model.html#classification-problems"><i class="fa fa-check"></i><b>4.1.1</b> Classification problems</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="selecting-an-algorithm.html"><a href="selecting-an-algorithm.html"><i class="fa fa-check"></i><b>4.2</b> Selecting an algorithm</a></li>
+<li class="chapter" data-level="4.3" data-path="training-our-algorithm.html"><a href="training-our-algorithm.html"><i class="fa fa-check"></i><b>4.3</b> Training our algorithm</a></li>
+<li class="chapter" data-level="4.4" data-path="evaluation-metrics.html"><a href="evaluation-metrics.html"><i class="fa fa-check"></i><b>4.4</b> Evaluation metrics</a><ul>
+<li class="chapter" data-level="4.4.1" data-path="evaluation-metrics.html"><a href="evaluation-metrics.html#accuracy"><i class="fa fa-check"></i><b>4.4.1</b> Accuracy</a></li>
+<li class="chapter" data-level="4.4.2" data-path="evaluation-metrics.html"><a href="evaluation-metrics.html#dummy-classifier"><i class="fa fa-check"></i><b>4.4.2</b> Dummy classifier</a></li>
+<li class="chapter" data-level="4.4.3" data-path="evaluation-metrics.html"><a href="evaluation-metrics.html#confusion-matrix"><i class="fa fa-check"></i><b>4.4.3</b> Confusion matrix</a></li>
+<li class="chapter" data-level="4.4.4" data-path="evaluation-metrics.html"><a href="evaluation-metrics.html#explainability"><i class="fa fa-check"></i><b>4.4.4</b> Explainability</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="other-classifiers.html"><a href="other-classifiers.html"><i class="fa fa-check"></i><b>5</b> Other classifiers</a><ul>
+<li class="chapter" data-level="5.1" data-path="logisic-regression.html"><a href="logisic-regression.html"><i class="fa fa-check"></i><b>5.1</b> Logisic Regression</a></li>
+<li class="chapter" data-level="5.2" data-path="decision-trees.html"><a href="decision-trees.html"><i class="fa fa-check"></i><b>5.2</b> Decision Trees</a></li>
+<li class="chapter" data-level="5.3" data-path="random-forest.html"><a href="random-forest.html"><i class="fa fa-check"></i><b>5.3</b> Random Forest</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="feature-selection-and-engineering.html"><a href="feature-selection-and-engineering.html"><i class="fa fa-check"></i><b>6</b> Feature selection and engineering</a><ul>
+<li class="chapter" data-level="6.1" data-path="leaving-out-our-best-feature.html"><a href="leaving-out-our-best-feature.html"><i class="fa fa-check"></i><b>6.1</b> Leaving out our best feature</a><ul>
+<li class="chapter" data-level="6.1.1" data-path="leaving-out-our-best-feature.html"><a href="leaving-out-our-best-feature.html#setting-up-our-features"><i class="fa fa-check"></i><b>6.1.1</b> Setting up our features</a></li>
+<li class="chapter" data-level="6.1.2" data-path="leaving-out-our-best-feature.html"><a href="leaving-out-our-best-feature.html#k-nearest-neighbors"><i class="fa fa-check"></i><b>6.1.2</b> K-nearest neighbors</a></li>
+<li class="chapter" data-level="6.1.3" data-path="leaving-out-our-best-feature.html"><a href="leaving-out-our-best-feature.html#logistic-regression"><i class="fa fa-check"></i><b>6.1.3</b> Logistic Regression</a></li>
+<li class="chapter" data-level="6.1.4" data-path="leaving-out-our-best-feature.html"><a href="leaving-out-our-best-feature.html#decision-tree"><i class="fa fa-check"></i><b>6.1.4</b> Decision tree</a></li>
+<li class="chapter" data-level="6.1.5" data-path="leaving-out-our-best-feature.html"><a href="leaving-out-our-best-feature.html#random-forest-1"><i class="fa fa-check"></i><b>6.1.5</b> Random forest</a></li>
+<li class="chapter" data-level="6.1.6" data-path="leaving-out-our-best-feature.html"><a href="leaving-out-our-best-feature.html#summary"><i class="fa fa-check"></i><b>6.1.6</b> Summary</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="7" data-path="explaining-predictions.html"><a href="explaining-predictions.html"><i class="fa fa-check"></i><b>7</b> Explaining predictions</a></li>
+<li class="chapter" data-level="8" data-path="percent-probability.html"><a href="percent-probability.html"><i class="fa fa-check"></i><b>8</b> Percent probability</a></li>
+<li class="chapter" data-level="9" data-path="review.html"><a href="review.html"><i class="fa fa-check"></i><b>9</b> Review</a></li>
+<li class="chapter" data-level="10" data-path="discussion-topics.html"><a href="discussion-topics.html"><i class="fa fa-check"></i><b>10</b> Discussion topics</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="decision-trees" class="section level2">
+<h2><span class="header-section-number">5.2</span> Decision Trees</h2>
+<p>A <strong>decision tree</strong> is another classifier we can try out. Can it beat logistic regression?</p>
+<div class="sourceCode" id="cb30"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb30-1"><a href="decision-trees.html#cb30-1"></a><span class="im">from</span> sklearn <span class="im">import</span> tree</span>
+<span id="cb30-2"><a href="decision-trees.html#cb30-2"></a></span>
+<span id="cb30-3"><a href="decision-trees.html#cb30-3"></a>dec_tree <span class="op">=</span> tree.DecisionTreeClassifier(max_depth<span class="op">=</span><span class="dv">4</span>)</span>
+<span id="cb30-4"><a href="decision-trees.html#cb30-4"></a>dec_tree.fit(X_train, y_train)</span>
+<span id="cb30-5"><a href="decision-trees.html#cb30-5"></a></span>
+<span id="cb30-6"><a href="decision-trees.html#cb30-6"></a><span class="co"># Check its accuracy</span></span></code></pre></div>
+<pre><code>## DecisionTreeClassifier(class_weight=None, criterion=&#39;gini&#39;, max_depth=4,
+##                        max_features=None, max_leaf_nodes=None,
+##                        min_impurity_decrease=0.0, min_impurity_split=None,
+##                        min_samples_leaf=1, min_samples_split=2,
+##                        min_weight_fraction_leaf=0.0, presort=False,
+##                        random_state=None, splitter=&#39;best&#39;)</code></pre>
+<div class="sourceCode" id="cb32"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb32-1"><a href="decision-trees.html#cb32-1"></a>accuracy_score(y_test, dec_tree.predict(X_test))</span></code></pre></div>
+<pre><code>## 0.7990325417766051</code></pre>
+<div class="sourceCode" id="cb34"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb34-1"><a href="decision-trees.html#cb34-1"></a>y_true <span class="op">=</span> y_test</span>
+<span id="cb34-2"><a href="decision-trees.html#cb34-2"></a>y_pred <span class="op">=</span> dec_tree.predict(X_test)</span>
+<span id="cb34-3"><a href="decision-trees.html#cb34-3"></a>matrix <span class="op">=</span> confusion_matrix(y_true, y_pred)</span>
+<span id="cb34-4"><a href="decision-trees.html#cb34-4"></a></span>
+<span id="cb34-5"><a href="decision-trees.html#cb34-5"></a>label_names <span class="op">=</span> pd.Series([<span class="st">&#39;unsuccessful&#39;</span>, <span class="st">&#39;successful&#39;</span>])</span>
+<span id="cb34-6"><a href="decision-trees.html#cb34-6"></a>pd.DataFrame(matrix,</span>
+<span id="cb34-7"><a href="decision-trees.html#cb34-7"></a>     columns<span class="op">=</span><span class="st">&#39;Predicted &#39;</span> <span class="op">+</span> label_names,</span>
+<span id="cb34-8"><a href="decision-trees.html#cb34-8"></a>     index<span class="op">=</span><span class="st">&#39;Is &#39;</span> <span class="op">+</span> label_names)</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Predicted unsuccessful
+</th>
+<th style="text-align:right;">
+Predicted successful
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+Is unsuccessful
+</td>
+<td style="text-align:right;">
+1433
+</td>
+<td style="text-align:right;">
+167
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Is successful
+</td>
+<td style="text-align:right;">
+290
+</td>
+<td style="text-align:right;">
+384
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The decision tree <strong>performs similarly to the logistic regression</strong>, but it has one big big benefit: to explain it, we can draw a super-fun diagram.</p>
+<div class="sourceCode" id="cb35"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb35-1"><a href="decision-trees.html#cb35-1"></a><span class="im">import</span> pydotplus</span>
+<span id="cb35-2"><a href="decision-trees.html#cb35-2"></a><span class="co"># from IPython.display import Image</span></span>
+<span id="cb35-3"><a href="decision-trees.html#cb35-3"></a></span>
+<span id="cb35-4"><a href="decision-trees.html#cb35-4"></a>dot_data <span class="op">=</span> tree.export_graphviz(dec_tree,</span>
+<span id="cb35-5"><a href="decision-trees.html#cb35-5"></a>    max_depth<span class="op">=</span><span class="dv">3</span>,</span>
+<span id="cb35-6"><a href="decision-trees.html#cb35-6"></a>    feature_names<span class="op">=</span>X.columns,  </span>
+<span id="cb35-7"><a href="decision-trees.html#cb35-7"></a>    class_names<span class="op">=</span>dec_tree.classes_.astype(<span class="bu">str</span>),  </span>
+<span id="cb35-8"><a href="decision-trees.html#cb35-8"></a>    out_file<span class="op">=</span><span class="va">None</span>, filled<span class="op">=</span><span class="va">True</span>, rounded<span class="op">=</span><span class="va">True</span>,  proportion<span class="op">=</span><span class="va">True</span>)  </span>
+<span id="cb35-9"><a href="decision-trees.html#cb35-9"></a>graph <span class="op">=</span> pydotplus.graph_from_dot_data(dot_data)  </span>
+<span id="cb35-10"><a href="decision-trees.html#cb35-10"></a><span class="co"># Image(graph.write_png(&quot;output.png&quot;))</span></span>
+<span id="cb35-11"><a href="decision-trees.html#cb35-11"></a>graph.write_png(<span class="st">&quot;output.png&quot;</span>)</span></code></pre></div>
+<div class="img-holder">
+<img src="unnamed-chunk-13.png" />
+</div>
+<p>I can also get a similar chart to the logistic regression one, explaining why a particular feature may or may not be important.</p>
+<div class="sourceCode" id="cb36"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb36-1"><a href="decision-trees.html#cb36-1"></a>eli5.explain_weights_df(dec_tree, feature_names<span class="op">=</span><span class="bu">list</span>(X.columns))</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+feature
+</th>
+<th style="text-align:right;">
+weight
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+high_success_rate_agency
+</td>
+<td style="text-align:right;">
+0.8813444
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+specificity
+</td>
+<td style="text-align:right;">
+0.0592870
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+word_count
+</td>
+<td style="text-align:right;">
+0.0350351
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+avg_sen_len
+</td>
+<td style="text-align:right;">
+0.0117031
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ref_foia
+</td>
+<td style="text-align:right;">
+0.0108913
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+ref_fees
+</td>
+<td style="text-align:right;">
+0.0017391
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+email_address
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+hyperlink
+</td>
+<td style="text-align:right;">
+0.0000000
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Again, it’s the <code>high_success_rate_agency</code> feature that does heavy lifting.</p>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="logisic-regression.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="random-forest.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 1
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

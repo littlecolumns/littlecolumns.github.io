@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.3 Attaching tract data to our latitudes and longitudes | _main.utf8.md</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.3 Attaching tract data to our latitudes and longitudes | _main.utf8.md" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.3 Attaching tract data to our latitudes and longitudes | _main.utf8.md" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="combining-our-datasets.html"/>
+<link rel="next" href="merging-our-datasets.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>2</b> Preface</a><ul>
+<li class="chapter" data-level="2.0.1" data-path="preface.html"><a href="preface.html#the-original-story"><i class="fa fa-check"></i><b>2.0.1</b> The original story</a></li>
+<li class="chapter" data-level="2.0.2" data-path="preface.html"><a href="preface.html#more-stuff-here"><i class="fa fa-check"></i><b>2.0.2</b> More stuff here?</a></li>
+<li class="chapter" data-level="2.1" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html"><i class="fa fa-check"></i><b>2.1</b> Turning our question into measureables</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html#data-potholes"><i class="fa fa-check"></i><b>2.1.1</b> Data: Potholes</a></li>
+<li class="chapter" data-level="2.1.2" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html#data-number-of-minorities-in-a-neighborhood"><i class="fa fa-check"></i><b>2.1.2</b> Data: Number of minorities in a neighborhood</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html"><i class="fa fa-check"></i><b>2.2</b> Combining our datasets</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#merging-census-data-and-pothole-data"><i class="fa fa-check"></i><b>2.2.1</b> Merging Census data and pothole data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#performing-the-geocoding"><i class="fa fa-check"></i><b>2.2.2</b> Performing the geocoding</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="attaching-tract-data-to-our-latitudes-and-longitudes.html"><a href="attaching-tract-data-to-our-latitudes-and-longitudes.html"><i class="fa fa-check"></i><b>2.3</b> Attaching tract data to our latitudes and longitudes</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="attaching-tract-data-to-our-latitudes-and-longitudes.html"><a href="attaching-tract-data-to-our-latitudes-and-longitudes.html#joining-attributes-by-location"><i class="fa fa-check"></i><b>2.3.1</b> Joining attributes by location</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="merging-our-datasets.html"><a href="merging-our-datasets.html"><i class="fa fa-check"></i><b>2.4</b> Merging our datasets</a></li>
+<li class="chapter" data-level="2.5" data-path="final-prep-for-analysis.html"><a href="final-prep-for-analysis.html"><i class="fa fa-check"></i><b>2.5</b> Final prep for analysis</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="final-prep-for-analysis.html"><a href="final-prep-for-analysis.html#the-amount-of-minorities"><i class="fa fa-check"></i><b>2.5.1</b> “The amount of minorities”</a></li>
+<li class="chapter" data-level="2.5.2" data-path="final-prep-for-analysis.html"><a href="final-prep-for-analysis.html#how-long-it-takes-to-fix-potholes"><i class="fa fa-check"></i><b>2.5.2</b> “How long it takes to fix potholes”</a></li>
+<li class="chapter" data-level="2.5.3" data-path="final-prep-for-analysis.html"><a href="final-prep-for-analysis.html#removing-missing-data"><i class="fa fa-check"></i><b>2.5.3</b> Removing missing data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2.6</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.6.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#linear-regression-1"><i class="fa fa-check"></i><b>2.6.2</b> Linear Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="alternative-techniques.html"><a href="alternative-techniques.html"><i class="fa fa-check"></i><b>2.7</b> Alternative techniques</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="alternative-techniques.html"><a href="alternative-techniques.html#binning"><i class="fa fa-check"></i><b>2.7.1</b> Binning</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="adding-to-our-analysis.html"><a href="adding-to-our-analysis.html"><i class="fa fa-check"></i><b>2.8</b> Adding to our analysis</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="attaching-tract-data-to-our-latitudes-and-longitudes" class="section level2">
+<h2><span class="header-section-number">2.3</span> Attaching tract data to our latitudes and longitudes</h2>
+<p>Now that we know where our street addresses are in space, we need to figure out what census tract they’re in. Or, more specifically, <strong>which census tract they were in as of 2013</strong>.</p>
+<p>We’ll be using geographic information from the US Census Bureau, specifically its <a href="https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html">TIGER/Line Shapefiles</a> product. If you aren’t familiar with shapefiles, they’re more or less a data format for geographic information that you can open up in applications like <a href="https://qgis.org/">QGIS</a> (which is what we’ll be doing our work in).</p>
+<p>Each year the Census Bureau releases a new set of shapefiles, and they have also produced <a href="https://www2.census.gov/geo/pdfs/maps-data/data/tiger/How_do_I_choose_TIGER_vintage.pdf">detailed documentation</a> about what set of shapefiles to use depending on where/when your data came from.</p>
+<p>Our data came from the 2013 American Community Survey (5-year, 2007-2013), so we’ll be using the 2013 shapefiles. Specifically the ones for at the <strong>census tract level in Wisconsin</strong>.</p>
+<div id="joining-attributes-by-location" class="section level3">
+<h3><span class="header-section-number">2.3.1</span> Joining attributes by location</h3>
+<p>JOINING ATTRIBUTES BY LOCATION</p>
+<p>After we do our join, we can see that our new Attribute Table lists all sorts of geographic data along with our original information.</p>
+<p>To save this to a CSV, right-click and select <strong>Export as…</strong>. Pick <strong>Comma Separated Values (CSV)</strong> from the filetype menu, and save it as <code>2013-addresses-tracts.csv</code>. We specifically call it <strong>2013</strong> because even though these addresses are from the entire dataset, this is the census tract they were in during 2013.</p>
+<blockquote>
+<p>Why didn’t we grab addresses from the entire dataset instead of just addresses with 2013 potholes? I thought we might need the other addresses later in case we decide to analyze the other years, so it seems reasonable to do them all at once.</p>
+</blockquote>
+<p>Now that we have this CSV of addresses, we can open them in pandas like so:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb25-1"><a href="attaching-tract-data-to-our-latitudes-and-longitudes.html#cb25-1"></a>tracts <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/2013-addresses-tracts.csv&quot;</span>)</span>
+<span id="cb25-2"><a href="attaching-tract-data-to-our-latitudes-and-longitudes.html#cb25-2"></a>tracts.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+address
+</th>
+<th style="text-align:left;">
+city
+</th>
+<th style="text-align:left;">
+state
+</th>
+<th style="text-align:right;">
+Latitude
+</th>
+<th style="text-align:right;">
+Longitude
+</th>
+<th style="text-align:right;">
+Accuracy Score
+</th>
+<th style="text-align:left;">
+Accuracy Type
+</th>
+<th style="text-align:right;">
+Number
+</th>
+<th style="text-align:left;">
+Street
+</th>
+<th style="text-align:left;">
+City_1
+</th>
+<th style="text-align:left;">
+State_1
+</th>
+<th style="text-align:left;">
+County
+</th>
+<th style="text-align:right;">
+Zip
+</th>
+<th style="text-align:left;">
+Country
+</th>
+<th style="text-align:left;">
+Source
+</th>
+<th style="text-align:right;">
+GEOID
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+8900 N 124TH ST
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+43.17790
+</td>
+<td style="text-align:right;">
+-88.06365
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+range_interpolation
+</td>
+<td style="text-align:right;">
+8900
+</td>
+<td style="text-align:left;">
+N 124th St
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+WI
+</td>
+<td style="text-align:left;">
+Waukesha County
+</td>
+<td style="text-align:right;">
+53224
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+TIGER/Line® dataset from the US Census Bureau
+</td>
+<td style="text-align:right;">
+55133200202
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2200 N TERRACE AV
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+43.05671
+</td>
+<td style="text-align:right;">
+-87.88080
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+rooftop
+</td>
+<td style="text-align:right;">
+2200
+</td>
+<td style="text-align:left;">
+N Terrace Ave
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+WI
+</td>
+<td style="text-align:left;">
+Milwaukee County
+</td>
+<td style="text-align:right;">
+53202
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+City of Milwaukee
+</td>
+<td style="text-align:right;">
+55079186900
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1000 N PROSPECT AV
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+43.04328
+</td>
+<td style="text-align:right;">
+-87.89869
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+range_interpolation
+</td>
+<td style="text-align:right;">
+1000
+</td>
+<td style="text-align:left;">
+N Prospect Ave
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+WI
+</td>
+<td style="text-align:left;">
+Milwaukee County
+</td>
+<td style="text-align:right;">
+53202
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+TIGER/Line® dataset from the US Census Bureau
+</td>
+<td style="text-align:right;">
+55079186900
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1700 N PROSPECT AV
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+43.05211
+</td>
+<td style="text-align:right;">
+-87.89049
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+rooftop
+</td>
+<td style="text-align:right;">
+1700
+</td>
+<td style="text-align:left;">
+N Prospect Ave
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+WI
+</td>
+<td style="text-align:left;">
+Milwaukee County
+</td>
+<td style="text-align:right;">
+53202
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+City of Milwaukee
+</td>
+<td style="text-align:right;">
+55079186900
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2298 N TERRACE AV
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+Wisconsin
+</td>
+<td style="text-align:right;">
+43.05931
+</td>
+<td style="text-align:right;">
+-87.87922
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:left;">
+range_interpolation
+</td>
+<td style="text-align:right;">
+2298
+</td>
+<td style="text-align:left;">
+N Terrace Ave
+</td>
+<td style="text-align:left;">
+Milwaukee
+</td>
+<td style="text-align:left;">
+WI
+</td>
+<td style="text-align:left;">
+Milwaukee County
+</td>
+<td style="text-align:right;">
+53202
+</td>
+<td style="text-align:left;">
+US
+</td>
+<td style="text-align:left;">
+TIGER/Line® dataset from the US Census Bureau
+</td>
+<td style="text-align:right;">
+55079186900
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Lots of extra columns there, so when we read it in later we’ll probably only take a few of the columns.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="combining-our-datasets.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="merging-our-datasets.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 1
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

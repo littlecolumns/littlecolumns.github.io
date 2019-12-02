@@ -1,0 +1,2002 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>In The Dark - Alternative formula methods</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/apm-reports-jury-bias/">Bias in the jury selection process</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/apm-reports-jury-bias/in-the-dark-alternative-formula-methods">In The Dark - Alternative formula methods</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Logistic-regression-of-jury-rejections-using-statsmodels'-formula-method">Logistic regression of jury rejections using statsmodels' formula method<a class="anchor-link" href="#Logistic-regression-of-jury-rejections-using-statsmodels'-formula-method">#</a></h1><p>In this notebook we'll be looking for evidence of racial bias in the jury selection process. To this end we'll be working with the statsmodels package, and specifically its R-formula-like <code>smf.logit</code> method.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/apm-reports-jury-bias/in-the-dark-alternative-formula-methods">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/apm-reports-jury-bias/notebooks/In The Dark - Alternative formula methods.ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Import-a-lot">Import a lot<a class="anchor-link" href="#Import-a-lot">#</a></h1>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_rows&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.width&#39;</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.float_format&#39;</span><span class="p">,</span> <span class="s1">&#39;</span><span class="si">{:.5f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Read-in-the-data">Read in the data<a class="anchor-link" href="#Read-in-the-data">#</a></h1><p>We'll start by reading in the pre-cleaned dataset. We've already joined the potential jurors, the trial information, and the judge information. We've also added the <code>struck_by_state</code> column and converted true and false values into ones and zeroes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/jury-cleaned.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id_x</th>
+      <th>juror_id</th>
+      <th>juror_id__trial__id</th>
+      <th>no_responses</th>
+      <th>married</th>
+      <th>children</th>
+      <th>religious</th>
+      <th>education</th>
+      <th>leans_state</th>
+      <th>leans_defense</th>
+      <th>leans_ambi</th>
+      <th>moral_hardship</th>
+      <th>job_hardship</th>
+      <th>caretaker</th>
+      <th>communication</th>
+      <th>medical</th>
+      <th>employed</th>
+      <th>social</th>
+      <th>prior_jury</th>
+      <th>crime_victim</th>
+      <th>fam_crime_victim</th>
+      <th>accused</th>
+      <th>fam_accused</th>
+      <th>eyewitness</th>
+      <th>fam_eyewitness</th>
+      <th>military</th>
+      <th>law_enforcement</th>
+      <th>fam_law_enforcement</th>
+      <th>premature_verdict</th>
+      <th>premature_guilt</th>
+      <th>premature_innocence</th>
+      <th>def_race</th>
+      <th>vic_race</th>
+      <th>def_gender</th>
+      <th>vic_gender</th>
+      <th>def_social</th>
+      <th>vic_social</th>
+      <th>def_age</th>
+      <th>vic_age</th>
+      <th>def_sexpref</th>
+      <th>vic_sexpref</th>
+      <th>def_incarcerated</th>
+      <th>vic_incarcerated</th>
+      <th>beliefs</th>
+      <th>other_biases</th>
+      <th>innocence</th>
+      <th>take_stand</th>
+      <th>arrest_is_guilt</th>
+      <th>cant_decide</th>
+      <th>cant_affirm</th>
+      <th>cant_decide_evidence</th>
+      <th>cant_follow</th>
+      <th>know_def</th>
+      <th>know_vic</th>
+      <th>know_wit</th>
+      <th>know_attny</th>
+      <th>civil_plantiff</th>
+      <th>civil_def</th>
+      <th>civil_witness</th>
+      <th>witness_defense</th>
+      <th>witness_state</th>
+      <th>prior_info</th>
+      <th>death_hesitation</th>
+      <th>no_death</th>
+      <th>no_life</th>
+      <th>no_cops</th>
+      <th>yes_cops</th>
+      <th>legally_disqualified</th>
+      <th>witness_ambi</th>
+      <th>notes</th>
+      <th>id_y</th>
+      <th>trial</th>
+      <th>trial__id</th>
+      <th>race</th>
+      <th>gender</th>
+      <th>race_source</th>
+      <th>gender_source</th>
+      <th>struck_by</th>
+      <th>strike_eligibility</th>
+      <th>id</th>
+      <th>defendant_name</th>
+      <th>cause_number</th>
+      <th>state_strikes</th>
+      <th>defense_strikes</th>
+      <th>county</th>
+      <th>defendant_race</th>
+      <th>second_defendant_race</th>
+      <th>third_defendant_race</th>
+      <th>fourth_defendant_race</th>
+      <th>more_than_four_defendants</th>
+      <th>judge</th>
+      <th>prosecutor_1</th>
+      <th>prosecutor_2</th>
+      <th>prosecutor_3</th>
+      <th>prosecutors_more_than_three</th>
+      <th>def_attny_1</th>
+      <th>def_attny_2</th>
+      <th>def_attny_3</th>
+      <th>def_attnys_more_than_three</th>
+      <th>offense_code_1</th>
+      <th>offense_title_1</th>
+      <th>offense_code_2</th>
+      <th>offense_title_2</th>
+      <th>offense_code_3</th>
+      <th>offense_title_3</th>
+      <th>offense_code_4</th>
+      <th>offense_title_4</th>
+      <th>offense_code_5</th>
+      <th>offense_title_5</th>
+      <th>offense_code_6</th>
+      <th>offense_title_6</th>
+      <th>more_than_six</th>
+      <th>verdict</th>
+      <th>case_appealed</th>
+      <th>batson_claim_by_defense</th>
+      <th>batson_claim_by_state</th>
+      <th>voir_dire_present</th>
+      <th>struck_by_state</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1521</td>
+      <td>107.00000</td>
+      <td>3.00000</td>
+      <td>0</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>107</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck by the defense</td>
+      <td>Both State and Defense</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>nan</td>
+      <td>0</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>Guilty on at least one offense</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1524</td>
+      <td>108.00000</td>
+      <td>3.00000</td>
+      <td>0</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>108</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck by the state</td>
+      <td>State</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>nan</td>
+      <td>0</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>Guilty on at least one offense</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Add-additional-features">Add additional features<a class="anchor-link" href="#Add-additional-features">#</a></h1><p>While our dataset is already pretty big, we also want to calculate a few new features to match what APM Reports has in their methodology document. For simplicity's sake, we're only calculating the ones that appear in the <strong>final regression.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;is_black&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">race</span> <span class="o">==</span> <span class="s1">&#39;Black&#39;</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;race_unknown&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">race</span> <span class="o">==</span> <span class="s1">&#39;Unknown&#39;</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;same_race&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">race</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">defendant_race</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>id_x</th>
+      <th>juror_id</th>
+      <th>juror_id__trial__id</th>
+      <th>no_responses</th>
+      <th>married</th>
+      <th>children</th>
+      <th>religious</th>
+      <th>education</th>
+      <th>leans_state</th>
+      <th>leans_defense</th>
+      <th>leans_ambi</th>
+      <th>moral_hardship</th>
+      <th>job_hardship</th>
+      <th>caretaker</th>
+      <th>communication</th>
+      <th>medical</th>
+      <th>employed</th>
+      <th>social</th>
+      <th>prior_jury</th>
+      <th>crime_victim</th>
+      <th>fam_crime_victim</th>
+      <th>accused</th>
+      <th>fam_accused</th>
+      <th>eyewitness</th>
+      <th>fam_eyewitness</th>
+      <th>military</th>
+      <th>law_enforcement</th>
+      <th>fam_law_enforcement</th>
+      <th>premature_verdict</th>
+      <th>premature_guilt</th>
+      <th>premature_innocence</th>
+      <th>def_race</th>
+      <th>vic_race</th>
+      <th>def_gender</th>
+      <th>vic_gender</th>
+      <th>def_social</th>
+      <th>vic_social</th>
+      <th>def_age</th>
+      <th>vic_age</th>
+      <th>def_sexpref</th>
+      <th>vic_sexpref</th>
+      <th>def_incarcerated</th>
+      <th>vic_incarcerated</th>
+      <th>beliefs</th>
+      <th>other_biases</th>
+      <th>innocence</th>
+      <th>take_stand</th>
+      <th>arrest_is_guilt</th>
+      <th>cant_decide</th>
+      <th>cant_affirm</th>
+      <th>cant_decide_evidence</th>
+      <th>cant_follow</th>
+      <th>know_def</th>
+      <th>know_vic</th>
+      <th>know_wit</th>
+      <th>know_attny</th>
+      <th>civil_plantiff</th>
+      <th>civil_def</th>
+      <th>civil_witness</th>
+      <th>witness_defense</th>
+      <th>witness_state</th>
+      <th>prior_info</th>
+      <th>death_hesitation</th>
+      <th>no_death</th>
+      <th>no_life</th>
+      <th>no_cops</th>
+      <th>yes_cops</th>
+      <th>legally_disqualified</th>
+      <th>witness_ambi</th>
+      <th>notes</th>
+      <th>id_y</th>
+      <th>trial</th>
+      <th>trial__id</th>
+      <th>race</th>
+      <th>gender</th>
+      <th>race_source</th>
+      <th>gender_source</th>
+      <th>struck_by</th>
+      <th>strike_eligibility</th>
+      <th>id</th>
+      <th>defendant_name</th>
+      <th>cause_number</th>
+      <th>state_strikes</th>
+      <th>defense_strikes</th>
+      <th>county</th>
+      <th>defendant_race</th>
+      <th>second_defendant_race</th>
+      <th>third_defendant_race</th>
+      <th>fourth_defendant_race</th>
+      <th>more_than_four_defendants</th>
+      <th>judge</th>
+      <th>prosecutor_1</th>
+      <th>prosecutor_2</th>
+      <th>prosecutor_3</th>
+      <th>prosecutors_more_than_three</th>
+      <th>def_attny_1</th>
+      <th>def_attny_2</th>
+      <th>def_attny_3</th>
+      <th>def_attnys_more_than_three</th>
+      <th>offense_code_1</th>
+      <th>offense_title_1</th>
+      <th>offense_code_2</th>
+      <th>offense_title_2</th>
+      <th>offense_code_3</th>
+      <th>offense_title_3</th>
+      <th>offense_code_4</th>
+      <th>offense_title_4</th>
+      <th>offense_code_5</th>
+      <th>offense_title_5</th>
+      <th>offense_code_6</th>
+      <th>offense_title_6</th>
+      <th>more_than_six</th>
+      <th>verdict</th>
+      <th>case_appealed</th>
+      <th>batson_claim_by_defense</th>
+      <th>batson_claim_by_state</th>
+      <th>voir_dire_present</th>
+      <th>struck_by_state</th>
+      <th>is_black</th>
+      <th>race_unknown</th>
+      <th>same_race</th>
+      <th>juror_id__gender_m</th>
+      <th>juror_id__gender_unknown</th>
+      <th>trial__defendant_race_asian</th>
+      <th>trial__defendant_race_black</th>
+      <th>trial__defendant_race_unknown</th>
+      <th>trial__judge_Loper</th>
+      <th>trial__judge_OTHER</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1521</td>
+      <td>107.00000</td>
+      <td>3.00000</td>
+      <td>0</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>107</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>White</td>
+      <td>Male</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck by the defense</td>
+      <td>Both State and Defense</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>nan</td>
+      <td>0</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>Guilty on at least one offense</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>False</td>
+      <td>False</td>
+      <td>False</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>1524</td>
+      <td>108.00000</td>
+      <td>3.00000</td>
+      <td>0</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>unknown</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>NaN</td>
+      <td>108</td>
+      <td>2004-0257--Sparky Watson</td>
+      <td>3</td>
+      <td>Black</td>
+      <td>Female</td>
+      <td>Jury strike sheet</td>
+      <td>Jury strike sheet</td>
+      <td>Struck by the state</td>
+      <td>State</td>
+      <td>3</td>
+      <td>Sparky Watson</td>
+      <td>2004-0257</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Grenada</td>
+      <td>Black</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>nan</td>
+      <td>0</td>
+      <td>C. Morgan, III</td>
+      <td>Susan Denley</td>
+      <td>Ryan Berry</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>M. Kevin Horan</td>
+      <td>Elizabeth Davis</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>41-29-139(a)(1)(b)(3)</td>
+      <td>sale of marihuana (less than 30 grams)</td>
+      <td>41-29-139(a)(1)(b)(1)</td>
+      <td>sale of cocaine</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>Guilty on at least one offense</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>True</td>
+      <td>False</td>
+      <td>True</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Since they're all trues and falses, we'll need to take a second to convert them to ones and zeroes so that our regression will work.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span>
+    <span class="kc">True</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="kc">False</span><span class="p">:</span> <span class="mi">0</span>
+<span class="p">})</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Performing-our-regression">Performing our regression<a class="anchor-link" href="#Performing-our-regression">#</a></h1><p>We're going to perform the simple regression from the end of their methodology. Not too many columns at all!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    struck_by_state ~ </span>
+<span class="s2">        same_race + accused + fam_accused + fam_law_enforcement</span>
+<span class="s2">        + know_def + death_hesitation</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Optimization terminated successfully.
+         Current function value: 0.453673
+         Iterations 6
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>    <td>struck_by_state</td> <th>  No. Observations:  </th>   <td>  2295</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  2288</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     6</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 04 Nov 2019</td> <th>  Pseudo R-squ.:     </th>   <td>0.1927</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>15:19:04</td>     <th>  Log-Likelihood:    </th>  <td> -1041.2</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -1289.7</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>3.524e-104</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+           <td></td>              <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>           <td>   -2.0663</td> <td>    0.090</td> <td>  -23.032</td> <td> 0.000</td> <td>   -2.242</td> <td>   -1.890</td>
+</tr>
+<tr>
+  <th>same_race</th>           <td>    1.3847</td> <td>    0.111</td> <td>   12.490</td> <td> 0.000</td> <td>    1.167</td> <td>    1.602</td>
+</tr>
+<tr>
+  <th>accused</th>             <td>    2.7632</td> <td>    0.522</td> <td>    5.298</td> <td> 0.000</td> <td>    1.741</td> <td>    3.785</td>
+</tr>
+<tr>
+  <th>fam_accused</th>         <td>    1.7841</td> <td>    0.150</td> <td>   11.866</td> <td> 0.000</td> <td>    1.489</td> <td>    2.079</td>
+</tr>
+<tr>
+  <th>fam_law_enforcement</th> <td>   -0.6989</td> <td>    0.156</td> <td>   -4.494</td> <td> 0.000</td> <td>   -1.004</td> <td>   -0.394</td>
+</tr>
+<tr>
+  <th>know_def</th>            <td>    1.3989</td> <td>    0.207</td> <td>    6.766</td> <td> 0.000</td> <td>    0.994</td> <td>    1.804</td>
+</tr>
+<tr>
+  <th>death_hesitation</th>    <td>    1.8131</td> <td>    0.550</td> <td>    3.295</td> <td> 0.001</td> <td>    0.734</td> <td>    2.892</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The irritating thing about this, though, is <strong>we had to make new columns.</strong> Making columns is a pain, in that it takes time and effort and there's always the potential to screw things up.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="An-alternative-technique">An alternative technique<a class="anchor-link" href="#An-alternative-technique">#</a></h1><p>When you're putting together your formula, you can actually do more than just add together columns! Instead, you can actually make the comparisons that say, "is this person's race black?" or "are they the same race as the defendant?"</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    struck_by_state ~ </span>
+<span class="s2">        (df.race == &#39;Black&#39;)</span>
+<span class="s2">        + (df.defendant_race == df.race)</span>
+<span class="s2">        + accused</span>
+<span class="s2">        + fam_accused + fam_law_enforcement + know_def</span>
+<span class="s2">        + death_hesitation</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Optimization terminated successfully.
+         Current function value: 0.411232
+         Iterations 6
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>    <td>struck_by_state</td> <th>  No. Observations:  </th>   <td>  2295</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  2287</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     7</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 04 Nov 2019</td> <th>  Pseudo R-squ.:     </th>   <td>0.2682</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>15:30:38</td>     <th>  Log-Likelihood:    </th>  <td> -943.78</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -1289.7</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>3.815e-145</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+                    <td></td>                      <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                            <td>   -2.4307</td> <td>    0.101</td> <td>  -24.017</td> <td> 0.000</td> <td>   -2.629</td> <td>   -2.232</td>
+</tr>
+<tr>
+  <th>df.race == 'Black'[T.True]</th>           <td>    1.8972</td> <td>    0.141</td> <td>   13.443</td> <td> 0.000</td> <td>    1.621</td> <td>    2.174</td>
+</tr>
+<tr>
+  <th>df.defendant_race == df.race[T.True]</th> <td>    0.3603</td> <td>    0.140</td> <td>    2.575</td> <td> 0.010</td> <td>    0.086</td> <td>    0.635</td>
+</tr>
+<tr>
+  <th>accused</th>                              <td>    2.5128</td> <td>    0.545</td> <td>    4.606</td> <td> 0.000</td> <td>    1.444</td> <td>    3.582</td>
+</tr>
+<tr>
+  <th>fam_accused</th>                          <td>    1.8476</td> <td>    0.162</td> <td>   11.402</td> <td> 0.000</td> <td>    1.530</td> <td>    2.165</td>
+</tr>
+<tr>
+  <th>fam_law_enforcement</th>                  <td>   -0.5627</td> <td>    0.162</td> <td>   -3.468</td> <td> 0.001</td> <td>   -0.881</td> <td>   -0.245</td>
+</tr>
+<tr>
+  <th>know_def</th>                             <td>    1.3257</td> <td>    0.223</td> <td>    5.937</td> <td> 0.000</td> <td>    0.888</td> <td>    1.763</td>
+</tr>
+<tr>
+  <th>death_hesitation</th>                     <td>    1.8243</td> <td>    0.592</td> <td>    3.084</td> <td> 0.002</td> <td>    0.665</td> <td>    2.984</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So exciting!!! We didn't need to make any columns at all!</p>
+<p>One downside of this method is that statsmodels can pick either <code>True</code> or <code>False</code> as what's shown in the coefficients list. The above <code>[T.True]</code> means the coefficient is for when they <em>are</em> black, but you could easily show up in a position where it's <code>[T.False]</code>, meaning "this is the coefficient for when they are <em>not</em> black."</p>
+<p>If you need to force statsmodels to use one or the other, you just need to explain which one you want as the <strong>reference category</strong>. You do this by shifing your comparison to look like this:</p>
+
+<pre><code>C(df.race == 'Black', Treatment(False))</code></pre>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    struck_by_state ~ </span>
+<span class="s2">        C(df.race == &#39;Black&#39;, Treatment(False))</span>
+<span class="s2">        + (df.defendant_race == df.race)</span>
+<span class="s2">        + accused</span>
+<span class="s2">        + fam_accused + fam_law_enforcement + know_def</span>
+<span class="s2">        + death_hesitation</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Optimization terminated successfully.
+         Current function value: 0.411232
+         Iterations 6
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>    <td>struck_by_state</td> <th>  No. Observations:  </th>   <td>  2295</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  2287</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     7</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 04 Nov 2019</td> <th>  Pseudo R-squ.:     </th>   <td>0.2682</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>15:35:15</td>     <th>  Log-Likelihood:    </th>  <td> -943.78</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -1289.7</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>3.815e-145</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+                         <td></td>                            <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                       <td>   -2.4307</td> <td>    0.101</td> <td>  -24.017</td> <td> 0.000</td> <td>   -2.629</td> <td>   -2.232</td>
+</tr>
+<tr>
+  <th>C(df.race == 'Black', Treatment(False))[T.True]</th> <td>    1.8972</td> <td>    0.141</td> <td>   13.443</td> <td> 0.000</td> <td>    1.621</td> <td>    2.174</td>
+</tr>
+<tr>
+  <th>df.defendant_race == df.race[T.True]</th>            <td>    0.3603</td> <td>    0.140</td> <td>    2.575</td> <td> 0.010</td> <td>    0.086</td> <td>    0.635</td>
+</tr>
+<tr>
+  <th>accused</th>                                         <td>    2.5128</td> <td>    0.545</td> <td>    4.606</td> <td> 0.000</td> <td>    1.444</td> <td>    3.582</td>
+</tr>
+<tr>
+  <th>fam_accused</th>                                     <td>    1.8476</td> <td>    0.162</td> <td>   11.402</td> <td> 0.000</td> <td>    1.530</td> <td>    2.165</td>
+</tr>
+<tr>
+  <th>fam_law_enforcement</th>                             <td>   -0.5627</td> <td>    0.162</td> <td>   -3.468</td> <td> 0.001</td> <td>   -0.881</td> <td>   -0.245</td>
+</tr>
+<tr>
+  <th>know_def</th>                                        <td>    1.3257</td> <td>    0.223</td> <td>    5.937</td> <td> 0.000</td> <td>    0.888</td> <td>    1.763</td>
+</tr>
+<tr>
+  <th>death_hesitation</th>                                <td>    1.8243</td> <td>    0.592</td> <td>    3.084</td> <td> 0.002</td> <td>    0.665</td> <td>    2.984</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This looks the same as before, so not very exciting. While it doesn't make much sense, we can change the reference category to be <code>True</code>, so our result will show us what happens when race is <em>not</em> black.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    struck_by_state ~ </span>
+<span class="s2">        C(df.race == &#39;Black&#39;, Treatment(True))</span>
+<span class="s2">        + (df.defendant_race == df.race)</span>
+<span class="s2">        + accused</span>
+<span class="s2">        + fam_accused + fam_law_enforcement + know_def</span>
+<span class="s2">        + death_hesitation</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Optimization terminated successfully.
+         Current function value: 0.411232
+         Iterations 6
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>    <td>struck_by_state</td> <th>  No. Observations:  </th>   <td>  2295</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  2287</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     7</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 04 Nov 2019</td> <th>  Pseudo R-squ.:     </th>   <td>0.2682</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>15:35:59</td>     <th>  Log-Likelihood:    </th>  <td> -943.78</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -1289.7</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>3.815e-145</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+                         <td></td>                            <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                       <td>   -0.5335</td> <td>    0.137</td> <td>   -3.897</td> <td> 0.000</td> <td>   -0.802</td> <td>   -0.265</td>
+</tr>
+<tr>
+  <th>C(df.race == 'Black', Treatment(True))[T.False]</th> <td>   -1.8972</td> <td>    0.141</td> <td>  -13.443</td> <td> 0.000</td> <td>   -2.174</td> <td>   -1.621</td>
+</tr>
+<tr>
+  <th>df.defendant_race == df.race[T.True]</th>            <td>    0.3603</td> <td>    0.140</td> <td>    2.575</td> <td> 0.010</td> <td>    0.086</td> <td>    0.635</td>
+</tr>
+<tr>
+  <th>accused</th>                                         <td>    2.5128</td> <td>    0.545</td> <td>    4.606</td> <td> 0.000</td> <td>    1.444</td> <td>    3.582</td>
+</tr>
+<tr>
+  <th>fam_accused</th>                                     <td>    1.8476</td> <td>    0.162</td> <td>   11.402</td> <td> 0.000</td> <td>    1.530</td> <td>    2.165</td>
+</tr>
+<tr>
+  <th>fam_law_enforcement</th>                             <td>   -0.5627</td> <td>    0.162</td> <td>   -3.468</td> <td> 0.001</td> <td>   -0.881</td> <td>   -0.245</td>
+</tr>
+<tr>
+  <th>know_def</th>                                        <td>    1.3257</td> <td>    0.223</td> <td>    5.937</td> <td> 0.000</td> <td>    0.888</td> <td>    1.763</td>
+</tr>
+<tr>
+  <th>death_hesitation</th>                                <td>    1.8243</td> <td>    0.592</td> <td>    3.084</td> <td> 0.002</td> <td>    0.665</td> <td>    2.984</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Calcualte the odds ratio without making a big dataframe... </span>
+<span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">1.8972</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.14998799821305078</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Which means non-black jurors have a 0.15x chance of getting rejected. Not as pleasant, is it? <strong>Just pay attention to your reference categories.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Another-alternative">Another alternative<a class="anchor-link" href="#Another-alternative">#</a></h1><p>Up above we're only checking to see if they're black or not. But what if there were multiple races, and we wanted to look at each one of them individually?</p>
+<ul>
+<li><strong>If you know what I'm talking about:</strong> you <em>could</em> do a lot of fancy one-hot encoding and blah blah blah pandas/sklearn magic.</li>
+<li><strong>If you don't know what I'm talking about:</strong> that sounds overly complex, doesn't it?</li>
+</ul>
+<p>Watch this.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    struck_by_state ~ </span>
+<span class="s2">        C(df.race, Treatment(&#39;White&#39;))</span>
+<span class="s2">        + (df.defendant_race == df.race)</span>
+<span class="s2">        + accused</span>
+<span class="s2">        + fam_accused + fam_law_enforcement + know_def</span>
+<span class="s2">        + death_hesitation</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Optimization terminated successfully.
+         Current function value: 0.411066
+         Iterations 6
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>    <td>struck_by_state</td> <th>  No. Observations:  </th>   <td>  2295</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  2286</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     8</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 04 Nov 2019</td> <th>  Pseudo R-squ.:     </th>   <td>0.2685</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>15:39:37</td>     <th>  Log-Likelihood:    </th>  <td> -943.40</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -1289.7</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>2.698e-144</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+                      <td></td>                         <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                 <td>   -2.4406</td> <td>    0.102</td> <td>  -23.917</td> <td> 0.000</td> <td>   -2.641</td> <td>   -2.241</td>
+</tr>
+<tr>
+  <th>C(df.race, Treatment('White'))[T.Black]</th>   <td>    1.9027</td> <td>    0.141</td> <td>   13.452</td> <td> 0.000</td> <td>    1.625</td> <td>    2.180</td>
+</tr>
+<tr>
+  <th>C(df.race, Treatment('White'))[T.Unknown]</th> <td>    0.7358</td> <td>    0.775</td> <td>    0.949</td> <td> 0.343</td> <td>   -0.784</td> <td>    2.256</td>
+</tr>
+<tr>
+  <th>df.defendant_race == df.race[T.True]</th>      <td>    0.3642</td> <td>    0.140</td> <td>    2.599</td> <td> 0.009</td> <td>    0.090</td> <td>    0.639</td>
+</tr>
+<tr>
+  <th>accused</th>                                   <td>    2.5173</td> <td>    0.546</td> <td>    4.611</td> <td> 0.000</td> <td>    1.447</td> <td>    3.587</td>
+</tr>
+<tr>
+  <th>fam_accused</th>                               <td>    1.8528</td> <td>    0.162</td> <td>   11.415</td> <td> 0.000</td> <td>    1.535</td> <td>    2.171</td>
+</tr>
+<tr>
+  <th>fam_law_enforcement</th>                       <td>   -0.5590</td> <td>    0.162</td> <td>   -3.441</td> <td> 0.001</td> <td>   -0.877</td> <td>   -0.241</td>
+</tr>
+<tr>
+  <th>know_def</th>                                  <td>    1.3282</td> <td>    0.224</td> <td>    5.942</td> <td> 0.000</td> <td>    0.890</td> <td>    1.766</td>
+</tr>
+<tr>
+  <th>death_hesitation</th>                          <td>    1.8283</td> <td>    0.592</td> <td>    3.088</td> <td> 0.002</td> <td>    0.668</td> <td>    2.989</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We changed the <code>is_black</code> variable into something slightly more complicated</p>
+
+<pre><code>C(df.race, Treatment('White'))</code></pre>
+<p>This tells statsmodels to look at all of the options in the <code>race</code> column, and calculate all of the coefficients in relation to the <code>White</code> value. While before we just knew if someone is black or not, now we have more options!</p>
+<ul>
+<li><code>C(df.race, Treatment('White'))[T.Black]</code> is when a juror is black</li>
+<li><code>C(df.race, Treatment('White'))[T.Unknown]</code> is when a juror's race is unknown</li>
+</ul>
+<p>Well, not a lot - the only options are "Black," "White," and "Unknown," but you get the idea. The <code>Treatment('White')</code> part lets you know that this is all in comparison to jurors listed as white.</p>
+<p>Now if we take the coefficient for black jurors - 1.9027 - and turn it into an odds ratio - 6.7 - we need to remember <strong>this is all in reference to white jurors.</strong> When we did it before the comparison was "black vs non-black," but now our comparison is "black vs. white" and "unknown race vs white."</p>
+<p>Taking advantage of this feature saves you a lot of time when you're trying to pick apart complicated categorical columns.</p>
+<p>For example, <strong>we could look at the judges!</strong> In the methodology from APM Reports, they have a couple different columns:</p>
+<ul>
+<li><code>trial__judge_Loper</code>: Judge for trial was Joseph Loper, reference category: Judge Morgan</li>
+<li><code>trial__judge_OTHER</code>: The judge was neither Loper nor Morgan</li>
+</ul>
+<p>We can do the same thing, but instead of creating multiple new categories we can just use <code>C()</code> and <code>Treatment()</code></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Find the actual names of the judges</span>
+<span class="n">df</span><span class="o">.</span><span class="n">judge</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>Joseph Loper, Jr    1282
+C. Morgan, III       966
+Other                 47
+Name: judge, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Run the regression</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="n">formula</span><span class="o">=</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    struck_by_state ~ </span>
+<span class="s2">        C(df.race, Treatment(&#39;White&#39;))</span>
+<span class="s2">        + C(df.judge, Treatment(&#39;C. Morgan, III&#39;))</span>
+<span class="s2">        + accused</span>
+<span class="s2">        + fam_accused + fam_law_enforcement + know_def</span>
+<span class="s2">        + death_hesitation</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Optimization terminated successfully.
+         Current function value: 0.411939
+         Iterations 6
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>    <td>struck_by_state</td> <th>  No. Observations:  </th>   <td>  2295</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td>  2285</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>     9</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Mon, 04 Nov 2019</td> <th>  Pseudo R-squ.:     </th>   <td>0.2670</td>  
+</tr>
+<tr>
+  <th>Time:</th>                <td>15:47:05</td>     <th>  Log-Likelihood:    </th>  <td> -945.40</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -1289.7</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>1.885e-142</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+                                <td></td>                                  <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                                    <td>   -2.4853</td> <td>    0.124</td> <td>  -19.995</td> <td> 0.000</td> <td>   -2.729</td> <td>   -2.242</td>
+</tr>
+<tr>
+  <th>C(df.race, Treatment('White'))[T.Black]</th>                      <td>    2.1134</td> <td>    0.119</td> <td>   17.788</td> <td> 0.000</td> <td>    1.881</td> <td>    2.346</td>
+</tr>
+<tr>
+  <th>C(df.race, Treatment('White'))[T.Unknown]</th>                    <td>    0.6073</td> <td>    0.776</td> <td>    0.782</td> <td> 0.434</td> <td>   -0.914</td> <td>    2.129</td>
+</tr>
+<tr>
+  <th>C(df.judge, Treatment('C. Morgan, III'))[T.Joseph Loper, Jr]</th> <td>    0.1899</td> <td>    0.120</td> <td>    1.586</td> <td> 0.113</td> <td>   -0.045</td> <td>    0.425</td>
+</tr>
+<tr>
+  <th>C(df.judge, Treatment('C. Morgan, III'))[T.Other]</th>            <td>   -0.0420</td> <td>    0.452</td> <td>   -0.093</td> <td> 0.926</td> <td>   -0.927</td> <td>    0.843</td>
+</tr>
+<tr>
+  <th>accused</th>                                                      <td>    2.4955</td> <td>    0.543</td> <td>    4.599</td> <td> 0.000</td> <td>    1.432</td> <td>    3.559</td>
+</tr>
+<tr>
+  <th>fam_accused</th>                                                  <td>    1.8845</td> <td>    0.162</td> <td>   11.615</td> <td> 0.000</td> <td>    1.566</td> <td>    2.202</td>
+</tr>
+<tr>
+  <th>fam_law_enforcement</th>                                          <td>   -0.5639</td> <td>    0.162</td> <td>   -3.488</td> <td> 0.000</td> <td>   -0.881</td> <td>   -0.247</td>
+</tr>
+<tr>
+  <th>know_def</th>                                                     <td>    1.4005</td> <td>    0.221</td> <td>    6.342</td> <td> 0.000</td> <td>    0.968</td> <td>    1.833</td>
+</tr>
+<tr>
+  <th>death_hesitation</th>                                             <td>    1.9159</td> <td>    0.586</td> <td>    3.268</td> <td> 0.001</td> <td>    0.767</td> <td>    3.065</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And there you go! Formulas make it all so easy.</p>
+<p><strong>Note:</strong> Remember that the coefficient isn't the odds ratio! We need to do an extra step to get that.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">coefs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;coef&#39;</span><span class="p">:</span> <span class="n">results</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">values</span><span class="p">,</span>
+    <span class="s1">&#39;odds ratio&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+    <span class="s1">&#39;pvalue&#39;</span><span class="p">:</span> <span class="n">results</span><span class="o">.</span><span class="n">pvalues</span><span class="p">,</span>
+    <span class="s1">&#39;column&#39;</span><span class="p">:</span> <span class="n">results</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">index</span>
+<span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;odds ratio&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">coefs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>coef</th>
+      <th>odds ratio</th>
+      <th>pvalue</th>
+      <th>column</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>accused</th>
+      <td>2.49549</td>
+      <td>12.12764</td>
+      <td>0.00000</td>
+      <td>accused</td>
+    </tr>
+    <tr>
+      <th>C(df.race, Treatment('White'))[T.Black]</th>
+      <td>2.11344</td>
+      <td>8.27668</td>
+      <td>0.00000</td>
+      <td>C(df.race, Treatment('White'))[T.Black]</td>
+    </tr>
+    <tr>
+      <th>death_hesitation</th>
+      <td>1.91590</td>
+      <td>6.79303</td>
+      <td>0.00108</td>
+      <td>death_hesitation</td>
+    </tr>
+    <tr>
+      <th>fam_accused</th>
+      <td>1.88448</td>
+      <td>6.58293</td>
+      <td>0.00000</td>
+      <td>fam_accused</td>
+    </tr>
+    <tr>
+      <th>know_def</th>
+      <td>1.40049</td>
+      <td>4.05718</td>
+      <td>0.00000</td>
+      <td>know_def</td>
+    </tr>
+    <tr>
+      <th>C(df.race, Treatment('White'))[T.Unknown]</th>
+      <td>0.60727</td>
+      <td>1.83542</td>
+      <td>0.43411</td>
+      <td>C(df.race, Treatment('White'))[T.Unknown]</td>
+    </tr>
+    <tr>
+      <th>C(df.judge, Treatment('C. Morgan, III'))[T.Joseph Loper, Jr]</th>
+      <td>0.18986</td>
+      <td>1.20908</td>
+      <td>0.11278</td>
+      <td>C(df.judge, Treatment('C. Morgan, III'))[T.Jos...</td>
+    </tr>
+    <tr>
+      <th>C(df.judge, Treatment('C. Morgan, III'))[T.Other]</th>
+      <td>-0.04205</td>
+      <td>0.95882</td>
+      <td>0.92583</td>
+      <td>C(df.judge, Treatment('C. Morgan, III'))[T.Other]</td>
+    </tr>
+    <tr>
+      <th>fam_law_enforcement</th>
+      <td>-0.56392</td>
+      <td>0.56897</td>
+      <td>0.00049</td>
+      <td>fam_law_enforcement</td>
+    </tr>
+    <tr>
+      <th>Intercept</th>
+      <td>-2.48534</td>
+      <td>0.08330</td>
+      <td>0.00000</td>
+      <td>Intercept</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Review">Review<a class="anchor-link" href="#Review">#</a></h2><p>We looked at the way statsmodels <strong>formulas</strong> work, allowing you to <strong>make comparisons</strong> and <strong>automatically split categories into separate features</strong>. Categories get assigned a <strong>reference</strong>, which is what your odds ratio  will be compared with.</p>
+<p>For example:</p>
+<table>
+<thead><tr>
+<th>formula</th>
+<th>meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>C(df.race, Treatment('White'))</code></td>
+<td>Comparing black vs. white</td>
+</tr>
+<tr>
+<td><code>df.race == 'Black'</code></td>
+<td>Comparing black vs. non-black</td>
+</tr>
+<tr>
+<td><code>is_black</code></td>
+<td>Same as above, just more typing to make the column!</td>
+</tr>
+</tbody>
+</table>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Discussion-topics">Discussion topics<a class="anchor-link" href="#Discussion-topics">#</a></h2><ul>
+<li>What are the pluses and minuses of using <code>C()</code> compared to building new columns?</li>
+<li>How do you pick the reference category?</li>
+<li>The p-value for unknown race is uselessly high compared to the p-value for black jurors. What do you think you should do about it, if anything?</li>
+<li>Are you heartbroken that you learned some tricks from the p-value filtering notebook, but if you end up using these techniques those tricks totally won't work? Because I am.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,3109 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Actual analysis</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/latimes-crime-classification/">Building a crime classification engine</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/latimes-crime-classification/actual-analysis">Actual analysis</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Finding-downgraded-crimes-using-machine-learning">Finding downgraded crimes using machine learning<a class="anchor-link" href="#Finding-downgraded-crimes-using-machine-learning">#</a></h1><p>Using a machine learning algorithm, The Los Angeles Times found the LAPD was downgrading serious assaults to the less serious "simple assault" category for years. We're going to reproduce this by manually downgrading 15% of the serious assaults in a database, then trying to see if we can detect which ones we edited.</p>
+<p>We'll be using actual assault reports from the LAPD, reported between the years of 2008-2012.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/latimes-crime-classification/actual-analysis">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/latimes-crime-classification/notebooks/Actual analysis.ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Imports-and-setup">Imports and setup<a class="anchor-link" href="#Imports-and-setup">#</a></h2><p>First we'll set some options up to make everything display correctly. It's mostly because these assault descriptions can be quite long, and the default is to truncate text after a few words.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_colwidth&#39;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_columns&#39;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s1">&#39;display.max_rows&#39;</span><span class="p">,</span> <span class="mi">300</span><span class="p">)</span>
+
+<span class="o">%</span><span class="k">matplotlib</span> inline
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Read-in-our-data">Read in our data<a class="anchor-link" href="#Read-in-our-data">#</a></h2><p>Our dataset is going to be a database of crimes committed between 2008 and 2012. The data has been cleaned and filtered a bit, though, so we're only left with two columns:</p>
+<ul>
+<li><code>CCDESC</code>, what criminal code was violated</li>
+<li><code>DO_NARRATIVE</code>, a short text description of what happened</li>
+</ul>
+<p>We're going to use this description to see if we can separate serious cases of assault compared to non-serious cases of assault.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/2008-2012.csv&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CCDESC</th>
+      <th>DO_NARRATIVE</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>SHOPLIFTING - PETTY THEFT ($950 &amp; UNDER)</td>
+      <td>DO-SUSP WAS SEEN THROUGH SURVAILANCE CONCEALING SEVERAL ITEMS INTO HER    SHOPPING AND PERSONAL BAG LEAVING WITHOUT PAYING DEPT STORE</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>VIOLATION OF COURT ORDER</td>
+      <td>DO-SUSP ARRIVED AT VICTS RESID AND ENTERED VICTS RESID IN VIOLATION OF    RESTRAINING ORDER</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-S APPRCHED V AND STATED ARE YOU GOING TO FCK ME V REPLIED NO SUSP PULL ED OUT A KNIFE AND STATED IM HERE TO HURT YOU BTCH S USED PROFANITIES</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>THEFT PLAIN - PETTY ($950 &amp; UNDER)</td>
+      <td>DO-UNK SUSP TOOK VICT PREPAID GIFT CARD SUSP PURCHASED PRODUCTS WITH ITEM</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-SUSP USED RIGHT FIST TO PUNCH VICT IN THE HEAD ONCE N PULL VICT HAIR   FOR APPRX 15 SECONDS</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>THEFT OF IDENTITY</td>
+      <td>DO-UNK SUSP USED VICTS PERSONAL INFO FOR GAIN WITHOUT THE VICTS CONSENT ORKNOWLEDGE</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>SHOPLIFTING - PETTY THEFT ($950 &amp; UNDER)</td>
+      <td>DO-SUSP ENTERED MKT AND SEL ITEMS SUSP CONCEALED ITEMS AND EXITED STORE WOPAYING</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>BURGLARY</td>
+      <td>DO-UNK SUSP ENTERED VICTS RESIDENCE BY UNLOCKED FRONT DOOR SUSP REMOVED VCTICTS PROPERTY SUSP FLED LOC</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>OTHER MISCELLANEOUS CRIME</td>
+      <td>DO-SUSP ADMITTED TO PLACING 2010 REG TAG HE ILLEGALLY OBTAINED ON HIS LIC PLATE HIS VEH REG WAS STILL EXP</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-S APPROACHED V IN VEH S SLAPPED AND LUNGGED AT V</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>How much data do we have?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(830218, 2)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Clean-the-data">Clean the data<a class="anchor-link" href="#Clean-the-data">#</a></h1><p>We don't get to use all 800,000 rows, though! We're just going to stick to assaults. First we'll filter our dataset to only include crimes with a description that includes the word <code>ASSAULT</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">CCDESC</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;ASSAULT&quot;</span><span class="p">)]</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(165965, 2)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Assaults come in two forms:</p>
+<ul>
+<li>Serious or Part I assaults, which are Aggravated and Serious assaults</li>
+<li>Non-Serious or Part II assaults, which are Simple assaults</li>
+</ul>
+<p>Let's make a new column called <code>serious</code> where we save whether the assault is serious/Part I or not.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;serious&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">CCDESC</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AGGRAVATED&quot;</span><span class="p">)</span> <span class="o">|</span> <span class="n">df</span><span class="o">.</span><span class="n">CCDESC</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;DEADLY&quot;</span><span class="p">)</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;serious&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="s1">&#39;serious&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">(</span><span class="s1">&#39;serious&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">CCDESC</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>serious  CCDESC                                        
+0        BATTERY - SIMPLE ASSAULT                          71951
+         INTIMATE PARTNER - SIMPLE ASSAULT                 42102
+         CHILD ABUSE (PHYSICAL) - SIMPLE ASSAULT            4297
+         OTHER ASSAULT                                       394
+1        ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT    43385
+         INTIMATE PARTNER - AGGRAVATED ASSAULT              1606
+         CHILD ABUSE (PHYSICAL) - AGGRAVATED ASSAULT        1481
+         ASSAULT WITH DEADLY WEAPON ON POLICE OFFICER        749
+Name: CCDESC, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>How many are serious vs simple assaults?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">serious</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    118744
+1     47221
+Name: serious, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We have about 2.5x as many serious assaults as we do simple assaults. Typically you want to have equal numbers of both, but we'll see how it goes for now.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Downgrading-some-serious-assaults">Downgrading some serious assaults<a class="anchor-link" href="#Downgrading-some-serious-assaults">#</a></h2><p>The Los Angeles Times looked for (and found) Part I crimes that the LAPD had downgraded to Part II. We don't have access to these original attributions, though, so we'll need to randomly select serious crimes to downgrade.</p>
+<p>Let's take 15% of the serious crimes and downgrade them to Part II. I'd rather not save this in another file because I don't want to imply it's real - <strong>it's just us faking the downgrade for the purposes of the exercise.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Select a random sample of 15% of the part I crimes</span>
+<span class="n">serious_subset</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">serious</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">frac</span><span class="o">=</span><span class="mf">0.15</span><span class="p">)</span>
+
+<span class="c1"># So we can flag the ones we&#39;re downgrading</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;downgraded&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+
+<span class="c1"># Update the original dataframe to downgrade them to part_ii</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">serious_subset</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;downgraded&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">serious_subset</span><span class="o">.</span><span class="n">index</span><span class="p">,</span> <span class="s1">&#39;serious&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="mi">0</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>How many did we downgrade?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">downgraded</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>7083</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Before we had 118,744 simple assaults and 47,221 serious assaults. What's that number look like now?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">serious</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    125827
+1     40138
+Name: serious, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And now we'll take a look at some of the downgraded assaults. Bear in mind that <strong>we selected the assaults to downgrade randomly.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">downgraded</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CCDESC</th>
+      <th>DO_NARRATIVE</th>
+      <th>serious</th>
+      <th>downgraded</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>187</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-BUSINESS DISPUTE SUPS PUNCHED VICT THREE TIMES IN THE FACE VICT FELL TOTHE GROUND SUPS THEN KICKED VICT IN THE FACE</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>368</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-SUSP AND VICT BECAME INVOLVED IN ARGUMENT SUSP PICKED UP METAL STAND AND STRUCK VICT CAUSING VISIBLE INJURIES</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>467</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-SUSP GRABBED VICT BY HIS NECK AND ATT TO STAB VICT VICT PUSHED THE GAS PETAL CAUSING SUSP TO LOSE GRIP AND MISSING VICT W KNIFE CUTTING INTO VEH SEAT</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>555</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-SUSP BECAME INV IN A DISPUTE WITH VICT VICT BEGAN TO WALK AWAY N       SUSP PICKED UP BOTTLE N THREW AT VICT N HIT VICT IN THE HEAD SUSP ARRESTED</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>708</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-UNK SUSP ATTACKED VICT AT ABV ADR AS HE WAS RECYCLING MATERIAL THE SUSPSTRUCK THE VICT WITH CLOSED FISTS THEN RETRIEVED A WOODEN STICK AND METAL PIPE</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>807</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-SUSP 1 HIT VICT IN FACE INSIDE CLUB AVALON AFTER SUSPS WERE KICKED SUSP2 HIT VICT 2 ON RT SIDE OF FACE WITH HEELED SHOE CAUSING VISIBLE INJURY</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>863</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-UNK SS APPROACH VICT IN UNK WHT VEH AND FIRE APPROX 5-6 SHOTS FROM UNK CALIBER HG STRIKING VICT IN UPPER RT SHOULDER AND FLED IN UNK DIRECTION</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>867</th>
+      <td>CHILD ABUSE (PHYSICAL) - AGGRAVATED ASSAULT</td>
+      <td>DO-MOTHER DISCIPLINED DAUGHTER WITH UNKNOWN HARD OBJ</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>881</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-V WAS PICKING UP FRIENDS WHEN HE HEARD THE S YELL OUT NEIGHBOR CRIP    THEN STARTED FIRING V FLED CRASHING INTO SEVERAL PARKED CARS S FLED IN UNK DIR</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1330</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-SUSP POINT A HND GUN AT VICTS AND FLEE SCENE AND INITIATE PURSUIT</td>
+      <td>0</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Time-to-classify">Time to classify<a class="anchor-link" href="#Time-to-classify">#</a></h1><p>Now we're going to build a classifier that can predict whether an assault is serious or non-serious. To do that, we first need to count all the words in each description.</p>
+<h2 id="Stemming">Stemming<a class="anchor-link" href="#Stemming">#</a></h2><p>When we talk about "words," we can mean a few different things. Do you feel like "stab," "stabbed," and "stabbing" should all count the same? If yes, you're interested in <strong>stemming.</strong></p>
+<p>Stemming is the process of trying to convert words to their root. There are a few different kinds of stemmers, but we'll be using one called <strong>SnowballStemmer</strong> that comes with NLTK.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="kn">import</span> <span class="n">SnowballStemmer</span>
+
+<span class="n">stemmer</span> <span class="o">=</span> <span class="n">SnowballStemmer</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's see how it works in the case of different tenses of the word "stabbing:"</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="s2">&quot;stab&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="s2">&quot;stabbed&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="s2">&quot;stabbing&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>stab
+stab
+stab
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Looks good! It also works with singular and plurals.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="s2">&quot;gun&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="s2">&quot;guns&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>gun
+gun
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>It can have trouble with more complicated words, though. Here's an example with "knife" as compared to "knives."</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="s2">&quot;knife&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="s2">&quot;knifed&quot;</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="s2">&quot;knives&quot;</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>knife
+knife
+knive
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If it gets most of what we're looking for, though, I think we're okay.</p>
+<h2 id="Building-a-vectorizer-that-uses-stemming">Building a vectorizer that uses stemming<a class="anchor-link" href="#Building-a-vectorizer-that-uses-stemming">#</a></h2><p>Vectorizing is the process of converting words to numbers, and counting each of them (along with any other transformations). It's a little complex to incorporate stemming into the process, but here we go.</p>
+<p>We're also using a <code>TfidfVectorizer</code>, which doesn't count words exactly. More common words become less meaningful, and words in short sentences mean more than words in longer sentences.</p>
+<p>For example, your name showing up in a tweet probably means the tweet is about you. If your name shows up once in a big, big book, though, the chances are much lower that the entire book is about you.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="n">stemmer</span> <span class="o">=</span> <span class="n">SnowballStemmer</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+<span class="k">class</span> <span class="nc">StemmedTfidfVectorizer</span><span class="p">(</span><span class="n">TfidfVectorizer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">build_analyzer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">analyzer</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">StemmedTfidfVectorizer</span><span class="p">,</span><span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build_analyzer</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">doc</span><span class="p">:(</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">analyzer</span><span class="p">(</span><span class="n">doc</span><span class="p">))</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we'll actually use our vectorizer to count the words. We're being a little picky, in that:</p>
+<ul>
+<li>We're only using words that show up at least 15 times in our dataset, and</li>
+<li>We're ignoring anything that shows up in more than half of the police reports</li>
+</ul>
+<p>This helps cut down on noise. Adjusting the terms will give us a greater or fewer number of words, and might also affect our accuracy later on.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">StemmedTfidfVectorizer</span><span class="p">(</span><span class="n">min_df</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span> <span class="n">max_df</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span>
+
+<span class="n">X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">DO_NARRATIVE</span><span class="p">)</span>
+<span class="n">X</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 1min 4s, sys: 620 ms, total: 1min 5s
+Wall time: 1min 6s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;165965x3417 sparse matrix of type &#39;&lt;class &#39;numpy.float64&#39;&gt;&#39;
+	with 2119793 stored elements in Compressed Sparse Row format&gt;</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>If we're only paying attention to words that show up at least 15 times, and are ignoring words that show up in half of the reports, how many words we we using?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">len</span><span class="p">(</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>3417</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Examining-our-words">Examining our words<a class="anchor-link" href="#Examining-our-words">#</a></h2><p>While it doesn't do us much good in terms of analysis, we can take a pick look at our words and sentences to see what shows up where.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">words_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+<span class="n">words_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>01</th>
+      <th>08</th>
+      <th>09</th>
+      <th>10</th>
+      <th>100</th>
+      <th>101</th>
+      <th>103rd</th>
+      <th>10time</th>
+      <th>10x</th>
+      <th>10yr</th>
+      <th>11</th>
+      <th>112</th>
+      <th>112th</th>
+      <th>118</th>
+      <th>11th</th>
+      <th>11yr</th>
+      <th>12</th>
+      <th>12yr</th>
+      <th>13</th>
+      <th>14</th>
+      <th>14yr</th>
+      <th>15</th>
+      <th>15yr</th>
+      <th>16</th>
+      <th>16yr</th>
+      <th>17</th>
+      <th>18</th>
+      <th>18th</th>
+      <th>18yr</th>
+      <th>19</th>
+      <th>1cic</th>
+      <th>1s</th>
+      <th>1st</th>
+      <th>1x</th>
+      <th>1yr</th>
+      <th>20</th>
+      <th>20yr</th>
+      <th>21</th>
+      <th>22</th>
+      <th>23</th>
+      <th>23rd</th>
+      <th>24</th>
+      <th>25</th>
+      <th>25yr</th>
+      <th>28th</th>
+      <th>2gether</th>
+      <th>2mos</th>
+      <th>2nd</th>
+      <th>2time</th>
+      <th>2x</th>
+      <th>...</th>
+      <th>witmer</th>
+      <th>wk</th>
+      <th>wks</th>
+      <th>wlkd</th>
+      <th>wlkng</th>
+      <th>wndw</th>
+      <th>wo</th>
+      <th>woke</th>
+      <th>woman</th>
+      <th>women</th>
+      <th>wood</th>
+      <th>wooden</th>
+      <th>woodman</th>
+      <th>word</th>
+      <th>work</th>
+      <th>worker</th>
+      <th>workplac</th>
+      <th>would</th>
+      <th>wouldnt</th>
+      <th>wound</th>
+      <th>wout</th>
+      <th>wrap</th>
+      <th>wre</th>
+      <th>wrench</th>
+      <th>wrestl</th>
+      <th>wrist</th>
+      <th>write</th>
+      <th>wrong</th>
+      <th>wrote</th>
+      <th>ws</th>
+      <th>wth</th>
+      <th>wtih</th>
+      <th>wy</th>
+      <th>xboyfriend</th>
+      <th>xs</th>
+      <th>yall</th>
+      <th>yank</th>
+      <th>yard</th>
+      <th>year</th>
+      <th>yell</th>
+      <th>yellow</th>
+      <th>yes</th>
+      <th>yo</th>
+      <th>you</th>
+      <th>younger</th>
+      <th>your</th>
+      <th>yourself</th>
+      <th>yr</th>
+      <th>yrs</th>
+      <th>zone</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.296974</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.4045</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.205927</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.224758</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>...</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.0</td>
+      <td>0.000000</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+<p>10 rows × 3417 columns</p>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Classify">Classify<a class="anchor-link" href="#Classify">#</a></h2><blockquote><p>"SVM models perform better on sparse data than does trees in general. For example in document classification you may have thousands, even tens of thousands of features and in any given document vector only a small fraction of these features may have a value greater than zero."</p>
+<p><a href="https://towardsdatascience.com/support-vector-machine-vs-logistic-regression-94cc2975433f">https://towardsdatascience.com/support-vector-machine-vs-logistic-regression-94cc2975433f</a></p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">cross_val_score</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="kn">import</span> <span class="n">LinearSVC</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">words_df</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">serious</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="o">%%time</span>
+
+<span class="n">clf</span> <span class="o">=</span> <span class="n">LinearSVC</span><span class="p">()</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>CPU times: user 5.54 s, sys: 4.89 s, total: 10.4 s
+Wall time: 14.5 s
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>LinearSVC(C=1.0, class_weight=None, dual=True, fit_intercept=True,
+          intercept_scaling=1, loss=&#39;squared_hinge&#39;, max_iter=1000,
+          multi_class=&#39;ovr&#39;, penalty=&#39;l2&#39;, random_state=None, tol=0.0001,
+          verbose=0)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="What-words-are-important?">What words are important?<a class="anchor-link" href="#What-words-are-important?">#</a></h2><p>Before we see how our classifier performs, let's take a look at which words point towards a report being either simple or aggravated assault. In this case, we're going to look at the top and bottom 20 terms.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">top_features</span> <span class="o">=</span> <span class="mi">20</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
+
+<span class="n">coef</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">coef_</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+<span class="n">sorted_coefs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">coef</span><span class="p">)</span>
+<span class="n">coef_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">r_</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">top_features</span><span class="p">,</span> <span class="o">-</span><span class="n">top_features</span><span class="p">:</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">top_coefficients</span> <span class="o">=</span> <span class="n">sorted_coefs</span><span class="p">[</span><span class="n">coef_indices</span><span class="p">]</span>
+
+<span class="n">terms</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">feature_names</span><span class="p">)[</span><span class="n">top_coefficients</span><span class="p">]</span>
+<span class="n">coefs</span> <span class="o">=</span> <span class="n">coef</span><span class="p">[</span><span class="n">top_coefficients</span><span class="p">]</span>
+
+<span class="n">terms</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span><span class="s1">&#39;coef&#39;</span><span class="p">:</span> <span class="n">coefs</span> <span class="p">},</span> <span class="n">index</span><span class="o">=</span><span class="n">terms</span><span class="p">)</span>
+<span class="n">terms</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>coef</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>stab</th>
+      <td>2.672139</td>
+    </tr>
+    <tr>
+      <th>shot</th>
+      <td>2.449831</td>
+    </tr>
+    <tr>
+      <th>stabe</th>
+      <td>2.439460</td>
+    </tr>
+    <tr>
+      <th>bat</th>
+      <td>2.250720</td>
+    </tr>
+    <tr>
+      <th>knife</th>
+      <td>2.130488</td>
+    </tr>
+    <tr>
+      <th>degre</th>
+      <td>2.053463</td>
+    </tr>
+    <tr>
+      <th>shovel</th>
+      <td>2.036169</td>
+    </tr>
+    <tr>
+      <th>crowbar</th>
+      <td>1.982014</td>
+    </tr>
+    <tr>
+      <th>gasolin</th>
+      <td>1.884614</td>
+    </tr>
+    <tr>
+      <th>arrstd</th>
+      <td>1.876636</td>
+    </tr>
+    <tr>
+      <th>dumbel</th>
+      <td>1.874038</td>
+    </tr>
+    <tr>
+      <th>ram</th>
+      <td>1.869418</td>
+    </tr>
+    <tr>
+      <th>brass</th>
+      <td>1.866549</td>
+    </tr>
+    <tr>
+      <th>bottl</th>
+      <td>1.838308</td>
+    </tr>
+    <tr>
+      <th>gsw</th>
+      <td>1.835944</td>
+    </tr>
+    <tr>
+      <th>brick</th>
+      <td>1.833388</td>
+    </tr>
+    <tr>
+      <th>aknif</th>
+      <td>1.821040</td>
+    </tr>
+    <tr>
+      <th>acceler</th>
+      <td>1.805133</td>
+    </tr>
+    <tr>
+      <th>gunfir</th>
+      <td>1.791086</td>
+    </tr>
+    <tr>
+      <th>shoot</th>
+      <td>1.790433</td>
+    </tr>
+    <tr>
+      <th>fallto</th>
+      <td>-0.990030</td>
+    </tr>
+    <tr>
+      <th>spit</th>
+      <td>-1.008923</td>
+    </tr>
+    <tr>
+      <th>wouldnt</th>
+      <td>-1.018480</td>
+    </tr>
+    <tr>
+      <th>plastic</th>
+      <td>-1.045692</td>
+    </tr>
+    <tr>
+      <th>spat</th>
+      <td>-1.049541</td>
+    </tr>
+    <tr>
+      <th>dept</th>
+      <td>-1.055074</td>
+    </tr>
+    <tr>
+      <th>dot</th>
+      <td>-1.104294</td>
+    </tr>
+    <tr>
+      <th>phne</th>
+      <td>-1.107071</td>
+    </tr>
+    <tr>
+      <th>chokedvict</th>
+      <td>-1.145338</td>
+    </tr>
+    <tr>
+      <th>inuri</th>
+      <td>-1.171514</td>
+    </tr>
+    <tr>
+      <th>victsfac</th>
+      <td>-1.183660</td>
+    </tr>
+    <tr>
+      <th>flick</th>
+      <td>-1.189508</td>
+    </tr>
+    <tr>
+      <th>subj2</th>
+      <td>-1.189801</td>
+    </tr>
+    <tr>
+      <th>patient</th>
+      <td>-1.201427</td>
+    </tr>
+    <tr>
+      <th>airsoft</th>
+      <td>-1.218440</td>
+    </tr>
+    <tr>
+      <th>triedto</th>
+      <td>-1.243769</td>
+    </tr>
+    <tr>
+      <th>nt</th>
+      <td>-1.246416</td>
+    </tr>
+    <tr>
+      <th>push</th>
+      <td>-1.409497</td>
+    </tr>
+    <tr>
+      <th>ppa</th>
+      <td>-1.470902</td>
+    </tr>
+    <tr>
+      <th>egg</th>
+      <td>-1.491123</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">colors</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;lightblue&#39;</span> <span class="k">if</span> <span class="n">c</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="s1">&#39;tan&#39;</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">coefs</span><span class="p">]</span>
+
+<span class="n">terms</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">y</span><span class="o">=</span><span class="s1">&#39;coef&#39;</span><span class="p">,</span>
+           <span class="n">kind</span><span class="o">=</span><span class="s1">&#39;barh&#39;</span><span class="p">,</span>
+           <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span>
+           <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span>
+           <span class="n">legend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+           <span class="n">title</span><span class="o">=</span><span class="s1">&#39;Most predictive terms for serious assault&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>&lt;matplotlib.axes._subplots.AxesSubplot at 0x3440520b8&gt;</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Lots of interesting stuff in there!</p>
+<ul>
+<li>Does it sound reasonable which terms imply aggravated vs simple assault?</li>
+<li>Which ones are misspellings? Does that worry you?</li>
+<li>Are there any terms in there you don't quite get?</li>
+</ul>
+<p>There's another notebook - "Inspecting misclassifications" - that goes a bit deeper into these terms and what they may (or may not) mean.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Making-predictions">Making predictions<a class="anchor-link" href="#Making-predictions">#</a></h2><p>No matter what the terms are that point to a report being filed as Part I or Part II, at the end of the day we're interested in seeing <strong>how good is our model as making predictions?</strong> To test it out, we'll need to perform some predictions on content we know the answer to. Let's start by seeing how it does on some sample sentences.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">sample_X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">([</span><span class="s1">&#39;SWUNG A MACHETE AND CUT VIC HAND&#39;</span><span class="p">])</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">sample_X</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([1])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>In this case <code>1</code> means that yes, it was a serious assault. Let's try a few more.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">examples</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span> 
+    <span class="s1">&#39;content&#39;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="s1">&#39;SWUNG A MACHETE AND CUT VIC HAND&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;GRABBED VIC AND SHOOK VERY HARD&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SHOT VIC ONE TIME IN LEFT LEG&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;PUNCHED VIC IN FACE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;SLAPPED VIC AND BROKE NOSE&#39;</span><span class="p">,</span>
+        <span class="s1">&#39;BURNED VIC WITH HOT IRON&#39;</span>
+    <span class="p">]</span>
+<span class="p">})</span>
+
+<span class="n">examples_X</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">examples</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="n">examples</span><span class="p">[</span><span class="s1">&#39;prediction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">examples_X</span><span class="p">)</span>
+<span class="n">examples</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>content</th>
+      <th>prediction</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>SWUNG A MACHETE AND CUT VIC HAND</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>GRABBED VIC AND SHOOK VERY HARD</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>SHOT VIC ONE TIME IN LEFT LEG</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>PUNCHED VIC IN FACE</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>SLAPPED VIC AND BROKE NOSE</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>BURNED VIC WITH HOT IRON</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>You can see that offenses that include weapons tend to be predicted as serious offenses, while ones involving punching or other direct physical contact are classified as simple assault.</p>
+<p>Instead of just looking at which category a report was put in, we can also look at <strong>the score the classifier used for the prediction.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">examples</span><span class="p">[</span><span class="s1">&#39;prediction_dist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">examples_X</span><span class="p">)</span>
+<span class="n">examples</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>content</th>
+      <th>prediction</th>
+      <th>prediction_dist</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>SWUNG A MACHETE AND CUT VIC HAND</td>
+      <td>1</td>
+      <td>0.868211</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>GRABBED VIC AND SHOOK VERY HARD</td>
+      <td>0</td>
+      <td>-0.838328</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>SHOT VIC ONE TIME IN LEFT LEG</td>
+      <td>1</td>
+      <td>0.221241</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>PUNCHED VIC IN FACE</td>
+      <td>0</td>
+      <td>-1.165487</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>SLAPPED VIC AND BROKE NOSE</td>
+      <td>0</td>
+      <td>-1.254914</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>BURNED VIC WITH HOT IRON</td>
+      <td>1</td>
+      <td>0.578480</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The further away from zero, more certain the algorithm is in its prediction.</p>
+<ul>
+<li><strong>SHOT VIC ONE TIME IN LEFT LEG</strong> scores <code>0.221241</code>, so it isn't very sure that it's serious</li>
+<li><strong>SLAPPED VIC AND BROKE NOSE</strong> sounds violent, but it scores <code>-1.254914</code> so the algorithm is pretty certain it's not a serious offense.</li>
+</ul>
+<p>Now we can move on to making comparisons with our actual dataset.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Making-predictions-to-find-downgraded-crimes">Making predictions to find downgraded crimes<a class="anchor-link" href="#Making-predictions-to-find-downgraded-crimes">#</a></h1><p>To see if our algorithm can find downgraded reports, we'll first ask it to make predictions on each of the descriptions we have. If a report is listed as not serious, but the algorithm thinks it should be serious, we should examine the report further.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Feed the classifier the word counts (X) to have it make the prediction</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;prediction&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="c1"># Let&#39;s also how certain the classifier is</span>
+<span class="n">df</span><span class="p">[</span><span class="s1">&#39;prediction_dist&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">decision_function</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CCDESC</th>
+      <th>DO_NARRATIVE</th>
+      <th>serious</th>
+      <th>downgraded</th>
+      <th>prediction</th>
+      <th>prediction_dist</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>2</th>
+      <td>ASSAULT WITH DEADLY WEAPON, AGGRAVATED ASSAULT</td>
+      <td>DO-S APPRCHED V AND STATED ARE YOU GOING TO FCK ME V REPLIED NO SUSP PULL ED OUT A KNIFE AND STATED IM HERE TO HURT YOU BTCH S USED PROFANITIES</td>
+      <td>0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0.028336</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-SUSP USED RIGHT FIST TO PUNCH VICT IN THE HEAD ONCE N PULL VICT HAIR   FOR APPRX 15 SECONDS</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-0.964781</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-S APPROACHED V IN VEH S SLAPPED AND LUNGGED AT V</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-0.281822</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-V STATED THAT SUSP CONFRT HER WHEN SHE TRIED TO APPR HER HUSBAND SUSP  AND V HUSBAND ARE FRNDS SUSP YELLED STAY AWAY FROM HIM AND PUSHED V</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-1.082779</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>BATTERY - SIMPLE ASSAULT</td>
+      <td>DO-SUSPS WERE VERBALLY ABUSING VICT DURING WHICH TIME S1 STRUCK VICT THREETIMES ON THE BACK OF HIS LEFT SHOULDER</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>-0.944355</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Crimes with a <code>1</code> in <strong>serious</strong> are serious, and ones with a <code>1</code> in <strong>downgraded</strong> were downgraded. If either of those columns is <code>1</code>, then <strong>prediction</strong> would also be <code>1</code> for a correct prediction.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Let's-evaluate-our-classifier">Let's evaluate our classifier<a class="anchor-link" href="#Let's-evaluate-our-classifier">#</a></h1><p>When you build a classifier, you'll talk about your <strong>evaluation metric</strong>, what you use to judge how well your algorithm performed. Typically this is <strong>accuracy</strong> - how often was your prediction correct?</p>
+<h2 id="How-often-did-our-prediction-match-whether-a-crime-was-listed-as-serious?">How often did our prediction match whether a crime was listed as serious?<a class="anchor-link" href="#How-often-did-our-prediction-match-whether-a-crime-was-listed-as-serious?">#</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">prediction</span> <span class="o">==</span> <span class="n">df</span><span class="o">.</span><span class="n">serious</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True     0.879384
+False    0.120616
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>88% doesn't seem that bad!</p>
+<p>Remember, though, <strong>15% of the serious crimes have been downgraded</strong>. We don't actually care whether the prediction matches <strong>if the crime has been downgraded</strong>. We need to see whether we correctly predicted reports marked as serious <em>or</em> downgraded reports.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="How-often-did-we-match-the-true-serious/not-serious-value?">How often did we match the true serious/not serious value?<a class="anchor-link" href="#How-often-did-we-match-the-true-serious/not-serious-value?">#</a></h2><p>Since we're interested in uncovering the secretly-serious reports, we want to see whether it's serious <em>or</em> downgraded.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">prediction</span> <span class="o">==</span> <span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">serious</span> <span class="o">|</span> <span class="n">df</span><span class="o">.</span><span class="n">downgraded</span><span class="p">))</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True     0.891266
+False    0.108734
+dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We actually did better when including the secrets! 89%!</p>
+<p>While this seems good, <strong>it isn't what we're actually after.</strong> We're specifically doing research on <strong>finding downgraded reports,</strong> so what we're interested in is <strong>how often we found reports marked as non-serious that were downgraded from serious</strong>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="How-often-did-we-catch-downgrades?">How often did we catch downgrades?<a class="anchor-link" href="#How-often-did-we-catch-downgrades?">#</a></h2><p>To figure this out, we'll first make sure we're only looking at downgraded reports, and then see how many of them we predicted as being serious assault.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Only select downgraded reports</span>
+<span class="n">downgraded_df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">downgraded</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># How often did we predict they were serious?</span>
+<span class="p">(</span><span class="n">downgraded_df</span><span class="o">.</span><span class="n">prediction</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True     0.644783
+False    0.355217
+Name: prediction, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># And again, without the percentage, in case you&#39;re curious</span>
+<span class="p">(</span><span class="n">downgraded_df</span><span class="o">.</span><span class="n">prediction</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>True     4567
+False    2516
+Name: prediction, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We were able to find around 4,500 of our 7,000 downgraded offenses. <strong>That's about 65% of them.</strong></p>
+<p>Let's finish up for now and discuss what we think about our techniques and scoring methods. If you're interested in picking apart the ones we got wrong and investigating the algorithm a little further, I recommend the <strong>Inspecting misclassifications</strong> notebook.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Review">Review<a class="anchor-link" href="#Review">#</a></h2><p>We reproduced an ersatz version of a Los Angeles Times piece where they uncovered <strong>serious assaults that had been downgraded by the LAPD</strong> to simple assault. We don't have access to the original classifications, so we used a dataset of assaults between 2008 and 2012 and downgraded a random 15% of the serious assaults.</p>
+<p>Using <strong>text analysis</strong>, we first analyzed the words used in a description of assault - less common words were given more weight, and incredibly common words were left out altogether. Using these results, we then created a <strong>classifier</strong>, teaching the classifier which words were associated with simple assault compared to aggravated assault.</p>
+<p>Finally, we used the classifier to <strong>predict whether each assault was aggravated or simple assault</strong>. If a crime was predicted as serious but marked as non-serious, it needed to be examined as a possible downgrade. Our algorithm correctly pointed out around <strong>65%</strong> of the randomly downgraded crimes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Discussion-topics">Discussion topics<a class="anchor-link" href="#Discussion-topics">#</a></h2><ul>
+<li>Our algorithm had 88% accuracy overall, but only 65% in detecting downgraded crimes. What's the difference here? How important is one score compared to the other?</li>
+<li>We only hit around 65% accuracy in finding downgraded crimes. Is this a useful score? How does it compare to random guessing, or going one-by-one through the crimes marked as non-serious?</li>
+<li>What techniques could we have used to find downgraded crimes if we didn't use machine learning?</li>
+<li>Is there a difference between looking at the prediction - the 0 or 1 - and looking at the output of <code>decision_function</code>?</li>
+<li>What happens if our algorithm errs on the side of calling non-serious crimes serious crimes? What if it errs on the side of calling serious crimes non-serious crimes?</li>
+<li>If we want to find more downgraded cases (but do more work), we'll want to err on the side of examining more potentially-serious cases. Is there a better method than picking random cases?</li>
+<li>One of our first steps was to eliminate all crimes that weren't assaults. How do you think this helped or hindered our analysis?</li>
+<li>Why did we use LinearSVC instead of another classifier such as LogisticRegression, RandomForest or Naive Bayes (MultinomialNB)? Why might we try or not try those?</li>
+<li>You don't work for the LAPD, so you can only be so sure what should and shouldn't be a serious crime. What can you do to help feel confident that a case should be one or the other, or that our algorithm is working as promised?</li>
+<li>In this case, we randomly picked serious crimes to downgrade. Would it be easier or more difficult if the LAPD was systematically downgrading certain types of serious crimes? Can you think of a way to around that sort of trickery?</li>
+<li>Many people say you need to release your data and analysis in order to have people trust what you've done. With something like this dataset, however, you're dealing with real things that happened to real people, many of whom would probably prefer to keep these things private. Is that a reasonable expectation? If it is, what can be done to bridge the gap between releasing all of the original data and keeping our process secret?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

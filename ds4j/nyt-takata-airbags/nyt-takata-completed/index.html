@@ -1,0 +1,4230 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>NYT Takata (Completed)</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/nyt-takata-airbags/">Searching for faulty airbags in vehicle complaints</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/nyt-takata-airbags/nyt-takata-completed">NYT Takata (Completed)</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Faulty-Takata-Airbags-using-Logistic-Regression">Faulty Takata Airbags using Logistic Regression<a class="anchor-link" href="#Faulty-Takata-Airbags-using-Logistic-Regression">#</a></h1><p><strong>The story:</strong></p>
+<ul>
+<li><a href="https://www.nytimes.com/2014/09/12/business/air-bag-flaw-long-known-led-to-recalls.html">https://www.nytimes.com/2014/09/12/business/air-bag-flaw-long-known-led-to-recalls.html</a></li>
+<li><a href="https://www.nytimes.com/2014/11/07/business/airbag-maker-takata-is-said-to-have-conducted-secret-tests.html">https://www.nytimes.com/2014/11/07/business/airbag-maker-takata-is-said-to-have-conducted-secret-tests.html</a></li>
+<li><a href="https://www.nytimes.com/interactive/2015/06/22/business/international/takata-airbag-recall-list.html">https://www.nytimes.com/interactive/2015/06/22/business/international/takata-airbag-recall-list.html</a></li>
+<li><a href="https://www.nytimes.com/2016/08/27/business/takata-airbag-recall-crisis.html">https://www.nytimes.com/2016/08/27/business/takata-airbag-recall-crisis.html</a></li>
+</ul>
+<p>This story, done by The New York Times, investigates the content in complaints made to National Highway Traffic Safety Administration (NHTSA) by customers who had bad experiences with Takata airbags in their cars. Eventually, car companies had to recall airbags made by the airbag supplier that promised a cheaper alternative.</p>
+<p><strong>Author:</strong> Daeil Kim did a more complex version of this particular analysis - <a href="https://www.slideshare.net/mortardata/daeil-kim-at-the-nyc-data-science-meetup">presentation here</a></p>
+<p><strong>Topics:</strong> Logistic Classifier</p>
+<p><strong>Datasets</strong></p>
+<ul>
+<li><strong>FLAT_CMPL.txt:</strong> Vehicle-related complaints from 1995-current from the <a href="https://www-odi.nhtsa.dot.gov/downloads/">National Highway Traffic Safety Administration</a></li>
+<li><strong>CMPL.txt:</strong> data dictionary for the above</li>
+<li><strong>sampled-unlabeled.csv:</strong> a sample of vehicle complaints, not labeled</li>
+<li><strong>sampled-labeled.csv:</strong> a sample of vehicle complaints, labeled with being suspicious or not</li>
+</ul>
+<h2 id="What's-the-goal?">What's the goal?<a class="anchor-link" href="#What's-the-goal?">#</a></h2><p>It's too much work to read twenty years of vehicle comments to find the ones related to dangerous airbags! Because we're lazy, we want the computer to do this for us. We're going to read a subset, mark each one as "suspicious" or "not suspicious," then use that information to train the computer to read the rest and recognize which comments are suspicious and which are not suspicious.</p>
+<p>This is a <strong>classification</strong> problem, because we want the computer to recognize which ones are suspicious and which are not.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/nyt-takata-airbags/nyt-takata-completed">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/nyt-takata-airbags/notebooks/NYT Takata (Completed).ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Our-code">Our code<a class="anchor-link" href="#Our-code">#</a></h1><h2 id="Setup">Setup<a class="anchor-link" href="#Setup">#</a></h2>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="c1"># Allow us to display 100 columns at a time, and 100 characters in each column (instead of ...)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_colwidth&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Read-in-our-data">Read in our data<a class="anchor-link" href="#Read-in-our-data">#</a></h2><p>The dataset in <code>FLAT_CMPL.txt</code> doesn't have column headers, so we're going to use this long long list of headers that we stole from <code>CMPL.txt</code> to read it in.</p>
+<p>It's kind of a complicated dataset with a few errors here or there, so we're passing in a <em>lot</em> of options to <code>pd.read_csv</code>. In the end it's just a big big dataframe, though.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">column_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;CMPLID&#39;</span><span class="p">,</span> <span class="s1">&#39;ODINO&#39;</span><span class="p">,</span> <span class="s1">&#39;MFR_NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;MAKETXT&#39;</span><span class="p">,</span> <span class="s1">&#39;MODELTXT&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;YEARTXT&#39;</span><span class="p">,</span> <span class="s1">&#39;CRASH&#39;</span><span class="p">,</span> <span class="s1">&#39;FAILDATE&#39;</span><span class="p">,</span> <span class="s1">&#39;FIRE&#39;</span><span class="p">,</span> <span class="s1">&#39;INJURED&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;DEATHS&#39;</span><span class="p">,</span> <span class="s1">&#39;COMPDESC&#39;</span><span class="p">,</span> <span class="s1">&#39;CITY&#39;</span><span class="p">,</span> <span class="s1">&#39;STATE&#39;</span><span class="p">,</span> <span class="s1">&#39;VIN&#39;</span><span class="p">,</span> <span class="s1">&#39;DATEA&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;LDATE&#39;</span><span class="p">,</span> <span class="s1">&#39;MILES&#39;</span><span class="p">,</span> <span class="s1">&#39;OCCURENCES&#39;</span><span class="p">,</span> <span class="s1">&#39;CDESCR&#39;</span><span class="p">,</span> <span class="s1">&#39;CMPL_TYPE&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;POLICE_RPT_YN&#39;</span><span class="p">,</span> <span class="s1">&#39;PURCH_DT&#39;</span><span class="p">,</span> <span class="s1">&#39;ORIG_OWNER_YN&#39;</span><span class="p">,</span> <span class="s1">&#39;ANTI_BRAKES_YN&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;CRUISE_CONT_YN&#39;</span><span class="p">,</span> <span class="s1">&#39;NUM_CYLS&#39;</span><span class="p">,</span> <span class="s1">&#39;DRIVE_TRAIN&#39;</span><span class="p">,</span> <span class="s1">&#39;FUEL_SYS&#39;</span><span class="p">,</span> <span class="s1">&#39;FUEL_TYPE&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;TRANS_TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;VEH_SPEED&#39;</span><span class="p">,</span> <span class="s1">&#39;DOT&#39;</span><span class="p">,</span> <span class="s1">&#39;TIRE_SIZE&#39;</span><span class="p">,</span> <span class="s1">&#39;LOC_OF_TIRE&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;TIRE_FAIL_TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;ORIG_EQUIP_YN&#39;</span><span class="p">,</span> <span class="s1">&#39;MANUF_DT&#39;</span><span class="p">,</span> <span class="s1">&#39;SEAT_TYPE&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;RESTRAINT_TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;DEALER_NAME&#39;</span><span class="p">,</span> <span class="s1">&#39;DEALER_TEL&#39;</span><span class="p">,</span> <span class="s1">&#39;DEALER_CITY&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;DEALER_STATE&#39;</span><span class="p">,</span> <span class="s1">&#39;DEALER_ZIP&#39;</span><span class="p">,</span> <span class="s1">&#39;PROD_TYPE&#39;</span><span class="p">,</span> <span class="s1">&#39;REPAIRED_YN&#39;</span><span class="p">,</span> 
+                <span class="s1">&#39;MEDICAL_ATTN&#39;</span><span class="p">,</span> <span class="s1">&#39;VEHICLES_TOWED_YN&#39;</span><span class="p">]</span>
+
+<span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/FLAT_CMPL.txt&quot;</span><span class="p">,</span>
+                 <span class="n">sep</span><span class="o">=</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">,</span>
+                 <span class="n">dtype</span><span class="o">=</span><span class="s1">&#39;str&#39;</span><span class="p">,</span>
+                 <span class="n">header</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+                 <span class="n">error_bad_lines</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+                 <span class="n">encoding</span><span class="o">=</span><span class="s1">&#39;latin-1&#39;</span><span class="p">,</span>
+                 <span class="n">names</span><span class="o">=</span><span class="n">column_names</span><span class="p">)</span>
+
+<span class="c1"># We&#39;re only interested in pre-2015</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">DATEA</span> <span class="o">&lt;</span> <span class="s1">&#39;2015&#39;</span><span class="p">]</span>
+
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CMPLID</th>
+      <th>ODINO</th>
+      <th>MFR_NAME</th>
+      <th>MAKETXT</th>
+      <th>MODELTXT</th>
+      <th>YEARTXT</th>
+      <th>CRASH</th>
+      <th>FAILDATE</th>
+      <th>FIRE</th>
+      <th>INJURED</th>
+      <th>DEATHS</th>
+      <th>COMPDESC</th>
+      <th>CITY</th>
+      <th>STATE</th>
+      <th>VIN</th>
+      <th>DATEA</th>
+      <th>LDATE</th>
+      <th>MILES</th>
+      <th>OCCURENCES</th>
+      <th>CDESCR</th>
+      <th>CMPL_TYPE</th>
+      <th>POLICE_RPT_YN</th>
+      <th>PURCH_DT</th>
+      <th>ORIG_OWNER_YN</th>
+      <th>ANTI_BRAKES_YN</th>
+      <th>CRUISE_CONT_YN</th>
+      <th>NUM_CYLS</th>
+      <th>DRIVE_TRAIN</th>
+      <th>FUEL_SYS</th>
+      <th>FUEL_TYPE</th>
+      <th>TRANS_TYPE</th>
+      <th>VEH_SPEED</th>
+      <th>DOT</th>
+      <th>TIRE_SIZE</th>
+      <th>LOC_OF_TIRE</th>
+      <th>TIRE_FAIL_TYPE</th>
+      <th>ORIG_EQUIP_YN</th>
+      <th>MANUF_DT</th>
+      <th>SEAT_TYPE</th>
+      <th>RESTRAINT_TYPE</th>
+      <th>DEALER_NAME</th>
+      <th>DEALER_TEL</th>
+      <th>DEALER_CITY</th>
+      <th>DEALER_STATE</th>
+      <th>DEALER_ZIP</th>
+      <th>PROD_TYPE</th>
+      <th>REPAIRED_YN</th>
+      <th>MEDICAL_ATTN</th>
+      <th>VEHICLES_TOWED_YN</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>958173</td>
+      <td>Ford Motor Company</td>
+      <td>LINCOLN</td>
+      <td>TOWN CAR</td>
+      <td>1994</td>
+      <td>Y</td>
+      <td>19941222</td>
+      <td>N</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SERVICE BRAKES, HYDRAULIC:PEDALS AND LINKAGES</td>
+      <td>HIGH LAND PA</td>
+      <td>MI</td>
+      <td>1LNLM82W8RY</td>
+      <td>19950103</td>
+      <td>19950103</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>BRAKE PEDAL PUSH ROD RETAINER WAS NOT PROPERLY INSTALLED, CAUSING BRAKES TO FAIL, RESULTING IN A...</td>
+      <td>EVOQ</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>V</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>958146</td>
+      <td>General Motors LLC</td>
+      <td>GMC</td>
+      <td>SONOMA</td>
+      <td>1995</td>
+      <td>NaN</td>
+      <td>19941215</td>
+      <td>N</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SERVICE BRAKES, HYDRAULIC:FOUNDATION COMPONENTS</td>
+      <td>MOBILE</td>
+      <td>AL</td>
+      <td>1GTCS19W3S8</td>
+      <td>19950103</td>
+      <td>19950103</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>VEHICLE STALLS AT HIGH SPEED, RESULTING IN LOSS OF STEERING AND BRAKING ABILITY.  TT</td>
+      <td>EVOQ</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>V</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>958127</td>
+      <td>Ford Motor Company</td>
+      <td>FORD</td>
+      <td>RANGER</td>
+      <td>1994</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>N</td>
+      <td>0</td>
+      <td>0</td>
+      <td>ENGINE AND ENGINE COOLING:EXHAUST SYSTEM</td>
+      <td>N. LAUDERDAL</td>
+      <td>FL</td>
+      <td>NaN</td>
+      <td>19950103</td>
+      <td>19950103</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>EXHAUST SYSTEM FAILS; PLEASE DESCRIBE DETAILS.  TT</td>
+      <td>EVOQ</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>V</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>958170</td>
+      <td>Ford Motor Company</td>
+      <td>MERCURY</td>
+      <td>COUGAR</td>
+      <td>1995</td>
+      <td>NaN</td>
+      <td>19950101</td>
+      <td>N</td>
+      <td>0</td>
+      <td>0</td>
+      <td>SERVICE BRAKES, HYDRAULIC:FOUNDATION COMPONENTS</td>
+      <td>CORRAL SPRIN</td>
+      <td>FL</td>
+      <td>1MELM62W5SH</td>
+      <td>19950103</td>
+      <td>19950103</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>BRAKING SYSTEM FAILURE WITHOUT ABS BRAKES.  TT</td>
+      <td>EVOQ</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>V</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>958149</td>
+      <td>Nissan North America, Inc.</td>
+      <td>NISSAN</td>
+      <td>MAXIMA</td>
+      <td>1987</td>
+      <td>NaN</td>
+      <td>19941223</td>
+      <td>N</td>
+      <td>0</td>
+      <td>0</td>
+      <td>VISIBILITY:SUN ROOF ASSEMBLY</td>
+      <td>COLUMBUS</td>
+      <td>OH</td>
+      <td>JN1HU11P3HX</td>
+      <td>19950103</td>
+      <td>19950103</td>
+      <td>NaN</td>
+      <td>1</td>
+      <td>VEHICLES SUN ROOF GLASS FLEW OFF WHILE DRIVING.  TT</td>
+      <td>EVOQ</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>V</td>
+      <td>NaN</td>
+      <td>NaN</td>
+      <td>NaN</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>How many rows and columns are in this dataset?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(1144207, 49)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="But-wait,-we-don't-even-need-that-yet">But wait, we don't even need that yet<a class="anchor-link" href="#But-wait,-we-don't-even-need-that-yet">#</a></h2><p>Oof, that's a lot of columns!</p>
+<p>When you're dealing with machine learning, one of the first things you'll need to think about is what columns are important to you. An important thing about this dataset is <strong>it doesn't include whether the complaint is about faulty airbags or not.</strong></p>
+<p>We can't teach our classifier what a suspicious comment looks like if we don't have a list of suspicious complaints, right? Luckily, we have another dataset of labeled complaints!</p>
+<p><strong>Read in <code>sampled-labeled.csv</code></strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">labeled</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/sampled-labeled.csv&quot;</span><span class="p">)</span>
+<span class="n">labeled</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_suspicious</th>
+      <th>CDESCR</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>ALTHOUGH I LOVED THE CAR OVERALL AT THE TIME I DECIDED TO OWN, , MY DREAM CAR CADILLAC CTS HAS T...</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>CONSUMER SHUT SLIDING DOOR WHEN ALL POWER LOCKS ON ALL DOORS LOCKED BY ITSELF, TRAPPING INFANT I...</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>DRIVERS SEAT BACK COLLAPSED AND BENT WHEN REAR ENDED. PLEASE DESCRIBE DETAILS.  TT</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>TL* THE CONTACT OWNS A 2009 NISSAN ALTIMA. THE CONTACT STATED THAT THE START BUTTON FOR THE IGNI...</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>THE FRONT MIDDLE SEAT DOESN'T LOCK IN PLACE.  *AK</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We're going to use this dataset to <strong>train our classifier about what a suspicious complaint looks like.</strong> Once our classifier is trained we'll be able to use it to predict whether each complaint in that original (big big big) dataset is suspicious or not.</p>
+<p>We made this dataset through hard work, reading comments, and marking them as <code>0</code> (not suspicious) or <code>1</code> (suspicious). For example, this complaint isn’t suspicious because it’s about an air bag <em>not</em> deploying:</p>
+
+<pre><code>DURING AN  ACCIDENT  AIR BAG'S DID NOT DEPLOY.  DEALER HAS BEEN CONTACTED.  *AK</code></pre>
+<p>This next one isn’t suspicious either, because it isn’t even about airbags!</p>
+
+<pre><code>DRIVERS SEAT BACK COLLAPSED AND BENT WHEN REAR ENDED. PLEASE DESCRIBE DETAILS.  TT</code></pre>
+<p>But if something involves explosions or shrapnel happens, it’s probably worth marking as suspicious:</p>
+<p><code>I WAS DRIVEN IN A SCHOOL ZONE STREET AND THE LIGHTS OF AIRBAG ON AND APROX. 2 MINUTES THE AIR BAGS EXPLODED IN MY FACE, THE DRIVE AND PASSENGERS SIDE, THEN I STOPPED THE JEEP, IT SMELL LIKE SOMETHING IS BURNING AND HOT, I DID NOT SEE FIRE.  *TR</code></p>
+<p>So we went down the file in Excel, one by one, reading comments, marking them as 0 or 1.</p>
+<p><strong>How many are in each category?</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">labeled</span><span class="o">.</span><span class="n">is_suspicious</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.0    150
+1.0     15
+Name: is_suspicious, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>150 non-suspicious and 15 suspicious is a pretty terrible ratio, but we're remarkably lazy and not very many of the comments are actually suspicious.</p>
+<p>Now that we've read a few, let's train our classifier</p>
+<h2 id="Creating-features">Creating features<a class="anchor-link" href="#Creating-features">#</a></h2><p>When you're working on machine learning, you need to feed the algorithm a bunch of inputs so it can make its decision. These are called <strong>features</strong>.</p>
+<p>There's a problem: computers only like features to be numbers, but every complaint is <strong>just a bunch of text</strong>, a.k.a. "unstructured data." How can we turn all of this unstructured data into something a computer can understand?</p>
+<p>While there are fancier (and more effective!) ways to do what we're about to do, the simple start below is going to provide a foundation for later work.</p>
+<p>To teach our computer how to find suspicious complaints, we first need to think about how we find those complaints as human beings. By reading, right? So let's teach the computer how to read, and what to look for.</p>
+<h3 id="Designing-our-features">Designing our features<a class="anchor-link" href="#Designing-our-features">#</a></h3><p>Let's take a look at what the airbag issue is, according <a href="https://www.consumerreports.org/car-recalls-defects/takata-airbag-recall-everything-you-need-to-know/">Consumer Reports</a>:</p>
+<blockquote><p>Vehicles made by 19 different automakers have been recalled to replace frontal airbags on the driver’s side or passenger’s side, or both in what NHTSA has called "the largest and most complex safety recall in U.S. history." The airbags, made by major parts supplier Takata, were mostly installed in cars from model year 2002 through 2015. Some of those airbags could deploy explosively, injuring or even killing car occupants.</p>
+<p>At the heart of the problem is the airbag’s inflator, a metal cartridge loaded with propellant wafers, which in some cases has ignited with explosive force. If the inflator housing ruptures in a crash, metal shards from the airbag can be sprayed throughout the passenger cabin—a potentially disastrous outcome from a supposedly life-saving device.</p>
+</blockquote>
+<p>If we're going through a list of vehicle complaints, it isn't too hard for us to figure out which complaints we might want to investigate further. If the complaint's about seatbelts or rear-view mirrors, we probably don't care about it. If the word "airbag" shows up in the description, though, we're going to start paying attention.</p>
+<p>We aren't interested in all complaints with the word "airbag," though. Since we're worried about exploding airbags, something like "the airbag did not deploy" would get our attention because of the word "airbag," but then we could ignore it once we saw the airbag just didn't work.</p>
+<h3 id="Selecting-our-features">Selecting our features<a class="anchor-link" href="#Selecting-our-features">#</a></h3><p>Since we just read a long long list of airbag complaints, we can probably brainstorm some words or phrases that might make a comment interesting or not interesting. A quick start might be these few:</p>
+<ul>
+<li>airbag</li>
+<li>air bag</li>
+<li>failed</li>
+<li>did not deploy</li>
+<li>violent</li>
+<li>explode</li>
+<li>shrapnel</li>
+</ul>
+<p>These <strong>features</strong> are the things that the machine learning algorithm is going to look for when it's reading. There are lots of words in each complaint, but these are the only ones we'll tell the classifier to pay attention to!</p>
+<h3 id="Building-our-features-dataframe">Building our features dataframe<a class="anchor-link" href="#Building-our-features-dataframe">#</a></h3><p>Now we're going to convert each sentence into a list of numbers. It will be a new dataframe, where there's a <code>1</code> if the word is in the complaint and a <code>0</code> if it isn't.</p>
+<p>To determine if a word is in <code>CDESCR</code>, we can use <code>.str.contains</code>.</p>
+<p><strong>See if each row has the word <code>AIRBAG</code> in it.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIRBAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0      False
+1      False
+2      False
+3      False
+4      False
+5      False
+6      False
+7      False
+8      False
+9      False
+10     False
+11     False
+12     False
+13     False
+14     False
+15     False
+16     False
+17     False
+18     False
+19      True
+20     False
+21     False
+22     False
+23     False
+24     False
+25     False
+26     False
+27     False
+28     False
+29     False
+       ...  
+320    False
+321    False
+322     True
+323    False
+324    False
+325    False
+326    False
+327    False
+328    False
+329    False
+330     True
+331     True
+332    False
+333     True
+334     True
+335     True
+336    False
+337     True
+338    False
+339     True
+340    False
+341     True
+342    False
+343     True
+344     True
+345    False
+346    False
+347    False
+348    False
+349    False
+Name: CDESCR, Length: 350, dtype: bool</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Computers can't use <code>True</code> and <code>False</code>, though, we need numbers. We'll need to use <code>.astype(int)</code> to turn them into intgers, with <code>0</code> for <code>False</code> and <code>1</code> for <code>True</code>.</p>
+<p><strong>Give me a <code>1</code> for every row that contains "AIRBAG" and a <code>0</code> fo every row that does not.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIRBAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0      0
+1      0
+2      0
+3      0
+4      0
+5      0
+6      0
+7      0
+8      0
+9      0
+10     0
+11     0
+12     0
+13     0
+14     0
+15     0
+16     0
+17     0
+18     0
+19     1
+20     0
+21     0
+22     0
+23     0
+24     0
+25     0
+26     0
+27     0
+28     0
+29     0
+      ..
+320    0
+321    0
+322    1
+323    0
+324    0
+325    0
+326    0
+327    0
+328    0
+329    0
+330    1
+331    1
+332    0
+333    1
+334    1
+335    1
+336    0
+337    1
+338    0
+339    1
+340    0
+341    1
+342    0
+343    1
+344    1
+345    0
+346    0
+347    0
+348    0
+349    0
+Name: CDESCR, Length: 350, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>How many <code>0</code> values and how many <code>1</code> values do we have?</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIRBAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    205
+1    145
+Name: CDESCR, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Okay, so about 200 don't have <code>AIRBAG</code> mentioned and about 150 do. That's a decent balance, I guess!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we need to make a new dataframe with a row for each complaint. Each word will have a column, and we'll have <code>0</code> or <code>1</code> as to whether the word is in there or not.</p>
+<ul>
+<li>airbag</li>
+<li>air bag</li>
+<li>failed</li>
+<li>did not deploy</li>
+<li>violent</li>
+<li>explode</li>
+<li>shrapnel</li>
+</ul>
+<p>Along with the words, we'll <strong>also save the <code>is_suspicious</code> label</strong> to keep everything in the same place.</p>
+<p>I've started the dataset with the label and the word <strong>airbag</strong>, you'll need to add in the rest of them.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;is_suspicious&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">is_suspicious</span><span class="p">,</span>
+    <span class="s1">&#39;airbag&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIRBAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;air bag&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIR BAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;failed&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;FAILED&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;did not deploy&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;DID NOT DEPLOY&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;violent&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;VIOLENT&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;explode&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;EXPLODE&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;shrapnel&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;SHRAPNEL&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+<span class="p">})</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_suspicious</th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Check how many rows and columns your dataframe has. You'll want to make sure it has <strong>8 columns</strong>, and they should all be numbers.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(350, 8)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Classification">Classification<a class="anchor-link" href="#Classification">#</a></h2><p>The kind of problem we're dealing with here is called a <strong>classification problem</strong>. That's because we have two different classes of complaints:</p>
+<ul>
+<li>Complaints that are suspicious</li>
+<li>Complaints that are not suspicious</li>
+</ul>
+<p>And the machine's job is to classify new complaints in one of those two categories. Before we put it on the job, though, we need to <strong>train it</strong>.</p>
+<p>Before we start with that, though, let's see how many suspicious and non-suspicious comments are in our training set.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">is_suspicious</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.0    150
+1.0     15
+Name: is_suspicious, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Wait a second, I thought we had 350 rows? Where are the rest?</p>
+<ul>
+<li><strong>Tip:</strong> Try adding <code>dropna=False</code> to your <code>.value_counts()</code>.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">is_suspicious</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">dropna</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>NaN    185
+0.0    150
+1.0     15
+Name: is_suspicious, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Yup, it looks like we're missing a LOT of labels. Classifiers hate missing data - both missing labels <em>and</em> missing features - so we might as well remove any row that's missing any data.</p>
+<ul>
+<li><strong>Tip:</strong> If you use <code>.dropna()</code>, it will drop any rows that have <code>NaN</code> in them.</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>After dropping the missing rows, double-check that your dataframe is the size you expect.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(165, 8)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Creating-our-classifier">Creating our classifier<a class="anchor-link" href="#Creating-our-classifier">#</a></h2><p>Just like with linear regression, we call our classifier a <strong>model</strong>. It <strong>models</strong> the relationship between the inputs and the outputs.</p>
+<p>The classifier we're using is a special one that uses <strong>logistic regression</strong> under the hood, but that doesn't matter very much right now. Just know that it's a classifier!</p>
+<h3 id="Separating-our-features-and-labels">Separating our features and labels<a class="anchor-link" href="#Separating-our-features-and-labels">#</a></h3><p>We need to feed our classifier two things</p>
+<ol>
+<li>The features</li>
+<li>The labels</li>
+</ol>
+<p>Take a look at the first five rows of <code>train_df</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_suspicious</th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><code>is_suspicious</code> is our label, and all of the othe columns are our features. We'll call the label <code>y</code> and the features <code>X</code>, because that's what everyone else does.</p>
+<p>The typical way of doing it is below (many people might use <code>axis=1</code> instead of <code>columns=</code>, but I like how explicit <code>columns=</code> is!)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Note that .drop doesn&#39;t drop the column permanently, it only drops the column to save it into `X`</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;is_suspicious&#39;</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">is_suspicious</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Take a look at <code>X</code> and <code>y</code> to make sure they look like a list of features and a list of labels. You can use <code>.head()</code> on both of them, no problem.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0    0.0
+1    0.0
+2    0.0
+3    0.0
+4    0.0
+Name: is_suspicious, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Building-our-classifier">Building our classifier<a class="anchor-link" href="#Building-our-classifier">#</a></h3><p>One we have our features and our labels, we can create a classifier.</p>
+<p>I'm actually going to move the <code>X=</code> and <code>y=</code> down into this section because it's nice to keep it all in one cell.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+
+<span class="c1"># Every column EXCEPT whether it&#39;s suspicious</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;is_suspicious&#39;</span><span class="p">)</span>
+<span class="c1"># label is suspicious 0/1</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">is_suspicious</span>
+
+<span class="c1"># Build a new classifier</span>
+<span class="c1"># C=1e9 is a magic secret I don&#39;t want to talk about</span>
+<span class="c1"># If we don&#39;t say solver=&#39;lbfgs&#39; it complains that it&#39;s the new default</span>
+<span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1e9</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
+
+<span class="c1"># Teach the classifier about the complaints we read</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>LogisticRegression(C=1000000000.0, class_weight=None, dual=False,
+                   fit_intercept=True, intercept_scaling=1, l1_ratio=None,
+                   max_iter=100, multi_class=&#39;warn&#39;, n_jobs=None, penalty=&#39;l2&#39;,
+                   random_state=None, solver=&#39;lbfgs&#39;, tol=0.0001, verbose=0,
+                   warm_start=False)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Okay, that... seems to have done nothing.</p>
+<p>When we do linear regression, it prints out a bunch of stuff for us. It's nice! When we train a classifier, <strong>it's up to us to use the classifier.</strong></p>
+<h2 id="Interpreting-our-classifier">Interpreting our classifier<a class="anchor-link" href="#Interpreting-our-classifier">#</a></h2><h3 id="Feature-importance">Feature importance<a class="anchor-link" href="#Feature-importance">#</a></h3><p>So the classifier did some reading. Hooray! We gave it all sorts of columns (each was a different word)... which columns did it think were important?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># The words we were looking for,</span>
+<span class="c1"># X were our features, X.columns is the column names</span>
+<span class="n">feature_names</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">columns</span>
+
+<span class="c1"># Coefficients! Remember this from linear regression?</span>
+<span class="n">coefficients</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;feature&#39;</span><span class="p">:</span> <span class="n">feature_names</span><span class="p">,</span>
+    <span class="s1">&#39;coefficient&#39;</span><span class="p">:</span> <span class="n">coefficients</span>
+<span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;coefficient&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature</th>
+      <th>coefficient</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>violent</td>
+      <td>32.318434</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>explode</td>
+      <td>1.819453</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>airbag</td>
+      <td>1.404580</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>air bag</td>
+      <td>0.812616</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>shrapnel</td>
+      <td>-12.096964</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>failed</td>
+      <td>-16.743779</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>did not deploy</td>
+      <td>-21.108236</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>A higher number for a coefficient means "this word makes me think it's suspicious, a.k.a. <code>1</code>" and a lower number means "this word makes me think it was not suspicious, a.k.a. <code>0</code>."</p>
+<p>Is there anything you found surprising about these results? Why do you think that might have happened?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Predicting-with-our-classifier">Predicting with our classifier<a class="anchor-link" href="#Predicting-with-our-classifier">#</a></h3><p>The point of a classifier is to classify documents it hasn't seen before, to read them and put them into the appropriate category. Before we can do this, we need to <strong>extract features from our original dataframe</strong>, the one that doesn't have labels.</p>
+<p>We'll do this the <strong>same way</strong> we did with our set of labeled data. Build a new dataframe that asks whether each complaint has the appropriate word:</p>
+<ul>
+<li>airbag</li>
+<li>air bag</li>
+<li>failed</li>
+<li>did not deploy</li>
+<li>violent</li>
+<li>explode</li>
+<li>shrapnel</li>
+</ul>
+<p>I've started you off with one check for the word <strong>airbag</strong>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;airbag&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIRBAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;airbag&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIRBAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;air bag&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIR BAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;failed&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;FAILED&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;did not deploy&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;DID NOT DEPLOY&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;violent&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;VIOLENT&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;explode&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;EXPLODE&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;shrapnel&#39;</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;SHRAPNEL&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+<span class="p">})</span>
+<span class="n">features</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>airbag             35613
+air bag            56358
+failed            129117
+did not deploy     16685
+violent             9994
+explode             6638
+shrapnel             160
+dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This dataframe should have 7 columns, <strong>none of which are <code>is_suspicious</code></strong>. It's unlabeled, remember? We aren't sure whether they're suspicious complaints or not.</p>
+<p>Confirm that real quick.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we can add a new column, the classifier's guess about whether it's suspicious or not. To make the classifier guess, we use <code>.predict</code>. We just feed our features to the classifier and there we go!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([0., 0., 0., ..., 0., 0., 0.])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's make a copy of <code>features</code> and give it a new column called <code>predicted</code>. That way if we need to use features again we won't have messed it up by adding new columns.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features_with_prediction</span> <span class="o">=</span> <span class="n">features</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">features_with_prediction</span><span class="p">[</span><span class="s1">&#39;predicted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">features</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Let's look at the first five.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features_with_prediction</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Pretty boring, right? No words in there, all predicted as <code>0</code>, not fun at all. Let's try filtering to see <strong>the first ten where the prediction was <code>1</code></strong>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">features_with_prediction</span><span class="p">[</span><span class="n">features_with_prediction</span><span class="o">.</span><span class="n">predicted</span> <span class="o">==</span> <span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+      <th>predicted</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>56</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1217</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>1868</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2035</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2936</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>2960</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3949</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>3952</th>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>4129</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+    <tr>
+      <th>5362</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We can see most of the ones marked as suspicious include the words "airbag" and "violent," and none of them include "failed" or "did not deploy." That all makes sense, but what about all of the ones that include the word "violent" but not "airbag" or "air bag?" None of those should be good!</p>
+<p>While we could just filter it to only include ones with the word "airabg" in it, we probably need a way to <strong>test the quality of our classifier</strong>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Testing-our-classifier">Testing our classifier<a class="anchor-link" href="#Testing-our-classifier">#</a></h2><p>When we look at the results of our classifier, we know some of them are wrong - complaints shouldn't be suspicious if they don't have airbags in them! But it would be nice to have an <strong>automated process</strong> to give us an idea of how well our classifier does.</p>
+<p>The problem is <strong>we can't test our classifier on this unlabeled data</strong>, because it doesn't know what's right and what's wrong. Instead, we have to test on the <strong>labeled data</strong> we trained our classifier on.</p>
+<p>One technique would be having our classifier compare the actual labels on our training data to what it would predict those labels to be.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Look at our training data, predict the labels,</span>
+<span class="c1"># then compare the labels to the actual labels</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.9212121212121213</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Incredible, over 90% accuracy! ...that's good, right? <strong>Well, not really.</strong> There are two major reason why this isn't impressive!</p>
+<h3 id="Test-train-split">Test-train split<a class="anchor-link" href="#Test-train-split">#</a></h3><p>One big problem with our classifier is that we're testing it on <strong>data it's already seen</strong>. While it's cool to have a study sheet for a test, it doesn't quite seem fair if the <strong>study sheet is exactly the same as the test</strong>.</p>
+<p>Instead, we should try to reproduce what the real world is like - trainig it on one set of data, and testing it on <em>similar</em> data... but similar data we already know the labels for!</p>
+<p>To make this happen we use something called <strong>train/test split</strong>, where instead of using the <em>entire</em> dataset for training, we only use <em>most</em> of it - the default is 80% for training and 20% for testing. The code on the line below automatically splits the dataset into two groups, one for training and a smaller one for testing.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>To try to understand what's going on, take a look at <code>X_train</code>, <code>X_test</code>, <code>y_train</code> and <code>y_test</code>, along with their sizes.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>12</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>321</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>296</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>348</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>246</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_test</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>84</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>240</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>127</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(123, 7)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(42, 7)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_train</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>12     0.0
+321    0.0
+296    0.0
+348    0.0
+246    0.0
+Name: is_suspicious, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_test</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>84     0.0
+240    0.0
+127    0.0
+0      0.0
+23     0.0
+Name: is_suspicious, dtype: float64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_train</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(123,)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_test</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(42,)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Both the <code>X_</code> and the <code>y_</code> variables look just about exactly the same, the only difference is that <code>_train</code> contains a lot more than <code>_test</code>, and there are no repeats between the two.</p>
+<p>Now when we give the model a test, it hasn't seen the answers already!</p>
+<ul>
+<li>Use <code>clf.fit</code> to train on the training sample</li>
+<li>Use <code>clf.score</code> to score on the testing sample</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+<span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.8809523809523809</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>This part is fun, because there's a chance <em>it will get even better!</em> Weird, right? We'll talk about why that might have happened a little later.</p>
+<p>There are other ways to improve this further, but for now we have a larger problem to tackle.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="The-confusion-matrix">The confusion matrix<a class="anchor-link" href="#The-confusion-matrix">#</a></h3><p>Our accuracy is looking great, hovering somewhere in the 90's. Feeling good, right? <strong>Unfortunately, things aren't actually that rosy.</strong></p>
+<p>Let's take a look at how many suspicious and how many non-suspicious ones we have in our labeled dataset (for the millionth time, yes)</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">labeled</span><span class="o">.</span><span class="n">is_suspicious</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.0    150
+1.0     15
+Name: is_suspicious, dtype: int64</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>We have a lot more non-suspicious ones as compared to suspicious, right? Let's say we were classifying, and we <em>always</em> guessed "not suspicious". Since there are so few suspicious ones, we wouldn't get very many wrong, and our accuracy would be really high!</p>
+<blockquote><p>If we have 99 non-suspicious and 1 suspicious, if we always guess "non-suspicious" we'd have 99% accuracy.</p>
+</blockquote>
+<p>Even though our accuracy would look great, the result would be super boring. Since zero of our complaints would have been marked as suspicious, we wouldn't have anything to read or research. <strong>It'd be much nicer if we could identify the difference between getting one category right compared to the other.</strong></p>
+<p>And hey, that's easy! We use this thing called a <strong>confusion matrix</strong>. It looks like this:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+
+<span class="n">y_true</span> <span class="o">=</span> <span class="n">y</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+
+<span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>array([[150,   0],
+       [ 14,   1]])</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>...which is pretty terrible-looking, right? It's hard as heck to understand! Let's try to spice it up a little bit and make it a little nicer to read:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+
+<span class="c1"># Save the true label, but also save the predicted label</span>
+<span class="n">y_true</span> <span class="o">=</span> <span class="n">y</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="c1"># We could also use just the test dataset</span>
+<span class="c1"># y_true = y_test</span>
+<span class="c1"># y_pred = clf.predict(X_test)</span>
+
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="c1"># But then make it look nice</span>
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;not suspicious&#39;</span><span class="p">,</span> <span class="s1">&#39;suspicious&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted not suspicious</th>
+      <th>Predicted suspicious</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is not suspicious</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Is suspicious</th>
+      <td>14</td>
+      <td>1</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>So now we can see what's going on a little bit better. According to the confusion matrix, when using our original dataset (your numbers might be a little different):</p>
+<ul>
+<li>We correctly predicted 149 of 150 not-suspicious</li>
+<li>We only correctly predicted 2 of 15 suspicious ones.</li>
+</ul>
+<p>Even though that gives us a really high score, <strong>it's pretty useless</strong>.</p>
+<h2 id="Thinking-about-what-your-outputs-mean">Thinking about what your outputs mean<a class="anchor-link" href="#Thinking-about-what-your-outputs-mean">#</a></h2><p>While we could spend a lot of time working on the math behind all of this and the technical ins and outs, I think a more useful thing for journalists to do - when both analyzing their own algorithms as well as other people's algorithms - is to think about <strong>what incorrect outputs mean</strong>.</p>
+<p>In this case, we're trying to predict whether we should investigate a given complaint. That basically means, "the computer takes a look and says 'hey human being, you should go look at it'.</p>
+<p>As a result, every complain that <em>shouldn't</em> have been flagged is more work for a computer, but every complaint that is <em>incorrectly</em> flagged means we'll never think to look at that complaint.</p>
+<p><strong>Do you think it's better to incorrectly flag non-suspicious complaints as suspicious, or to incorrectly flag suspicious complaints as non-suspicious</strong></p>
+<p>What are the upsides/downsides of each, and which side is more important to you?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Classifier-Probability">Classifier Probability<a class="anchor-link" href="#Classifier-Probability">#</a></h2><p>When we use <code>clf.predict</code>, we only get a <code>0</code> or a <code>1</code>. That's kind of a fakeout, though, as under the hood there is actually something a (little) more complicated going on. Since we only have two categories, each row is given a score between 0-100% as to whether it should belong to a category. If it's over 50% it goes into that category!</p>
+<p>We can see this with <code>clf.predict_proba</code>.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_with_predictions</span> <span class="o">=</span> <span class="n">X</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_with_predictions</span><span class="p">[</span><span class="s1">&#39;predicted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="c1"># [:,1] is the probability it belongs in the &#39;1&#39; category</span>
+<span class="n">X_with_predictions</span><span class="p">[</span><span class="s1">&#39;probability&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X</span><span class="p">)[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">X_with_predictions</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+      <th>predicted</th>
+      <th>probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.055643</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.055643</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.055643</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.055643</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.055643</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Now we can be a little more discriminating - instead of just looking as whether it scored above or below 50% by seeing the final classification we can see exactly what the classifier was thinking when it assigned it to one category or another. Try sorting by probability and showing the top 20, putting the higher probability at the top.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X_with_predictions</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;probability&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">20</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+      <th>predicted</th>
+      <th>probability</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>303</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.641107</td>
+    </tr>
+    <tr>
+      <th>334</th>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.358830</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>254</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>290</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>252</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>296</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>339</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>337</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>316</th>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.321545</td>
+    </tr>
+    <tr>
+      <th>224</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.158299</td>
+    </tr>
+    <tr>
+      <th>223</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.158299</td>
+    </tr>
+    <tr>
+      <th>57</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.158299</td>
+    </tr>
+    <tr>
+      <th>349</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.158299</td>
+    </tr>
+    <tr>
+      <th>342</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.158299</td>
+    </tr>
+    <tr>
+      <th>323</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.158299</td>
+    </tr>
+    <tr>
+      <th>348</th>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.158299</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Let's-improve-our-model">Let's improve our model<a class="anchor-link" href="#Let's-improve-our-model">#</a></h2><p>Right now our model isn't very good. It doesn't seem to require the word "airbag" to be in it (maybe because we count "airbag" and "air bag" as separate words?) and doesn't include that many features. Can you think of ways to improve our model, and maybe try a few out?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Imports">Imports<a class="anchor-link" href="#Imports">#</a></h3><p>We'll just do this all over again.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="kn">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">confusion_matrix</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_colwidth&quot;</span><span class="p">,</span> <span class="mi">500</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Read-in-our-labeled-data">Read in our labeled data<a class="anchor-link" href="#Read-in-our-labeled-data">#</a></h3><p>Right now we're only dropping ones have missing labels. Why do we have so many missing labels? Are there other options for ones we could include/not include?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Read in our data, drop those that are missing labels</span>
+<span class="n">labeled</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/sampled-labeled.csv&quot;</span><span class="p">)</span>
+<span class="n">labeled</span> <span class="o">=</span> <span class="n">labeled</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="n">labeled</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>(165, 2)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Create-our-X-and-y">Create our X and y<a class="anchor-link" href="#Create-our-X-and-y">#</a></h3><p>Are there other words you might look for? Any words you might remove?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;is_suspicious&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">is_suspicious</span><span class="p">,</span>
+    <span class="s1">&#39;airbag&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIRBAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;air bag&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;AIR BAG&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;failed&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;FAILED&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;did not deploy&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;DID NOT DEPLOY&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;violent&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;VIOLENT&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;explode&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;EXPLODE&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+    <span class="s1">&#39;shrapnel&#39;</span><span class="p">:</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s2">&quot;SHRAPNEL&quot;</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+<span class="p">})</span>
+<span class="n">train_df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_suspicious</th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>0.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Split-into-train-and-test">Split into train and test<a class="anchor-link" href="#Split-into-train-and-test">#</a></h3><p>Does giving the model more (or less) to train with change anything?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;is_suspicious&#39;</span><span class="p">)</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">is_suspicious</span>
+
+<span class="c1"># With test_size=0.3, we&#39;ll train on 70% and test on 30%</span>
+<span class="c1"># random_state=42 means it isn&#39;t actually random, it will always give you the same split</span>
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Create-and-train-our-classifier">Create and train our classifier<a class="anchor-link" href="#Create-and-train-our-classifier">#</a></h3><p>You... don't know any other classifiers. But hey, you could always look some up, I guess!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">(</span><span class="n">C</span><span class="o">=</span><span class="mf">1e9</span><span class="p">,</span> <span class="n">solver</span><span class="o">=</span><span class="s1">&#39;lbfgs&#39;</span><span class="p">)</span>
+
+<span class="n">clf</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>LogisticRegression(C=1000000000.0, class_weight=None, dual=False,
+                   fit_intercept=True, intercept_scaling=1, l1_ratio=None,
+                   max_iter=100, multi_class=&#39;warn&#39;, n_jobs=None, penalty=&#39;l2&#39;,
+                   random_state=None, solver=&#39;lbfgs&#39;, tol=0.0001, verbose=0,
+                   warm_start=False)</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Check-the-important-words">Check the important words<a class="anchor-link" href="#Check-the-important-words">#</a></h3><p>Are the selected words pushing your results in the direction you think they should?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">feature_names</span> <span class="o">=</span> <span class="n">X_train</span><span class="o">.</span><span class="n">columns</span>
+<span class="c1"># Coefficients! Remember this from linear regression?</span>
+<span class="n">coefficients</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">coef_</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;feature&#39;</span><span class="p">:</span> <span class="n">feature_names</span><span class="p">,</span>
+    <span class="s1">&#39;coefficient&#39;</span><span class="p">:</span> <span class="n">coefficients</span>
+<span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;coefficient&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>feature</th>
+      <th>coefficient</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>violent</td>
+      <td>45.690384</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>explode</td>
+      <td>1.600866</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>air bag</td>
+      <td>1.283316</td>
+    </tr>
+    <tr>
+      <th>0</th>
+      <td>airbag</td>
+      <td>0.689808</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>shrapnel</td>
+      <td>-11.551542</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>failed</td>
+      <td>-23.881028</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>did not deploy</td>
+      <td>-34.018183</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Test-our-classifier">Test our classifier<a class="anchor-link" href="#Test-our-classifier">#</a></h3><p>We'll do a simple <code>.score</code> (which we know isn't very useful) along with a confusion matrix (which is harder to understand, but less useful). How do we feel about the results according to both?</p>
+<p><strong>Normally I'd only use the confusion matrix on <code>X_test</code>/<code>y_test</code>, but we do such a bad job that I feel like we should look at it all.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">clf</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>0.8484848484848485</pre>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">y_true</span> <span class="o">=</span> <span class="n">y</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+<span class="c1"># y_true = y_test</span>
+<span class="c1"># y_pred = clf.predict(X_test)</span>
+
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_true</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+<span class="n">label_names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">([</span><span class="s1">&#39;not suspicious&#39;</span><span class="p">,</span> <span class="s1">&#39;suspicious&#39;</span><span class="p">])</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="p">,</span>
+     <span class="n">columns</span><span class="o">=</span><span class="s1">&#39;Predicted &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">,</span>
+     <span class="n">index</span><span class="o">=</span><span class="s1">&#39;Is &#39;</span> <span class="o">+</span> <span class="n">label_names</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Predicted not suspicious</th>
+      <th>Predicted suspicious</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Is not suspicious</th>
+      <td>150</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <th>Is suspicious</th>
+      <td>13</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p><strong>If you keep running this and running this, it's going to be different each time.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="Examining-the-results">Examining the results<a class="anchor-link" href="#Examining-the-results">#</a></h3>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df_with_predictions</span> <span class="o">=</span> <span class="n">train_df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+<span class="n">train_df_with_predictions</span><span class="p">[</span><span class="s1">&#39;predicted&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">train_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;is_suspicious&#39;</span><span class="p">))</span>
+<span class="n">train_df_with_predictions</span><span class="p">[</span><span class="s1">&#39;predicted_prob&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">clf</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">train_df</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="s1">&#39;is_suspicious&#39;</span><span class="p">))[:,</span><span class="mi">1</span><span class="p">]</span>
+<span class="n">train_df_with_predictions</span><span class="p">[</span><span class="s1">&#39;sentence&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">labeled</span><span class="o">.</span><span class="n">CDESCR</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">train_df_with_predictions</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;predicted_prob&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>is_suspicious</th>
+      <th>airbag</th>
+      <th>air bag</th>
+      <th>failed</th>
+      <th>did not deploy</th>
+      <th>violent</th>
+      <th>explode</th>
+      <th>shrapnel</th>
+      <th>predicted</th>
+      <th>predicted_prob</th>
+      <th>sentence</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>294</th>
+      <td>1.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>1.000000</td>
+      <td>DROVE THE CAR ABOUT 20 YARDS, THEN PLACED IT IN PARK TO ALLOW THE REAR VAN DOORS TO OPEN FOR OUR CHILDREN.  WHEN THE KIDS GOT IN, I PLACED THE SHIFT LEVER IN DRIVE.  IMMEDIATELY, BOTH THE DRIVER AND PASSENGER AIRBAGS DEPLOYED VIOLENTLY.  I WAS NOT IN MOTION, WAS NOT STRUCK BY ANY OTHER VEHICLE OR OBJECT, AND MY FOOT WAS ON THE BRAKE. AN OFF-DUTY POLICE OFFICER WAS PARKED RIGHT BEHIND ME SAW THIS AND CAME TO HELP. HE  NOTED THAT THE AIRBAG FIRING MECHANISMS CONTINUED TO FIRE.  "I'VE SEEN A LO...</td>
+    </tr>
+    <tr>
+      <th>303</th>
+      <td>1.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1.0</td>
+      <td>0.655119</td>
+      <td>I WAS DRIVEN IN A SCHOOL ZONE STREET AND THE LIGHTS OF AIRBAG ON AND APROX. 2 MINUTES THE AIR BAGS EXPLODED IN MY FACE, THE DRIVE AND PASSENGERS SIDE, THEN I STOPPED THE JEEP, IT SMELL LIKE SOMETHING IS BURNING AND HOT, I DID NOT SEE FIRE.  *TR</td>
+    </tr>
+    <tr>
+      <th>334</th>
+      <td>0.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.344863</td>
+      <td>SINGLE-CAR ACCIDENT; ROLLOVER, 2008 KIA RONDO DECLARED A TOTAL LOSS BY INSURANCE CO.; SAFETY FEATURES INCLUDED ELECTRONIC STABILITY CONTROL; 6 AIRBAGS INCLUDING SIDE/HEAD CURTAIN AND NOT ONE DEPLOYED - I SUFFER FROM APPROX 6" LESION WITH PARTIAL SKULL SHOWING (16 STAPLES) TO LEFT SIDE OF HEAD FROM THE SIDEROOF SLAMMED INTO ME; I WAS WEARING A SEATBELT AND IT SAVED MY LIFE - GLASS EXPLODED EVERYWHERE, I HAVE SEVERE WHIPLASH AND CONCUSSION. *TR</td>
+    </tr>
+    <tr>
+      <th>84</th>
+      <td>0.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.277029</td>
+      <td>THE SEBRING HIT THE CAR IN FRONT OF IT. LEFT FRONT OF SEBRING HITTING THE RIGHT REAR BUMPER OF CAR IN FRONT OF IT. IMMEDIATELY STOPPING THE SEBRING AND THEN HAVING IT ROLL BACKWARDS INTO A DITCH. TOTALLY THE SEBRING. NO AIR BAGS DEPLOYED. INJURIES SUSTAINED BECAUSE OF AIRBAGS NOT DEPLOYING. WEATHER OUTSIDE WAS BELOW ZERO.  *TR</td>
+    </tr>
+    <tr>
+      <th>55</th>
+      <td>0.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.277029</td>
+      <td>2005 NISSAN MURANO AIR BAG SENSOR LIGHT CONTINUED TO BLINK.  CONSUMER WANTS TO KNOW IF THIS IS A SAFETY ISSUE.   *NJ  A DIAGNOSTICS DETERMINED THAT THE CONTACT SPIRAL IN THE STEERING COLUMN HAD AN OPEN CIRCUIT AND NEEDED TO BE REPLACED OR THE DRIVER'S SIDE AIRBAG WOULD NOT DEPLOY.  *JB</td>
+    </tr>
+    <tr>
+      <th>337</th>
+      <td>0.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.277029</td>
+      <td>2008 JEEP WRANGLER RHD POSTAL VEHICLES USED BY RURAL CARRIERS FOR USPS.  THOSE OF US WHO PURCHASED THE VEHICLES ARE HAVING ISSUES WITH AIRBAG MALFUNCTION INDICATOR LIGHT AND NO HORN USE OR INTERMITTENT USAGE.  ONE ITEM OF INTEREST POSSIBLE CAUSE IS THE SPRINGCLOCK IN THE STEERING COLUMN AS COMPONENT THAT OPERATES BOTH HORN AND AIR BAG CIRCUITS.  THIS ITEM HAS BEEN A PROBLEM IN YEARS PAST WITH JEEP.  CONCERNED WITH A DEPLOYMENT OF FAULTY AIR BAG ISSUE MOSTLY, TRYING TO GET MY VEHICLE IN FOR A...</td>
+    </tr>
+    <tr>
+      <th>339</th>
+      <td>0.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.277029</td>
+      <td>SERVICE AIR BAG CHECK ENGINE LIGHT ON WHEN STARTING 2006 SILVERADO; GM DEALERS DIAGNOSED AIRBAG SENSOR MALFUNCTIONING REQUIRES REPLACEMENT.  THIS SAFETY ISSUE HAS BEEN REPORTED IN 2009 AT EDMUNDS.COM BY OTHERS.  CALLED, EMAILED AND TWITTED GM SINCE 14 MAY 2014. AFTER 13 PHONE TAGS WITH 4 GM CUSTOMER CARE SPECIALISTS AND 2 DEALER SERVICE REPS (INCLUDE MANAGER) AND 5 DAYS, A VERBAL WORD FROM GM "YOUR VEHICLE IS WAY BELONG GM'S RESPONSIBILITY"...WE ARE 'TICKED" AROUND BY GM AND THE DEALER WITH ...</td>
+    </tr>
+    <tr>
+      <th>59</th>
+      <td>0.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.277029</td>
+      <td>COMMON DEFECT:  AIR BAG WARNING LIGHT IS ON.  SUSPECTED PASSENGER SEAT SENSOR FAILURE.  I'VE HAD 2 BMW'S FROM THIS SERIES - BOTH WITH THE SAME ISSUE - YET NO RECALL FROM BMW - WHY?  ISN'T THIS A SAFETY SYSTEM?  I SEE AIRBAG RECALLS ON CARS DATING BACK TO THIS ERA.  WHY NONE FOR BMW?  ALSO - ODOMETER RIBBON CABLE FAILURE CAUSING PIXELS TO FAIL.  NO RECALL - PROBLEM EXISTS ACROSS THE SERIES FROM 1996-2001 AND BEYOND.  NO FIX - NO RECALL -  NO REPAIRS OFFERED.  WHY?  *TR</td>
+    </tr>
+    <tr>
+      <th>296</th>
+      <td>0.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.277029</td>
+      <td>WE BOUGHT THIS VEHICLE IN JUNE 2013. WE HAD IT ALMOST A MONTH WHEN THE STEERING LOCKED UP ON ME. THE POWER STEERING PRESSURE LINE BLEW OUT. WE TOOK IT TO THE DEALER THAT WE BOUGHT IT FROM AND THEY FIXED THE LINE. THREE DAYS LATER THE STEERING WENT AGAIN WE GOT IT TO THE DEALERSHIP AND THEY WERE GOING TO CHARGE US $300.00.  I GOT UPSET BUT THE MOST THEY WOULD DO FOR ME WAS SPLIT THE COST.THEN A FEW MONTHS LATER I STARTED TO SMELL GAS. I DIDN'T SEE ANY THING ON THE GROUND SO I LEFT IT GO. THEN...</td>
+    </tr>
+    <tr>
+      <th>81</th>
+      <td>0.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>0.0</td>
+      <td>0.277029</td>
+      <td>2007 HYUNDAI SONATA.  CONSUMER WRITES IN REGARDS TO VEHICLE AIRBAG ISSUES.  *SMD  THE CONSUMER STATED THE AIR BAG LIGHT ILLUMINATED. THE CONSUMER HAD AN ISSUE WITH THE AIR BAG LIGHT ILLUMINATING IN OCTOBER 2012, WHERE THE DEALER REPLACED THE SEAT BELT BUCKLE ASSEMBLY. *JB</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h3 id="How-are-we-going-to-fix-this?">How are we going to fix this?<a class="anchor-link" href="#How-are-we-going-to-fix-this?">#</a></h3><p>Even if you can't successfully make your classifier perform any better, try to think about what you feel like could make it better.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Review">Review<a class="anchor-link" href="#Review">#</a></h2><p>We have far too many complaints from the National Highway Traffic Safety Administration to read ourselves, so we're hoping to convince a computer to mark the ones we'll be interested in. <strong>We hand-labeled a random sample as suspicious or not</strong> and used this smaller dataset as a source of training material for our machine learning algorithm.</p>
+<p>We picked a few words we thought might be indicative of malfunctioning air bags, and added new columns to our dataset as to whether each complain has the word or not. We then <strong>train</strong> our  algorithm, where it learns how these <strong>features</strong> are related to the <strong>label</strong> of suspicious or not. In this case we used a <strong>logistic regression classifier</strong>.</p>
+<p>It did not do a very good job, and we thought about reasons why.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Discussion-topics">Discussion topics<a class="anchor-link" href="#Discussion-topics">#</a></h2><p>We have a few options: try to flag more examples, try a different machine learning algorithm, just give up and have someone read all of the complaints manually.</p>
+<p>Do you think our algorithm might perform better if we had a better split between suspicious and non-suspicious complaints?</p>
+<p>What do you think takes longer: learning to use machine learning, or searching for "airbag" and manually marking complaints as suspicious or not?</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

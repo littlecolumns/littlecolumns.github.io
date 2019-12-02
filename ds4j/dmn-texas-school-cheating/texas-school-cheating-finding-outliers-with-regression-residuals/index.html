@@ -1,0 +1,1913 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Texas School Cheating - Finding outliers with regression residuals</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/dmn-texas-school-cheating/">Finding cheating schools in Texas with linear regression</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/dmn-texas-school-cheating/texas-school-cheating-finding-outliers-with-regression-residuals">Texas School Cheating - Finding outliers with regression residuals</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Finding-suspicious-behavior-by-tracking-down-outliers">Finding suspicious behavior by tracking down outliers<a class="anchor-link" href="#Finding-suspicious-behavior-by-tracking-down-outliers">#</a></h1><p>To reproduce this finding from the Dallas Morning News, we'll need to use standard deviation, regression, and residuals to identify schools that performed suspiciously well in certain standardized tests.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/dmn-texas-school-cheating/texas-school-cheating-finding-outliers-with-regression-residuals">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/dmn-texas-school-cheating/notebooks/Texas School Cheating - Finding outliers with regression residuals.ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">200</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Reading-in-our-data">Reading in our data<a class="anchor-link" href="#Reading-in-our-data">#</a></h1><p>We'll start by opening up our dataset - standardized test performance at each school, for fourth graders in 2004.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/cfy04e4.dat&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;r_all_rs&#39;</span><span class="p">,</span> <span class="s1">&#39;CNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;CAMPUS&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;CAMPUS&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">add_suffix</span><span class="p">(</span><span class="s1">&#39;_fourth&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fourth</th>
+      <th>r_all_rs_fourth</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1902103</th>
+      <td>CAYUGA EL</td>
+      <td>2392.0</td>
+    </tr>
+    <tr>
+      <th>1903101</th>
+      <td>ELKHART EL</td>
+      <td>2263.0</td>
+    </tr>
+    <tr>
+      <th>1904102</th>
+      <td>FRANKSTON EL</td>
+      <td>2242.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">third_graders</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/cfy03e3.dat&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;CAMPUS&#39;</span><span class="p">,</span> <span class="s1">&#39;r_all_rs&#39;</span><span class="p">])</span>
+<span class="n">third_graders</span> <span class="o">=</span> <span class="n">third_graders</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;CAMPUS&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">add_suffix</span><span class="p">(</span><span class="s1">&#39;_third&#39;</span><span class="p">)</span>
+<span class="n">merged</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">third_graders</span><span class="p">)</span>
+<span class="n">merged</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fourth</th>
+      <th>r_all_rs_fourth</th>
+      <th>r_all_rs_third</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1902103</th>
+      <td>CAYUGA EL</td>
+      <td>2392.0</td>
+      <td>2330.0</td>
+    </tr>
+    <tr>
+      <th>1903101</th>
+      <td>ELKHART EL</td>
+      <td>2263.0</td>
+      <td>2285.0</td>
+    </tr>
+    <tr>
+      <th>1904102</th>
+      <td>FRANKSTON EL</td>
+      <td>2242.0</td>
+      <td>2299.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Using-a-regression-to-predict-fourth-grade-scores">Using a regression to predict fourth-grade scores<a class="anchor-link" href="#Using-a-regression-to-predict-fourth-grade-scores">#</a></h1><p>The Dallas Morning News decided to run a <strong>regression</strong>, which is a way of predicting how two different variables interact. In this case, we want to see the relationship between a <strong>third grade score</strong> and a <strong>fourth grade score</strong>.</p>
+<p>First we'll need to get rid of missing data, because regressions hate hate hate missing data.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Before dropping missing data&quot;</span><span class="p">,</span> <span class="n">merged</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">merged</span> <span class="o">=</span> <span class="n">merged</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;After dropping missing data&quot;</span><span class="p">,</span> <span class="n">merged</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Before dropping missing data (3780, 3)
+After dropping missing data (3501, 3)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And now we can ask what the relationship is between third-grade scores and fourth-grade scores.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;r_all_rs_fourth ~ r_all_rs_third&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">merged</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>     <td>r_all_rs_fourth</td> <th>  R-squared:         </th> <td>   0.647</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.647</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   6410.</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Tue, 05 Nov 2019</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
+</tr>
+<tr>
+  <th>Time:</th>                 <td>08:31:22</td>     <th>  Log-Likelihood:    </th> <td> -17961.</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>  3501</td>      <th>  AIC:               </th> <td>3.593e+04</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>  3499</td>      <th>  BIC:               </th> <td>3.594e+04</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     1</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+         <td></td>           <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>      <td>  632.6929</td> <td>   19.936</td> <td>   31.736</td> <td> 0.000</td> <td>  593.606</td> <td>  671.780</td>
+</tr>
+<tr>
+  <th>r_all_rs_third</th> <td>    0.7094</td> <td>    0.009</td> <td>   80.061</td> <td> 0.000</td> <td>    0.692</td> <td>    0.727</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>263.054</td> <th>  Durbin-Watson:     </th> <td>   1.897</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td>1312.900</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 0.147</td>  <th>  Prob(JB):          </th> <td>8.08e-286</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 5.986</td>  <th>  Cond. No.          </th> <td>6.49e+04</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 6.49e+04. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>What's this all mean? It doesn't matter! What matters is that <strong>if we know what third-grade score a school got, we can try to predict its fourth-grade score.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">merged</span><span class="p">[</span><span class="s1">&#39;predicted_fourth&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">predict</span><span class="p">()</span>
+<span class="n">merged</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fourth</th>
+      <th>r_all_rs_fourth</th>
+      <th>r_all_rs_third</th>
+      <th>predicted_fourth</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1902103</th>
+      <td>CAYUGA EL</td>
+      <td>2392.0</td>
+      <td>2330.0</td>
+      <td>2285.616126</td>
+    </tr>
+    <tr>
+      <th>1903101</th>
+      <td>ELKHART EL</td>
+      <td>2263.0</td>
+      <td>2285.0</td>
+      <td>2253.692715</td>
+    </tr>
+    <tr>
+      <th>1904102</th>
+      <td>FRANKSTON EL</td>
+      <td>2242.0</td>
+      <td>2299.0</td>
+      <td>2263.624443</td>
+    </tr>
+    <tr>
+      <th>1906102</th>
+      <td>NECHES EL</td>
+      <td>2218.0</td>
+      <td>2236.0</td>
+      <td>2218.931668</td>
+    </tr>
+    <tr>
+      <th>1907110</th>
+      <td>STORY EL</td>
+      <td>2200.0</td>
+      <td>2202.0</td>
+      <td>2194.811757</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h2 id="Using-standard-deviations-with-regression-error">Using standard deviations with regression error<a class="anchor-link" href="#Using-standard-deviations-with-regression-error">#</a></h2><p>Notice how there's a difference between the <em>actual</em> fourth-grade score and the <em>predicted</em> fourth-grade score. This is called the <strong>error</strong> or <strong>residual</strong>. The bigger the error, the bigger the difference between what was expected and what actually happened.</p>
+<p>Remember how we were suspicious of that one school because it performed normally, but then performed really well? A school like that is going to have a really big error!</p>
+<p>To calculate what a suspiciously large error is, we're going to use our old friend <strong>standard deviation.</strong> Before we used standard deviation to see how far a school's score was from the average score. This time we're going to use standard deviation to see how far the school's error is from the average error!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Just trust me, this is how you do it</span>
+<span class="n">merged</span><span class="p">[</span><span class="s1">&#39;error_std_dev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">resid</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">mse_resid</span><span class="p">)</span>
+<span class="n">merged</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fourth</th>
+      <th>r_all_rs_fourth</th>
+      <th>r_all_rs_third</th>
+      <th>predicted_fourth</th>
+      <th>error_std_dev</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1902103</th>
+      <td>CAYUGA EL</td>
+      <td>2392.0</td>
+      <td>2330.0</td>
+      <td>2285.616126</td>
+      <td>2.600187</td>
+    </tr>
+    <tr>
+      <th>1903101</th>
+      <td>ELKHART EL</td>
+      <td>2263.0</td>
+      <td>2285.0</td>
+      <td>2253.692715</td>
+      <td>0.227484</td>
+    </tr>
+    <tr>
+      <th>1904102</th>
+      <td>FRANKSTON EL</td>
+      <td>2242.0</td>
+      <td>2299.0</td>
+      <td>2263.624443</td>
+      <td>-0.528535</td>
+    </tr>
+    <tr>
+      <th>1906102</th>
+      <td>NECHES EL</td>
+      <td>2218.0</td>
+      <td>2236.0</td>
+      <td>2218.931668</td>
+      <td>-0.022771</td>
+    </tr>
+    <tr>
+      <th>1907110</th>
+      <td>STORY EL</td>
+      <td>2200.0</td>
+      <td>2202.0</td>
+      <td>2194.811757</td>
+      <td>0.126809</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>The more standard deviations away from the mean a school's error is, the bigger the gap between actual and predicted scores, and <strong>the more suspicious its fourth-grade performance is.</strong></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">merged</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;error_std_dev&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fourth</th>
+      <th>r_all_rs_fourth</th>
+      <th>r_all_rs_third</th>
+      <th>predicted_fourth</th>
+      <th>error_std_dev</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>57905115</th>
+      <td>HARRELL BUDD EL</td>
+      <td>2470.0</td>
+      <td>2140.0</td>
+      <td>2150.828391</td>
+      <td>7.801048</td>
+    </tr>
+    <tr>
+      <th>123803101</th>
+      <td>TEKOA ACADEMY O</td>
+      <td>2313.0</td>
+      <td>2021.0</td>
+      <td>2066.408705</td>
+      <td>6.027073</td>
+    </tr>
+    <tr>
+      <th>15803101</th>
+      <td>HIGGS/CARTER/KI</td>
+      <td>2349.0</td>
+      <td>2097.0</td>
+      <td>2120.323799</td>
+      <td>5.589200</td>
+    </tr>
+    <tr>
+      <th>101912172</th>
+      <td>HENDERSON N EL</td>
+      <td>2324.0</td>
+      <td>2093.0</td>
+      <td>2117.486162</td>
+      <td>5.047518</td>
+    </tr>
+    <tr>
+      <th>180901101</th>
+      <td>MIMI FARLEY ELE</td>
+      <td>2448.0</td>
+      <td>2294.0</td>
+      <td>2260.077397</td>
+      <td>4.593119</td>
+    </tr>
+    <tr>
+      <th>57825001</th>
+      <td>PINNACLE SCHOOL</td>
+      <td>2274.0</td>
+      <td>2068.0</td>
+      <td>2099.750934</td>
+      <td>4.258917</td>
+    </tr>
+    <tr>
+      <th>131001103</th>
+      <td>SARITA EL</td>
+      <td>2509.0</td>
+      <td>2424.0</td>
+      <td>2352.300584</td>
+      <td>3.829976</td>
+    </tr>
+    <tr>
+      <th>101823101</th>
+      <td>CHILDREN FIRST</td>
+      <td>2252.0</td>
+      <td>2066.0</td>
+      <td>2098.332116</td>
+      <td>3.755881</td>
+    </tr>
+    <tr>
+      <th>61911111</th>
+      <td>PRAIRIE VIEW EL</td>
+      <td>2389.0</td>
+      <td>2261.0</td>
+      <td>2236.666896</td>
+      <td>3.723257</td>
+    </tr>
+    <tr>
+      <th>57905185</th>
+      <td>WILLIAM B MILLE</td>
+      <td>2295.0</td>
+      <td>2129.0</td>
+      <td>2143.024891</td>
+      <td>3.714507</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Reproducing-the-story">Reproducing the story<a class="anchor-link" href="#Reproducing-the-story">#</a></h1><p>From The Dallas Morning News:</p>
+<blockquote><p>"In statistician's lingo, these schools had at least one average score that was more than three standard deviations away from what would be predicted based on their scores in other grades or on other tests</p>
+</blockquote>
+<p>While we've been talking about schools with a <strong>major increase</strong> between the two years, we're also interested in schools with a <strong>major drop</strong>. That could indicate cheating in 2003 and a return to "real" testing in 2004.</p>
+<p>Let's check out all of our suspicious schools according to the three standard deviations test they performed.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">merged</span><span class="p">[</span><span class="n">merged</span><span class="o">.</span><span class="n">error_std_dev</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fourth</th>
+      <th>r_all_rs_fourth</th>
+      <th>r_all_rs_third</th>
+      <th>predicted_fourth</th>
+      <th>error_std_dev</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>15803101</th>
+      <td>HIGGS/CARTER/KI</td>
+      <td>2349.0</td>
+      <td>2097.0</td>
+      <td>2120.323799</td>
+      <td>5.589200</td>
+    </tr>
+    <tr>
+      <th>15819001</th>
+      <td>SHEKINAH RADIAN</td>
+      <td>1976.0</td>
+      <td>2149.0</td>
+      <td>2157.213074</td>
+      <td>-4.429128</td>
+    </tr>
+    <tr>
+      <th>19901102</th>
+      <td>DEKALB EL</td>
+      <td>2356.0</td>
+      <td>2223.0</td>
+      <td>2209.709349</td>
+      <td>3.575570</td>
+    </tr>
+    <tr>
+      <th>22004101</th>
+      <td>TERLINGUA EL</td>
+      <td>2055.0</td>
+      <td>2178.0</td>
+      <td>2177.785938</td>
+      <td>-3.001078</td>
+    </tr>
+    <tr>
+      <th>25904101</th>
+      <td>BLANKET EL</td>
+      <td>2082.0</td>
+      <td>2225.0</td>
+      <td>2211.128167</td>
+      <td>-3.156092</td>
+    </tr>
+    <tr>
+      <th>47905001</th>
+      <td>SIDNEY SCHOOL</td>
+      <td>2208.0</td>
+      <td>2024.0</td>
+      <td>2068.536933</td>
+      <td>3.408693</td>
+    </tr>
+    <tr>
+      <th>50901101</th>
+      <td>EVANT EL</td>
+      <td>2169.0</td>
+      <td>2345.0</td>
+      <td>2296.257263</td>
+      <td>-3.110365</td>
+    </tr>
+    <tr>
+      <th>57817101</th>
+      <td>FOCUS LEARNING</td>
+      <td>1973.0</td>
+      <td>2079.0</td>
+      <td>2107.554435</td>
+      <td>-3.288719</td>
+    </tr>
+    <tr>
+      <th>57825001</th>
+      <td>PINNACLE SCHOOL</td>
+      <td>2274.0</td>
+      <td>2068.0</td>
+      <td>2099.750934</td>
+      <td>4.258917</td>
+    </tr>
+    <tr>
+      <th>57825012</th>
+      <td>DESTINY HIGH SC</td>
+      <td>2013.0</td>
+      <td>2133.0</td>
+      <td>2145.862528</td>
+      <td>-3.247366</td>
+    </tr>
+    <tr>
+      <th>57905115</th>
+      <td>HARRELL BUDD EL</td>
+      <td>2470.0</td>
+      <td>2140.0</td>
+      <td>2150.828391</td>
+      <td>7.801048</td>
+    </tr>
+    <tr>
+      <th>57905185</th>
+      <td>WILLIAM B MILLE</td>
+      <td>2295.0</td>
+      <td>2129.0</td>
+      <td>2143.024891</td>
+      <td>3.714507</td>
+    </tr>
+    <tr>
+      <th>61911111</th>
+      <td>PRAIRIE VIEW EL</td>
+      <td>2389.0</td>
+      <td>2261.0</td>
+      <td>2236.666896</td>
+      <td>3.723257</td>
+    </tr>
+    <tr>
+      <th>66005101</th>
+      <td>RAMIREZ EL</td>
+      <td>2033.0</td>
+      <td>2195.0</td>
+      <td>2189.845893</td>
+      <td>-3.833556</td>
+    </tr>
+    <tr>
+      <th>90905101</th>
+      <td>GRANDVIEW-HOPKI</td>
+      <td>2149.0</td>
+      <td>2346.0</td>
+      <td>2296.966672</td>
+      <td>-3.616535</td>
+    </tr>
+    <tr>
+      <th>101820001</th>
+      <td>BENJI'S SPECIAL</td>
+      <td>2131.0</td>
+      <td>2290.0</td>
+      <td>2257.239761</td>
+      <td>-3.085495</td>
+    </tr>
+    <tr>
+      <th>101823101</th>
+      <td>CHILDREN FIRST</td>
+      <td>2252.0</td>
+      <td>2066.0</td>
+      <td>2098.332116</td>
+      <td>3.755881</td>
+    </tr>
+    <tr>
+      <th>101840101</th>
+      <td>TWO DIMENSIONS</td>
+      <td>2076.0</td>
+      <td>2275.0</td>
+      <td>2246.598624</td>
+      <td>-4.169694</td>
+    </tr>
+    <tr>
+      <th>101909104</th>
+      <td>LAKEWOOD ELEMEN</td>
+      <td>2275.0</td>
+      <td>2104.0</td>
+      <td>2125.289663</td>
+      <td>3.659152</td>
+    </tr>
+    <tr>
+      <th>101912108</th>
+      <td>BASTIAN EL</td>
+      <td>2260.0</td>
+      <td>2105.0</td>
+      <td>2125.999072</td>
+      <td>3.275190</td>
+    </tr>
+    <tr>
+      <th>101912134</th>
+      <td>CRAWFORD EL</td>
+      <td>2056.0</td>
+      <td>2240.0</td>
+      <td>2221.769304</td>
+      <td>-4.051658</td>
+    </tr>
+    <tr>
+      <th>101912140</th>
+      <td>DOGAN EL</td>
+      <td>1972.0</td>
+      <td>2150.0</td>
+      <td>2157.922483</td>
+      <td>-4.544233</td>
+    </tr>
+    <tr>
+      <th>101912172</th>
+      <td>HENDERSON N EL</td>
+      <td>2324.0</td>
+      <td>2093.0</td>
+      <td>2117.486162</td>
+      <td>5.047518</td>
+    </tr>
+    <tr>
+      <th>101912217</th>
+      <td>PECK EL</td>
+      <td>2105.0</td>
+      <td>2265.0</td>
+      <td>2239.504532</td>
+      <td>-3.287499</td>
+    </tr>
+    <tr>
+      <th>103902001</th>
+      <td>HARTLEY SCHOOL</td>
+      <td>2288.0</td>
+      <td>2159.0</td>
+      <td>2164.307165</td>
+      <td>3.023244</td>
+    </tr>
+    <tr>
+      <th>105802041</th>
+      <td>SAN MARCOS PREP</td>
+      <td>2025.0</td>
+      <td>2245.0</td>
+      <td>2225.316350</td>
+      <td>-4.896042</td>
+    </tr>
+    <tr>
+      <th>108912110</th>
+      <td>JOSE DE ESCANDO</td>
+      <td>2166.0</td>
+      <td>2360.0</td>
+      <td>2306.898400</td>
+      <td>-3.443775</td>
+    </tr>
+    <tr>
+      <th>123803101</th>
+      <td>TEKOA ACADEMY O</td>
+      <td>2313.0</td>
+      <td>2021.0</td>
+      <td>2066.408705</td>
+      <td>6.027073</td>
+    </tr>
+    <tr>
+      <th>123907105</th>
+      <td>LEE EL</td>
+      <td>2292.0</td>
+      <td>2165.0</td>
+      <td>2168.563620</td>
+      <td>3.016976</td>
+    </tr>
+    <tr>
+      <th>131001103</th>
+      <td>SARITA EL</td>
+      <td>2509.0</td>
+      <td>2424.0</td>
+      <td>2352.300584</td>
+      <td>3.829976</td>
+    </tr>
+    <tr>
+      <th>139908101</th>
+      <td>ROXTON EL</td>
+      <td>2130.0</td>
+      <td>2388.0</td>
+      <td>2326.761855</td>
+      <td>-4.809164</td>
+    </tr>
+    <tr>
+      <th>180901101</th>
+      <td>MIMI FARLEY ELE</td>
+      <td>2448.0</td>
+      <td>2294.0</td>
+      <td>2260.077397</td>
+      <td>4.593119</td>
+    </tr>
+    <tr>
+      <th>226903111</th>
+      <td>FT CONCHO EL</td>
+      <td>2196.0</td>
+      <td>2386.0</td>
+      <td>2325.343037</td>
+      <td>-3.161344</td>
+    </tr>
+    <tr>
+      <th>240901124</th>
+      <td>LIGARDE EL</td>
+      <td>2096.0</td>
+      <td>2239.0</td>
+      <td>2221.059895</td>
+      <td>-3.056657</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>But then they level things up a bit:</p>
+<blockquote><p>Using a stricter standard - four standard deviations from predictions - 41 schools have suspect scores</p>
+</blockquote>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">merged</span><span class="p">[</span><span class="n">merged</span><span class="o">.</span><span class="n">error_std_dev</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">4</span><span class="p">]</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fourth</th>
+      <th>r_all_rs_fourth</th>
+      <th>r_all_rs_third</th>
+      <th>predicted_fourth</th>
+      <th>error_std_dev</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>15803101</th>
+      <td>HIGGS/CARTER/KI</td>
+      <td>2349.0</td>
+      <td>2097.0</td>
+      <td>2120.323799</td>
+      <td>5.589200</td>
+    </tr>
+    <tr>
+      <th>15819001</th>
+      <td>SHEKINAH RADIAN</td>
+      <td>1976.0</td>
+      <td>2149.0</td>
+      <td>2157.213074</td>
+      <td>-4.429128</td>
+    </tr>
+    <tr>
+      <th>57825001</th>
+      <td>PINNACLE SCHOOL</td>
+      <td>2274.0</td>
+      <td>2068.0</td>
+      <td>2099.750934</td>
+      <td>4.258917</td>
+    </tr>
+    <tr>
+      <th>57905115</th>
+      <td>HARRELL BUDD EL</td>
+      <td>2470.0</td>
+      <td>2140.0</td>
+      <td>2150.828391</td>
+      <td>7.801048</td>
+    </tr>
+    <tr>
+      <th>101840101</th>
+      <td>TWO DIMENSIONS</td>
+      <td>2076.0</td>
+      <td>2275.0</td>
+      <td>2246.598624</td>
+      <td>-4.169694</td>
+    </tr>
+    <tr>
+      <th>101912134</th>
+      <td>CRAWFORD EL</td>
+      <td>2056.0</td>
+      <td>2240.0</td>
+      <td>2221.769304</td>
+      <td>-4.051658</td>
+    </tr>
+    <tr>
+      <th>101912140</th>
+      <td>DOGAN EL</td>
+      <td>1972.0</td>
+      <td>2150.0</td>
+      <td>2157.922483</td>
+      <td>-4.544233</td>
+    </tr>
+    <tr>
+      <th>101912172</th>
+      <td>HENDERSON N EL</td>
+      <td>2324.0</td>
+      <td>2093.0</td>
+      <td>2117.486162</td>
+      <td>5.047518</td>
+    </tr>
+    <tr>
+      <th>105802041</th>
+      <td>SAN MARCOS PREP</td>
+      <td>2025.0</td>
+      <td>2245.0</td>
+      <td>2225.316350</td>
+      <td>-4.896042</td>
+    </tr>
+    <tr>
+      <th>123803101</th>
+      <td>TEKOA ACADEMY O</td>
+      <td>2313.0</td>
+      <td>2021.0</td>
+      <td>2066.408705</td>
+      <td>6.027073</td>
+    </tr>
+    <tr>
+      <th>139908101</th>
+      <td>ROXTON EL</td>
+      <td>2130.0</td>
+      <td>2388.0</td>
+      <td>2326.761855</td>
+      <td>-4.809164</td>
+    </tr>
+    <tr>
+      <th>180901101</th>
+      <td>MIMI FARLEY ELE</td>
+      <td>2448.0</td>
+      <td>2294.0</td>
+      <td>2260.077397</td>
+      <td>4.593119</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Our dataset isn't as thorough as theirs - we're only looking at one combination of tests - but it's the same idea.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Finding-other-suspicious-scores">Finding other suspicious scores<a class="anchor-link" href="#Finding-other-suspicious-scores">#</a></h1><p>We might assume a school that does well in reading probably also does well in math.</p>
+<p><strong>What if they did well in one, but not the other?</strong> While the school might just have a strong department in one particular field, such discripancies could be worth investigating.</p>
+<p>Let's look at fifth graders' math and reading scores from 2004.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/cfy04e5.dat&quot;</span><span class="p">,</span> <span class="n">usecols</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;CAMPUS&#39;</span><span class="p">,</span> <span class="s1">&#39;CNAME&#39;</span><span class="p">,</span> <span class="s1">&#39;m_all_rs&#39;</span><span class="p">,</span> <span class="s1">&#39;r_all_rs&#39;</span><span class="p">])</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s1">&#39;CAMPUS&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">add_suffix</span><span class="p">(</span><span class="s1">&#39;_fifth&#39;</span><span class="p">)</span>
+<span class="n">df</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fifth</th>
+      <th>r_all_rs_fifth</th>
+      <th>m_all_rs_fifth</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1902103</th>
+      <td>CAYUGA EL</td>
+      <td>2308.0</td>
+      <td>2317.0</td>
+    </tr>
+    <tr>
+      <th>1903101</th>
+      <td>ELKHART EL</td>
+      <td>2193.0</td>
+      <td>2153.0</td>
+    </tr>
+    <tr>
+      <th>1904102</th>
+      <td>FRANKSTON EL</td>
+      <td>2288.0</td>
+      <td>2256.0</td>
+    </tr>
+    <tr>
+      <th>1906102</th>
+      <td>NECHES EL</td>
+      <td>2298.0</td>
+      <td>2312.0</td>
+    </tr>
+    <tr>
+      <th>1907110</th>
+      <td>STORY EL</td>
+      <td>2218.0</td>
+      <td>2269.0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Building-the-graphic">Building the graphic<a class="anchor-link" href="#Building-the-graphic">#</a></h1><p>While it isn't necessary, reproducing the graphics is always fun.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span><span class="mi">4</span><span class="p">))</span>
+
+<span class="n">ax</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mi">1900</span><span class="p">,</span> <span class="mi">2500</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mi">1800</span><span class="p">,</span> <span class="mi">2750</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_facecolor</span><span class="p">(</span><span class="s1">&#39;lightgrey&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;white&#39;</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">set_axisbelow</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">regplot</span><span class="p">(</span><span class="s1">&#39;r_all_rs_fifth&#39;</span><span class="p">,</span>
+            <span class="s1">&#39;m_all_rs_fifth&#39;</span><span class="p">,</span>
+            <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span>
+            <span class="n">marker</span><span class="o">=</span><span class="s1">&#39;.&#39;</span><span class="p">,</span> 
+            <span class="n">line_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="s2">&quot;linewidth&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">},</span>
+            <span class="n">scatter_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;color&quot;</span><span class="p">:</span> <span class="s2">&quot;grey&quot;</span><span class="p">})</span>
+
+<span class="n">highlight</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="mi">101912236</span><span class="p">]</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">highlight</span><span class="o">.</span><span class="n">r_all_rs_fifth</span><span class="p">,</span> <span class="n">highlight</span><span class="o">.</span><span class="n">m_all_rs_fifth</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+
+<div class="output_text output_subarea output_execute_result">
+<pre>[&lt;matplotlib.lines.Line2D at 0x11d843e48&gt;]</pre>
+</div>
+
+</div>
+
+<div class="output_area">
+
+
+
+<div class="output_png output_subarea ">
+<img src="data:image/png;base64,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
+"
+>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Running-the-regression">Running the regression<a class="anchor-link" href="#Running-the-regression">#</a></h1><p>We can't be exactly sure of the relationship between math and reading scores - it's a lot of schools! - so we'll run a regression to figure out how the two scores typically interact.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Before dropping missing data&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;After dropping missing data&quot;</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Before dropping missing data (3571, 3)
+After dropping missing data (3452, 3)
+</pre>
+</div>
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">ols</span><span class="p">(</span><span class="s2">&quot;m_all_rs_fifth ~ r_all_rs_fifth&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">)</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">results</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>OLS Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>     <td>m_all_rs_fifth</td>  <th>  R-squared:         </th> <td>   0.735</td> 
+</tr>
+<tr>
+  <th>Model:</th>                   <td>OLS</td>       <th>  Adj. R-squared:    </th> <td>   0.735</td> 
+</tr>
+<tr>
+  <th>Method:</th>             <td>Least Squares</td>  <th>  F-statistic:       </th> <td>   9570.</td> 
+</tr>
+<tr>
+  <th>Date:</th>             <td>Tue, 05 Nov 2019</td> <th>  Prob (F-statistic):</th>  <td>  0.00</td>  
+</tr>
+<tr>
+  <th>Time:</th>                 <td>08:27:21</td>     <th>  Log-Likelihood:    </th> <td> -18443.</td> 
+</tr>
+<tr>
+  <th>No. Observations:</th>      <td>  3452</td>      <th>  AIC:               </th> <td>3.689e+04</td>
+</tr>
+<tr>
+  <th>Df Residuals:</th>          <td>  3450</td>      <th>  BIC:               </th> <td>3.690e+04</td>
+</tr>
+<tr>
+  <th>Df Model:</th>              <td>     1</td>      <th>                     </th>     <td> </td>    
+</tr>
+<tr>
+  <th>Covariance Type:</th>      <td>nonrobust</td>    <th>                     </th>     <td> </td>    
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+         <td></td>           <th>coef</th>     <th>std err</th>      <th>t</th>      <th>P>|t|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>      <td>  136.3779</td> <td>   21.321</td> <td>    6.397</td> <td> 0.000</td> <td>   94.576</td> <td>  178.180</td>
+</tr>
+<tr>
+  <th>r_all_rs_fifth</th> <td>    0.9462</td> <td>    0.010</td> <td>   97.826</td> <td> 0.000</td> <td>    0.927</td> <td>    0.965</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+  <th>Omnibus:</th>       <td>210.369</td> <th>  Durbin-Watson:     </th> <td>   1.687</td> 
+</tr>
+<tr>
+  <th>Prob(Omnibus):</th> <td> 0.000</td>  <th>  Jarque-Bera (JB):  </th> <td> 858.872</td> 
+</tr>
+<tr>
+  <th>Skew:</th>          <td> 0.127</td>  <th>  Prob(JB):          </th> <td>3.15e-187</td>
+</tr>
+<tr>
+  <th>Kurtosis:</th>      <td> 5.430</td>  <th>  Cond. No.          </th> <td>5.46e+04</td> 
+</tr>
+</table><br/><br/>Warnings:<br/>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.<br/>[2] The condition number is large, 5.46e+04. This might indicate that there are<br/>strong multicollinearity or other numerical problems.
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And now, just like last time, we calculate how many standard deviations away the actual score was from the predicted score. Large number of standard deviations away means a school is worth a look!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;error_std_dev&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">resid</span> <span class="o">/</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">results</span><span class="o">.</span><span class="n">mse_resid</span><span class="p">)</span>
+
+<span class="n">df</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">error_std_dev</span><span class="o">.</span><span class="n">abs</span><span class="p">()</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">]</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;error_std_dev&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>CNAME_fifth</th>
+      <th>r_all_rs_fifth</th>
+      <th>m_all_rs_fifth</th>
+      <th>error_std_dev</th>
+    </tr>
+    <tr>
+      <th>CAMPUS</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>101912236</th>
+      <td>SANDERSON EL</td>
+      <td>2235.0</td>
+      <td>2696.0</td>
+      <td>8.790097</td>
+    </tr>
+    <tr>
+      <th>109908101</th>
+      <td>MALONE EL</td>
+      <td>2104.0</td>
+      <td>2355.0</td>
+      <td>4.501120</td>
+    </tr>
+    <tr>
+      <th>101912113</th>
+      <td>BOWIE EL</td>
+      <td>2265.0</td>
+      <td>2498.0</td>
+      <td>4.316536</td>
+    </tr>
+    <tr>
+      <th>188901130</th>
+      <td>SUNRISE EL</td>
+      <td>2311.0</td>
+      <td>2517.0</td>
+      <td>3.831884</td>
+    </tr>
+    <tr>
+      <th>240901120</th>
+      <td>J C MARTIN JR E</td>
+      <td>2212.0</td>
+      <td>2417.0</td>
+      <td>3.706908</td>
+    </tr>
+    <tr>
+      <th>40901102</th>
+      <td>MORTON EL</td>
+      <td>2215.0</td>
+      <td>2417.0</td>
+      <td>3.650814</td>
+    </tr>
+    <tr>
+      <th>72909001</th>
+      <td>LINGLEVILLE SCH</td>
+      <td>2148.0</td>
+      <td>2017.0</td>
+      <td>-3.000714</td>
+    </tr>
+    <tr>
+      <th>233903001</th>
+      <td>COMSTOCK SCHOOL</td>
+      <td>2241.0</td>
+      <td>2100.0</td>
+      <td>-3.099482</td>
+    </tr>
+    <tr>
+      <th>178904152</th>
+      <td>BARNES EL</td>
+      <td>2233.0</td>
+      <td>2092.0</td>
+      <td>-3.107985</td>
+    </tr>
+    <tr>
+      <th>139911102</th>
+      <td>AARON PARKER EL</td>
+      <td>2126.0</td>
+      <td>1990.0</td>
+      <td>-3.122899</td>
+    </tr>
+    <tr>
+      <th>235904101</th>
+      <td>NURSERY EL</td>
+      <td>2314.0</td>
+      <td>2167.0</td>
+      <td>-3.140463</td>
+    </tr>
+    <tr>
+      <th>105905101</th>
+      <td>BOWEN INT</td>
+      <td>2313.0</td>
+      <td>2166.0</td>
+      <td>-3.141526</td>
+    </tr>
+    <tr>
+      <th>243801001</th>
+      <td>BRIGHT IDEAS CH</td>
+      <td>2211.0</td>
+      <td>2066.0</td>
+      <td>-3.210409</td>
+    </tr>
+    <tr>
+      <th>50909001</th>
+      <td>JONESBORO SCHOO</td>
+      <td>2127.0</td>
+      <td>1981.0</td>
+      <td>-3.319444</td>
+    </tr>
+    <tr>
+      <th>112906101</th>
+      <td>NORTH HOPKINS E</td>
+      <td>2204.0</td>
+      <td>2052.0</td>
+      <td>-3.356173</td>
+    </tr>
+    <tr>
+      <th>103902001</th>
+      <td>HARTLEY SCHOOL</td>
+      <td>2293.0</td>
+      <td>2130.0</td>
+      <td>-3.478953</td>
+    </tr>
+    <tr>
+      <th>227817101</th>
+      <td>CEDARS INTERNAT</td>
+      <td>2167.0</td>
+      <td>2006.0</td>
+      <td>-3.573343</td>
+    </tr>
+    <tr>
+      <th>21803001</th>
+      <td>BRAZOS SCHOOL F</td>
+      <td>2169.0</td>
+      <td>2007.0</td>
+      <td>-3.590978</td>
+    </tr>
+    <tr>
+      <th>148903001</th>
+      <td>HIGGINS SCHOOL</td>
+      <td>2195.0</td>
+      <td>2028.0</td>
+      <td>-3.662149</td>
+    </tr>
+    <tr>
+      <th>101805101</th>
+      <td>GIRLS &amp; BOYS PR</td>
+      <td>2443.0</td>
+      <td>2262.0</td>
+      <td>-3.675228</td>
+    </tr>
+    <tr>
+      <th>70801001</th>
+      <td>WAXAHACHIE FAIT</td>
+      <td>2084.0</td>
+      <td>1912.0</td>
+      <td>-3.878922</td>
+    </tr>
+    <tr>
+      <th>19914101</th>
+      <td>LEARY EL</td>
+      <td>2296.0</td>
+      <td>2110.0</td>
+      <td>-3.930262</td>
+    </tr>
+    <tr>
+      <th>105802041</th>
+      <td>SAN MARCOS PREP</td>
+      <td>2203.0</td>
+      <td>1968.0</td>
+      <td>-4.997376</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Wow, look at that! Sanderson Elementary looks like they either have a <strong>really</strong> exceptional math program or something suspicious is going on.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Review">Review<a class="anchor-link" href="#Review">#</a></h1><p>First, we learned about using <strong>standard deviation</strong> as a measurement of how unusual a measurement in a data point might be. Data points that fall many standard deviations from the mean - either above or below - might be worth investigating as bad data or from other suspicious angles (cheating schools, in this case).</p>
+<p>Then we learned how a <strong>linear regression</strong> can determine the relationship between two numbers. In this case, it was how third-grade scores relate to fourth-grade scores, and then how math and reading scores relate to one another. By using a regression, you can use one variable to predict what the other should be.</p>
+<p>Finally, we used the <strong>residual</strong> or <strong>error</strong> from the regression to see how far off each prediction was. Just like we did with the original scores, we used standard deviation to find usually suspiciously large errors. Even though yes, our regression might not be perfect, times when it's <em>very</em> wrong probably call for an investigation.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Discussion-points">Discussion points<a class="anchor-link" href="#Discussion-points">#</a></h1><ul>
+<li>TODO need some questions about what a standard deviation is.</li>
+<li>The Dallas Morning News specifically called out schools with scores "more than three standard deviations away from what would be predicted based on their scores in other grades or on other tests." Do you think they ignored schools that were 2.99 standard deviations away?</li>
+<li>Did <em>we</em> ignore those schools? If we did, how could we be more cautious in the future?</li>
+<li>What are the pros and cons of selecting a cutoff like three standard deviations away from the predicted value? Note that <a href="https://stats.stackexchange.com/questions/311174/what-does-it-mean-when-three-standard-deviations-away-from-the-mean-i-land-ou">three standard deviations is a typical number in stats</a></li>
+<li>What's the difference between a school with predicted scores -3 standard deviations away as compared to +3 standard deviations away? Do we need to pay attention to both, or only one?</li>
+<li>What next steps should we take after we've calculated these findings?</li>
+<li>If a school did have a strong math department and a weak english department, they would definitely be predicted incorrectly. What happens to that school after being flagged by research like this?</li>
+</ul>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

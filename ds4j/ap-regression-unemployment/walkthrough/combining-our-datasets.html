@@ -1,0 +1,2211 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3.5 Combining our datasets | _main.utf8.md</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3.5 Combining our datasets | _main.utf8.md" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3.5 Combining our datasets | _main.utf8.md" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-demographics.html"/>
+<link rel="next" href="analyzing-our-data.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>2</b> Preface</a><ul>
+<li class="chapter" data-level="2.0.1" data-path="preface.html"><a href="preface.html#the-original-story"><i class="fa fa-check"></i><b>2.0.1</b> The original story</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="the-data.html"><a href="the-data.html"><i class="fa fa-check"></i><b>3</b> The Data</a><ul>
+<li class="chapter" data-level="3.1" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html"><i class="fa fa-check"></i><b>3.1</b> Turning our question into measureables</a></li>
+<li class="chapter" data-level="3.2" data-path="data-life-expectancy.html"><a href="data-life-expectancy.html"><i class="fa fa-check"></i><b>3.2</b> Data: Life expectancy</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="data-life-expectancy.html"><a href="data-life-expectancy.html#the-data-dictionary"><i class="fa fa-check"></i><b>3.2.1</b> The data dictionary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="data-unemployment.html"><a href="data-unemployment.html"><i class="fa fa-check"></i><b>3.3</b> Data: Unemployment</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="data-unemployment.html"><a href="data-unemployment.html#picking-a-data-source-editorial-choice"><i class="fa fa-check"></i><b>3.3.1</b> Picking a data source (editorial choice)</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data-unemployment.html"><a href="data-unemployment.html#picking-a-survey-year"><i class="fa fa-check"></i><b>3.3.2</b> Picking a survey year</a></li>
+<li class="chapter" data-level="3.3.3" data-path="data-unemployment.html"><a href="data-unemployment.html#picking-an-unemployment-table"><i class="fa fa-check"></i><b>3.3.3</b> Picking an unemployment table</a></li>
+<li class="chapter" data-level="3.3.4" data-path="data-unemployment.html"><a href="data-unemployment.html#the-data-dictionary-1"><i class="fa fa-check"></i><b>3.3.4</b> The data dictionary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="data-demographics.html"><a href="data-demographics.html"><i class="fa fa-check"></i><b>3.4</b> Data: Demographics</a></li>
+<li class="chapter" data-level="3.5" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html"><i class="fa fa-check"></i><b>3.5</b> Combining our datasets</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#reading-in-life-expectancy"><i class="fa fa-check"></i><b>3.5.1</b> Reading in life expectancy</a></li>
+<li class="chapter" data-level="3.5.2" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#reading-in-unemployment"><i class="fa fa-check"></i><b>3.5.2</b> Reading in unemployment</a></li>
+<li class="chapter" data-level="3.5.3" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#final-joining"><i class="fa fa-check"></i><b>3.5.3</b> Final joining</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="analyzing-our-data.html"><a href="analyzing-our-data.html"><i class="fa fa-check"></i><b>4</b> Analyzing our data</a><ul>
+<li class="chapter" data-level="4.1" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>4.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="4.2" data-path="interpreting-coefficients.html"><a href="interpreting-coefficients.html"><i class="fa fa-check"></i><b>4.2</b> Interpreting coefficients</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="interpreting-coefficients.html"><a href="interpreting-coefficients.html#understanding-const"><i class="fa fa-check"></i><b>4.2.1</b> Understanding const</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="improving-our-analysis.html"><a href="improving-our-analysis.html"><i class="fa fa-check"></i><b>5</b> Improving our analysis</a><ul>
+<li class="chapter" data-level="5.0.1" data-path="improving-our-analysis.html"><a href="improving-our-analysis.html#reading-in-and-processing-our-data"><i class="fa fa-check"></i><b>5.0.1</b> Reading in and processing our data</a></li>
+<li class="chapter" data-level="5.1" data-path="performing-the-multivariate-regression.html"><a href="performing-the-multivariate-regression.html"><i class="fa fa-check"></i><b>5.1</b> Performing the multivariate regression</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="combining-our-datasets" class="section level2">
+<h2><span class="header-section-number">3.5</span> Combining our datasets</h2>
+<p>These datasets are pretty simple to deal with. Since Social Explorer downloads have a million and one columns, though, we’ll need to adjust the options in pandas to cope.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="combining-our-datasets.html#cb1-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb1-2"><a href="combining-our-datasets.html#cb1-2"></a>pd.set_option(<span class="st">&quot;display.max_columns&quot;</span>, <span class="dv">200</span>)</span></code></pre></div>
+<div id="reading-in-life-expectancy" class="section level3">
+<h3><span class="header-section-number">3.5.1</span> Reading in life expectancy</h3>
+<p>The life expectancy data - <code>US_A.CSV</code> - is a standard csv file.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="combining-our-datasets.html#cb2-1"></a>life_expect <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/US_A.CSV&quot;</span>)</span>
+<span id="cb2-2"><a href="combining-our-datasets.html#cb2-2"></a>life_expect.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+Tract ID
+</th>
+<th style="text-align:right;">
+STATE2KX
+</th>
+<th style="text-align:right;">
+CNTY2KX
+</th>
+<th style="text-align:right;">
+TRACT2KX
+</th>
+<th style="text-align:right;">
+e(0)
+</th>
+<th style="text-align:right;">
+se(e(0))
+</th>
+<th style="text-align:right;">
+Abridged life table flag
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1001020100
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20100
+</td>
+<td style="text-align:right;">
+73.1
+</td>
+<td style="text-align:right;">
+2.2348
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020200
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20200
+</td>
+<td style="text-align:right;">
+76.9
+</td>
+<td style="text-align:right;">
+3.3453
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020400
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20400
+</td>
+<td style="text-align:right;">
+75.4
+</td>
+<td style="text-align:right;">
+1.0216
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020500
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20500
+</td>
+<td style="text-align:right;">
+79.4
+</td>
+<td style="text-align:right;">
+1.1768
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020600
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20600
+</td>
+<td style="text-align:right;">
+73.1
+</td>
+<td style="text-align:right;">
+1.5519
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The column names are weird, though, and it’s only after looking at the data dictionary - <code>Record_Layout_CensusTract_Life_Expectancy.pdf</code> - that we understand <code>e(0)</code> is going to be our life expectancy column. Let’s rename it!</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="combining-our-datasets.html#cb3-1"></a>life_expect <span class="op">=</span> life_expect.rename(columns<span class="op">=</span>{<span class="st">&#39;e(0)&#39;</span>: <span class="st">&#39;life_expectancy&#39;</span>})</span>
+<span id="cb3-2"><a href="combining-our-datasets.html#cb3-2"></a>life_expect.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+Tract ID
+</th>
+<th style="text-align:right;">
+STATE2KX
+</th>
+<th style="text-align:right;">
+CNTY2KX
+</th>
+<th style="text-align:right;">
+TRACT2KX
+</th>
+<th style="text-align:right;">
+life_expectancy
+</th>
+<th style="text-align:right;">
+se(e(0))
+</th>
+<th style="text-align:right;">
+Abridged life table flag
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1001020100
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20100
+</td>
+<td style="text-align:right;">
+73.1
+</td>
+<td style="text-align:right;">
+2.2348
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020200
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20200
+</td>
+<td style="text-align:right;">
+76.9
+</td>
+<td style="text-align:right;">
+3.3453
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020400
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20400
+</td>
+<td style="text-align:right;">
+75.4
+</td>
+<td style="text-align:right;">
+1.0216
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020500
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20500
+</td>
+<td style="text-align:right;">
+79.4
+</td>
+<td style="text-align:right;">
+1.1768
+</td>
+<td style="text-align:right;">
+1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020600
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+20600
+</td>
+<td style="text-align:right;">
+73.1
+</td>
+<td style="text-align:right;">
+1.5519
+</td>
+<td style="text-align:right;">
+3
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>And while we’re at it, might as well drop the columns we don’t need. Since we’re only using the census tract code - Tract ID - and the life expectancy, it’s slightly easier to select the columns we want instead of using <code>.drop</code> on the ones we don’t.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="combining-our-datasets.html#cb4-1"></a>life_expect <span class="op">=</span> life_expect[[<span class="st">&#39;Tract ID&#39;</span>, <span class="st">&#39;life_expectancy&#39;</span>]]</span>
+<span id="cb4-2"><a href="combining-our-datasets.html#cb4-2"></a>life_expect.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+Tract ID
+</th>
+<th style="text-align:right;">
+life_expectancy
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1001020100
+</td>
+<td style="text-align:right;">
+73.1
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020200
+</td>
+<td style="text-align:right;">
+76.9
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020400
+</td>
+<td style="text-align:right;">
+75.4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020500
+</td>
+<td style="text-align:right;">
+79.4
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020600
+</td>
+<td style="text-align:right;">
+73.1
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="reading-in-unemployment" class="section level3">
+<h3><span class="header-section-number">3.5.2</span> Reading in unemployment</h3>
+<p>An irritating thing about Social Explorer data is that it will <em>always</em> give you an error if you read it into panads. This is because it’s a <em>Latin-1 encoded file</em>, which more or less means <strong>is text that only likes American letters and doesn’t support emoji.</strong></p>
+<p>Pandas doesn’t know this unless you tell it, though. By default pandas assumes every file is text that likes all the world’s languages <em>and</em> supports emoji, which is a format called <strong>Unicode</strong> or <strong>UTF-8</strong>.</p>
+<p>To avoid this error we need to tell pandas to use Latin-1 when opening the file.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="combining-our-datasets.html#cb5-1"></a>unemployment <span class="op">=</span> pd.read_csv(<span class="st">&quot;data/R12221544_SL140.csv&quot;</span>, encoding<span class="op">=</span><span class="st">&#39;latin-1&#39;</span>)</span>
+<span id="cb5-2"><a href="combining-our-datasets.html#cb5-2"></a>unemployment.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+Geo_FIPS
+</th>
+<th style="text-align:left;">
+Geo_GEOID
+</th>
+<th style="text-align:left;">
+Geo_NAME
+</th>
+<th style="text-align:left;">
+Geo_QName
+</th>
+<th style="text-align:left;">
+Geo_STUSAB
+</th>
+<th style="text-align:right;">
+Geo_SUMLEV
+</th>
+<th style="text-align:right;">
+Geo_GEOCOMP
+</th>
+<th style="text-align:left;">
+Geo_FILEID
+</th>
+<th style="text-align:right;">
+Geo_LOGRECNO
+</th>
+<th style="text-align:right;">
+Geo_US
+</th>
+<th style="text-align:right;">
+Geo_REGION
+</th>
+<th style="text-align:right;">
+Geo_DIVISION
+</th>
+<th style="text-align:right;">
+Geo_STATECE
+</th>
+<th style="text-align:right;">
+Geo_STATE
+</th>
+<th style="text-align:right;">
+Geo_COUNTY
+</th>
+<th style="text-align:right;">
+Geo_COUSUB
+</th>
+<th style="text-align:right;">
+Geo_PLACE
+</th>
+<th style="text-align:right;">
+Geo_PLACESE
+</th>
+<th style="text-align:right;">
+Geo_TRACT
+</th>
+<th style="text-align:right;">
+Geo_BLKGRP
+</th>
+<th style="text-align:right;">
+Geo_CONCIT
+</th>
+<th style="text-align:right;">
+Geo_AIANHH
+</th>
+<th style="text-align:right;">
+Geo_AIANHHFP
+</th>
+<th style="text-align:right;">
+Geo_AIHHTLI
+</th>
+<th style="text-align:right;">
+Geo_AITSCE
+</th>
+<th style="text-align:right;">
+Geo_AITS
+</th>
+<th style="text-align:right;">
+Geo_ANRC
+</th>
+<th style="text-align:right;">
+Geo_CBSA
+</th>
+<th style="text-align:right;">
+Geo_CSA
+</th>
+<th style="text-align:right;">
+Geo_METDIV
+</th>
+<th style="text-align:right;">
+Geo_MACC
+</th>
+<th style="text-align:right;">
+Geo_MEMI
+</th>
+<th style="text-align:right;">
+Geo_NECTA
+</th>
+<th style="text-align:right;">
+Geo_CNECTA
+</th>
+<th style="text-align:right;">
+Geo_NECTADIV
+</th>
+<th style="text-align:right;">
+Geo_UA
+</th>
+<th style="text-align:right;">
+Geo_UACP
+</th>
+<th style="text-align:right;">
+Geo_CDCURR
+</th>
+<th style="text-align:right;">
+Geo_SLDU
+</th>
+<th style="text-align:right;">
+Geo_SLDL
+</th>
+<th style="text-align:right;">
+Geo_VTD
+</th>
+<th style="text-align:right;">
+Geo_ZCTA3
+</th>
+<th style="text-align:right;">
+Geo_ZCTA5
+</th>
+<th style="text-align:right;">
+Geo_SUBMCD
+</th>
+<th style="text-align:right;">
+Geo_SDELM
+</th>
+<th style="text-align:right;">
+Geo_SDSEC
+</th>
+<th style="text-align:right;">
+Geo_SDUNI
+</th>
+<th style="text-align:right;">
+Geo_UR
+</th>
+<th style="text-align:right;">
+Geo_PCI
+</th>
+<th style="text-align:right;">
+Geo_TAZ
+</th>
+<th style="text-align:right;">
+Geo_UGA
+</th>
+<th style="text-align:right;">
+Geo_BTTR
+</th>
+<th style="text-align:right;">
+Geo_BTBG
+</th>
+<th style="text-align:right;">
+Geo_PUMA5
+</th>
+<th style="text-align:right;">
+Geo_PUMA1
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025001
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025002
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025003
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025004
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025005
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025006
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025007
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025001s
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025002s
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025003s
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025004s
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025005s
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025006s
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025007s
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1001020100
+</td>
+<td style="text-align:left;">
+14000US01001020100
+</td>
+<td style="text-align:left;">
+Census Tract 201, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+Census Tract 201, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+al
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+ACSSF
+</td>
+<td style="text-align:right;">
+1760
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+20100
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+1554
+</td>
+<td style="text-align:right;">
+997
+</td>
+<td style="text-align:right;">
+997
+</td>
+<td style="text-align:right;">
+943
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:right;">
+557
+</td>
+<td style="text-align:right;">
+92.12121
+</td>
+<td style="text-align:right;">
+85.45455
+</td>
+<td style="text-align:right;">
+85.45455
+</td>
+<td style="text-align:right;">
+83.63636
+</td>
+<td style="text-align:right;">
+18.78788
+</td>
+<td style="text-align:right;">
+6.666667
+</td>
+<td style="text-align:right;">
+67.87879
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020200
+</td>
+<td style="text-align:left;">
+14000US01001020200
+</td>
+<td style="text-align:left;">
+Census Tract 202, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+Census Tract 202, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+al
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+ACSSF
+</td>
+<td style="text-align:right;">
+1761
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+20200
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+1731
+</td>
+<td style="text-align:right;">
+884
+</td>
+<td style="text-align:right;">
+869
+</td>
+<td style="text-align:right;">
+753
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+847
+</td>
+<td style="text-align:right;">
+143.03030
+</td>
+<td style="text-align:right;">
+115.15152
+</td>
+<td style="text-align:right;">
+114.54545
+</td>
+<td style="text-align:right;">
+107.27273
+</td>
+<td style="text-align:right;">
+38.18182
+</td>
+<td style="text-align:right;">
+14.545454
+</td>
+<td style="text-align:right;">
+86.66667
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020300
+</td>
+<td style="text-align:left;">
+14000US01001020300
+</td>
+<td style="text-align:left;">
+Census Tract 203, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+Census Tract 203, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+al
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+ACSSF
+</td>
+<td style="text-align:right;">
+1762
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+20300
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+2462
+</td>
+<td style="text-align:right;">
+1472
+</td>
+<td style="text-align:right;">
+1464
+</td>
+<td style="text-align:right;">
+1373
+</td>
+<td style="text-align:right;">
+91
+</td>
+<td style="text-align:right;">
+8
+</td>
+<td style="text-align:right;">
+990
+</td>
+<td style="text-align:right;">
+169.09091
+</td>
+<td style="text-align:right;">
+132.12121
+</td>
+<td style="text-align:right;">
+134.54545
+</td>
+<td style="text-align:right;">
+123.03030
+</td>
+<td style="text-align:right;">
+31.51515
+</td>
+<td style="text-align:right;">
+8.484849
+</td>
+<td style="text-align:right;">
+120.60606
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020400
+</td>
+<td style="text-align:left;">
+14000US01001020400
+</td>
+<td style="text-align:left;">
+Census Tract 204, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+Census Tract 204, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+al
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+ACSSF
+</td>
+<td style="text-align:right;">
+1763
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+20400
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+3424
+</td>
+<td style="text-align:right;">
+2013
+</td>
+<td style="text-align:right;">
+1998
+</td>
+<td style="text-align:right;">
+1782
+</td>
+<td style="text-align:right;">
+216
+</td>
+<td style="text-align:right;">
+15
+</td>
+<td style="text-align:right;">
+1411
+</td>
+<td style="text-align:right;">
+197.57576
+</td>
+<td style="text-align:right;">
+157.57576
+</td>
+<td style="text-align:right;">
+161.81818
+</td>
+<td style="text-align:right;">
+132.12121
+</td>
+<td style="text-align:right;">
+58.78788
+</td>
+<td style="text-align:right;">
+14.545454
+</td>
+<td style="text-align:right;">
+127.87879
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020500
+</td>
+<td style="text-align:left;">
+14000US01001020500
+</td>
+<td style="text-align:left;">
+Census Tract 205, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+Census Tract 205, Autauga County, Alabama
+</td>
+<td style="text-align:left;">
+al
+</td>
+<td style="text-align:right;">
+140
+</td>
+<td style="text-align:right;">
+0
+</td>
+<td style="text-align:left;">
+ACSSF
+</td>
+<td style="text-align:right;">
+1764
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+1
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+20500
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+NaN
+</td>
+<td style="text-align:right;">
+8198
+</td>
+<td style="text-align:right;">
+5461
+</td>
+<td style="text-align:right;">
+5258
+</td>
+<td style="text-align:right;">
+5037
+</td>
+<td style="text-align:right;">
+221
+</td>
+<td style="text-align:right;">
+203
+</td>
+<td style="text-align:right;">
+2737
+</td>
+<td style="text-align:right;">
+321.81818
+</td>
+<td style="text-align:right;">
+339.39394
+</td>
+<td style="text-align:right;">
+356.96970
+</td>
+<td style="text-align:right;">
+369.09091
+</td>
+<td style="text-align:right;">
+89.09091
+</td>
+<td style="text-align:right;">
+103.030303
+</td>
+<td style="text-align:right;">
+273.93939
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>While it did open, the result is mildly horrifying. How many columns is that?</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="combining-our-datasets.html#cb6-1"></a>unemployment.shape</span></code></pre></div>
+<pre><code>## (74001, 69)</code></pre>
+<p>The first number is rows, the second one is columns - so, either way, <strong>a lot</strong>. Most of them are weird geographic identifiers - which we aren’t interested in - and then a handful of employment measures. If we look at our <strong>data dictionary</strong> we can find the codes for the unemployment columns we’re interested in:</p>
+<ul>
+<li><code>ACS15_5yr_B23025001</code> Total population</li>
+<li><code>ACS15_5yr_B23025005</code> Number unemployed</li>
+</ul>
+<p>We’re also interested in <code>Geo_FIPS</code>, as it’s our census tract identifier which will let us connect to the life expectancy dataset. Let’s select only the columns we’re interested in to clean things up a bit:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="combining-our-datasets.html#cb8-1"></a>unemployment <span class="op">=</span> unemployment[[<span class="st">&#39;Geo_FIPS&#39;</span>, <span class="st">&#39;ACS15_5yr_B23025005&#39;</span>, <span class="st">&#39;ACS15_5yr_B23025001&#39;</span>]]</span>
+<span id="cb8-2"><a href="combining-our-datasets.html#cb8-2"></a>unemployment.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+Geo_FIPS
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025005
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025001
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1001020100
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+1554
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020200
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+1731
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020300
+</td>
+<td style="text-align:right;">
+91
+</td>
+<td style="text-align:right;">
+2462
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020400
+</td>
+<td style="text-align:right;">
+216
+</td>
+<td style="text-align:right;">
+3424
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020500
+</td>
+<td style="text-align:right;">
+221
+</td>
+<td style="text-align:right;">
+8198
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Also, these are the raw numbers of unemployed people. We’re instead interested in <strong>percent unemployment</strong>, which will allow us to be able to compare census tracts with varying numbers of people.</p>
+<p>We’ll save the percent unemployment into a new column:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="combining-our-datasets.html#cb9-1"></a>unemployment[<span class="st">&#39;unemployed_pct&#39;</span>] <span class="op">=</span> unemployment.ACS15_5yr_B23025005 <span class="op">/</span> unemployment.ACS15_5yr_B23025001 <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb9-2"><a href="combining-our-datasets.html#cb9-2"></a>unemployment.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+Geo_FIPS
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025005
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025001
+</th>
+<th style="text-align:right;">
+unemployed_pct
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+1001020100
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+1554
+</td>
+<td style="text-align:right;">
+3.474903
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020200
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+1731
+</td>
+<td style="text-align:right;">
+6.701329
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020300
+</td>
+<td style="text-align:right;">
+91
+</td>
+<td style="text-align:right;">
+2462
+</td>
+<td style="text-align:right;">
+3.696182
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020400
+</td>
+<td style="text-align:right;">
+216
+</td>
+<td style="text-align:right;">
+3424
+</td>
+<td style="text-align:right;">
+6.308411
+</td>
+</tr>
+<tr>
+<td style="text-align:right;">
+1001020500
+</td>
+<td style="text-align:right;">
+221
+</td>
+<td style="text-align:right;">
+8198
+</td>
+<td style="text-align:right;">
+2.695779
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div id="final-joining" class="section level3">
+<h3><span class="header-section-number">3.5.3</span> Final joining</h3>
+<p>Now that we have two datasets with matching census tract columns, we can easily join our datasets together. Both have different names for those columns, though:</p>
+<ul>
+<li><code>Tract ID</code> for life expectancy</li>
+<li><code>Geo_FIPS</code> for unemployment</li>
+</ul>
+<p>But it isn’t a problem! When we merge, we’ll just need to use <code>left_on=</code> and <code>right_on=</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="combining-our-datasets.html#cb10-1"></a>df <span class="op">=</span> life_expect.merge(unemployment, left_on<span class="op">=</span><span class="st">&#39;Tract ID&#39;</span>, right_on<span class="op">=</span><span class="st">&#39;Geo_FIPS&#39;</span>)</span>
+<span id="cb10-2"><a href="combining-our-datasets.html#cb10-2"></a>df.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:right;">
+Tract ID
+</th>
+<th style="text-align:right;">
+life_expectancy
+</th>
+<th style="text-align:right;">
+Geo_FIPS
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025005
+</th>
+<th style="text-align:right;">
+ACS15_5yr_B23025001
+</th>
+<th style="text-align:right;">
+unemployed_pct
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:right;">
+1001020100
+</td>
+<td style="text-align:right;">
+73.1
+</td>
+<td style="text-align:right;">
+1001020100
+</td>
+<td style="text-align:right;">
+54
+</td>
+<td style="text-align:right;">
+1554
+</td>
+<td style="text-align:right;">
+3.474903
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:right;">
+1001020200
+</td>
+<td style="text-align:right;">
+76.9
+</td>
+<td style="text-align:right;">
+1001020200
+</td>
+<td style="text-align:right;">
+116
+</td>
+<td style="text-align:right;">
+1731
+</td>
+<td style="text-align:right;">
+6.701329
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:right;">
+1001020400
+</td>
+<td style="text-align:right;">
+75.4
+</td>
+<td style="text-align:right;">
+1001020400
+</td>
+<td style="text-align:right;">
+216
+</td>
+<td style="text-align:right;">
+3424
+</td>
+<td style="text-align:right;">
+6.308411
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:right;">
+1001020500
+</td>
+<td style="text-align:right;">
+79.4
+</td>
+<td style="text-align:right;">
+1001020500
+</td>
+<td style="text-align:right;">
+221
+</td>
+<td style="text-align:right;">
+8198
+</td>
+<td style="text-align:right;">
+2.695779
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:right;">
+1001020600
+</td>
+<td style="text-align:right;">
+73.1
+</td>
+<td style="text-align:right;">
+1001020600
+</td>
+<td style="text-align:right;">
+190
+</td>
+<td style="text-align:right;">
+2855
+</td>
+<td style="text-align:right;">
+6.654991
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>It’s easy to remember <code>left_on=</code> and <code>right_on=</code> if you think about the actual position of the two dataframes. <code>life_expect</code> is on the left, so <code>left_on=</code> is about its column. Then <code>unemployment</code> is on the right, so <code>Geo_FIPS</code> gets attached to <code>right_on=</code>.</p>
+<p>Now that our data is cleaned and merged we can get started with our regression.</p>
+</div>
+</div>
+<!-- </div> -->
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-demographics.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="analyzing-our-data.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 1
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

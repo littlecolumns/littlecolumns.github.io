@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>2.6 Linear Regression | _main.utf8.md</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="2.6 Linear Regression | _main.utf8.md" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="2.6 Linear Regression | _main.utf8.md" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="final-prep-for-analysis.html"/>
+<link rel="next" href="alternative-techniques.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>2</b> Preface</a><ul>
+<li class="chapter" data-level="2.0.1" data-path="preface.html"><a href="preface.html#the-original-story"><i class="fa fa-check"></i><b>2.0.1</b> The original story</a></li>
+<li class="chapter" data-level="2.0.2" data-path="preface.html"><a href="preface.html#more-stuff-here"><i class="fa fa-check"></i><b>2.0.2</b> More stuff here?</a></li>
+<li class="chapter" data-level="2.1" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html"><i class="fa fa-check"></i><b>2.1</b> Turning our question into measureables</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html#data-potholes"><i class="fa fa-check"></i><b>2.1.1</b> Data: Potholes</a></li>
+<li class="chapter" data-level="2.1.2" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html#data-number-of-minorities-in-a-neighborhood"><i class="fa fa-check"></i><b>2.1.2</b> Data: Number of minorities in a neighborhood</a></li>
+</ul></li>
+<li class="chapter" data-level="2.2" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html"><i class="fa fa-check"></i><b>2.2</b> Combining our datasets</a><ul>
+<li class="chapter" data-level="2.2.1" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#merging-census-data-and-pothole-data"><i class="fa fa-check"></i><b>2.2.1</b> Merging Census data and pothole data</a></li>
+<li class="chapter" data-level="2.2.2" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#performing-the-geocoding"><i class="fa fa-check"></i><b>2.2.2</b> Performing the geocoding</a></li>
+</ul></li>
+<li class="chapter" data-level="2.3" data-path="attaching-tract-data-to-our-latitudes-and-longitudes.html"><a href="attaching-tract-data-to-our-latitudes-and-longitudes.html"><i class="fa fa-check"></i><b>2.3</b> Attaching tract data to our latitudes and longitudes</a><ul>
+<li class="chapter" data-level="2.3.1" data-path="attaching-tract-data-to-our-latitudes-and-longitudes.html"><a href="attaching-tract-data-to-our-latitudes-and-longitudes.html#joining-attributes-by-location"><i class="fa fa-check"></i><b>2.3.1</b> Joining attributes by location</a></li>
+</ul></li>
+<li class="chapter" data-level="2.4" data-path="merging-our-datasets.html"><a href="merging-our-datasets.html"><i class="fa fa-check"></i><b>2.4</b> Merging our datasets</a></li>
+<li class="chapter" data-level="2.5" data-path="final-prep-for-analysis.html"><a href="final-prep-for-analysis.html"><i class="fa fa-check"></i><b>2.5</b> Final prep for analysis</a><ul>
+<li class="chapter" data-level="2.5.1" data-path="final-prep-for-analysis.html"><a href="final-prep-for-analysis.html#the-amount-of-minorities"><i class="fa fa-check"></i><b>2.5.1</b> “The amount of minorities”</a></li>
+<li class="chapter" data-level="2.5.2" data-path="final-prep-for-analysis.html"><a href="final-prep-for-analysis.html#how-long-it-takes-to-fix-potholes"><i class="fa fa-check"></i><b>2.5.2</b> “How long it takes to fix potholes”</a></li>
+<li class="chapter" data-level="2.5.3" data-path="final-prep-for-analysis.html"><a href="final-prep-for-analysis.html#removing-missing-data"><i class="fa fa-check"></i><b>2.5.3</b> Removing missing data</a></li>
+</ul></li>
+<li class="chapter" data-level="2.6" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>2.6</b> Linear Regression</a><ul>
+<li class="chapter" data-level="2.6.1" data-path="linear-regression.html"><a href="linear-regression.html#correlation"><i class="fa fa-check"></i><b>2.6.1</b> Correlation</a></li>
+<li class="chapter" data-level="2.6.2" data-path="linear-regression.html"><a href="linear-regression.html#linear-regression-1"><i class="fa fa-check"></i><b>2.6.2</b> Linear Regression</a></li>
+</ul></li>
+<li class="chapter" data-level="2.7" data-path="alternative-techniques.html"><a href="alternative-techniques.html"><i class="fa fa-check"></i><b>2.7</b> Alternative techniques</a><ul>
+<li class="chapter" data-level="2.7.1" data-path="alternative-techniques.html"><a href="alternative-techniques.html#binning"><i class="fa fa-check"></i><b>2.7.1</b> Binning</a></li>
+</ul></li>
+<li class="chapter" data-level="2.8" data-path="adding-to-our-analysis.html"><a href="adding-to-our-analysis.html"><i class="fa fa-check"></i><b>2.8</b> Adding to our analysis</a></li>
+</ul></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="linear-regression" class="section level2">
+<h2><span class="header-section-number">2.6</span> Linear Regression</h2>
+<div id="correlation" class="section level3">
+<h3><span class="header-section-number">2.6.1</span> Correlation</h3>
+<p>Before we start getting fancy with a regression, there’s a quick check we can do to see if two variables are related called <strong>correlation</strong>. Correlation tells you the general idea of “if one number goes up, does another number go up, too?”</p>
+<div class="sourceCode" id="cb53"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb53-1"><a href="linear-regression.html#cb53-1"></a>df[<span class="st">&#39;pct_white&#39;</span>].corr(df[<span class="st">&#39;wait_days&#39;</span>])</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+x
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+-0.098948
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb54-1"><a href="linear-regression.html#cb54-1"></a>df[<span class="st">&#39;pct_minority&#39;</span>].corr(df[<span class="st">&#39;wait_days&#39;</span>])</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:right;">
+x
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right;">
+0.098948
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>EXPLAIN MORE ABOUT CORRELATION. OR DO WE???</p>
+</div>
+<div id="linear-regression-1" class="section level3">
+<h3><span class="header-section-number">2.6.2</span> Linear Regression</h3>
+<p>MORE ABOUT LINEAR REGRESSION</p>
+<p>Journalistically, linear regression allows us to make statements like “for every X percent increase in minorities in an area, pothole wait times will go up Y days”.</p>
+<blockquote>
+<p><em>Always always always always check your regressions with an expert.</em> You (probably) aren’t a mathematician, and there are a lot of ‘gotchas’ that you can come across when you’re dealing with statistics.</p>
+</blockquote>
+<p>In our code, we’ll be asking what the effect of <code>X</code> is on <code>y</code>. No matter what stats package you use, these variable names will generally be the same! In this case, we want to know the affect of <code>pct_minority</code> on <code>wait_days</code>, so <code>X</code> is going to be <code>pct_minority</code> and <code>y</code> is going to be <code>wait_days</code>.</p>
+<p>In this case, we’re using the <code>statsmodels</code> package for our regression, because it has a real nice-looking output. You run a linear regression with statsmodels like this:</p>
+<div class="sourceCode" id="cb55"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb55-1"><a href="linear-regression.html#cb55-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb55-2"><a href="linear-regression.html#cb55-2"></a>X <span class="op">=</span> df[[<span class="st">&#39;pct_minority&#39;</span>]]</span>
+<span id="cb55-3"><a href="linear-regression.html#cb55-3"></a>X <span class="op">=</span> sm.add_constant(X)</span></code></pre></div>
+<pre><code>## /Library/Frameworks/Python.framework/Versions/3.6/lib/python3.6/site-packages/numpy/core/fromnumeric.py:2495: FutureWarning: Method .ptp is deprecated and will be removed in a future version. Use numpy.ptp instead.
+##   return ptp(axis=axis, out=out, **kwargs)</code></pre>
+<div class="sourceCode" id="cb57"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb57-1"><a href="linear-regression.html#cb57-1"></a>y <span class="op">=</span> df.wait_days</span>
+<span id="cb57-2"><a href="linear-regression.html#cb57-2"></a></span>
+<span id="cb57-3"><a href="linear-regression.html#cb57-3"></a>model <span class="op">=</span> sm.OLS(y, X)</span>
+<span id="cb57-4"><a href="linear-regression.html#cb57-4"></a>result <span class="op">=</span> model.fit()</span>
+<span id="cb57-5"><a href="linear-regression.html#cb57-5"></a>result.summary()</span></code></pre></div>
+<pre><code>## &lt;class &#39;statsmodels.iolib.summary.Summary&#39;&gt;
+## &quot;&quot;&quot;
+##                             OLS Regression Results                            
+## ==============================================================================
+## Dep. Variable:              wait_days   R-squared:                       0.010
+## Model:                            OLS   Adj. R-squared:                  0.010
+## Method:                 Least Squares   F-statistic:                     126.4
+## Date:                Mon, 02 Dec 2019   Prob (F-statistic):           3.49e-29
+## Time:                        08:31:39   Log-Likelihood:                -50049.
+## No. Observations:               12783   AIC:                         1.001e+05
+## Df Residuals:                   12781   BIC:                         1.001e+05
+## Df Model:                           1                                         
+## Covariance Type:            nonrobust                                         
+## ================================================================================
+##                    coef    std err          t      P&gt;|t|      [0.025      0.975]
+## --------------------------------------------------------------------------------
+## const            6.0386      0.247     24.489      0.000       5.555       6.522
+## pct_minority     3.9611      0.352     11.242      0.000       3.270       4.652
+## ==============================================================================
+## Omnibus:                     6385.090   Durbin-Watson:                   1.411
+## Prob(Omnibus):                  0.000   Jarque-Bera (JB):            37480.668
+## Skew:                           2.405   Prob(JB):                         0.00
+## Kurtosis:                       9.873   Cond. No.                         4.68
+## ==============================================================================
+## 
+## Warnings:
+## [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+## &quot;&quot;&quot;</code></pre>
+<p>The machine that learns from our data is called the model. After the model analyzes each row of our data, it decides the relationship between <code>pct_minority</code> and <code>wait_days</code>, which shows up under the <code>coef</code> section.</p>
+<p>Under <code>coef</code> it lists <code>pct_minority</code> as <code>3.9611</code>… but what’s that mean?</p>
+<div id="understanding-the-coefficient" class="section level4">
+<h4><span class="header-section-number">2.6.2.1</span> Understanding the coefficient</h4>
+<pre><code>                   coef    std err          t      P&gt;|t|      [0.025      0.975]
+--------------------------------------------------------------------------------
+const            6.0386      0.247     24.489      0.000       5.555       6.522
+pct_minority     3.9611      0.352     11.242      0.000       3.270       4.652</code></pre>
+<p>The coefficient - <code>coef</code> - is what goes in our sentence: “for every increase of 1 in pct_minority, pothole wait times will go up Y days”. In this case, the coefficient is <strong>3.9611</strong>, so our sentence goes something like this:</p>
+<p>For every increase of 1 in <code>pct_minority</code>, the number of days you wait is increased by <strong>3.9611</strong> . ( We’d hopefully round it up to <strong>around 4</strong>, because no one cares about those extra digits.)</p>
+<p>Now, in this case <code>pct_minority</code> goes from <code>0-1</code>, with 0 being 0% minorities and 1 being 100% minorities. As a result, “an increase of 1” from our setnence actually means <strong>increasing the number of minorities from 0% to 100%</strong>. That doesn’t really make sense, so you might do a little division to break it down into smaller units:</p>
+<ul>
+<li><strong>The output:</strong> 1 point increase in <code>pct_minority</code>, an additional 4 days</li>
+<li><strong>multipled by 10:</strong> 0.5 increase in <code>pct_minority</code>, an additional 2 days</li>
+<li><strong>multipled by 25:</strong> 0.25 increase in <code>pct_minority</code>, an additional 1 day</li>
+</ul>
+<p>As a result: if you have two areas, one with a <code>pct_minority</code> of 0.37 and one with a <code>pct_minority</code> of 0.62 — a 0.25 difference — you can expect pothole fixing to take an extra 1 day in the second area.</p>
+<blockquote>
+<p><strong>Very important note:</strong> this doesn’t mean a 25% increase in <code>pct_minority</code> (which would be 0.37 + 0.09 = 0.46), it means an actual increase of <code>0.25</code> (which would be 0.37 + 0.25 = 0.62).</p>
+</blockquote>
+</div>
+<div id="adjusting-our-units" class="section level4">
+<h4><span class="header-section-number">2.6.2.2</span> Adjusting our units</h4>
+<p>While can change those numbers around in our heads - 0.25 is 25%, 0.5 is 50%, etc - some people might find that kind of tough to think about. <strong>Even though <code>0</code>-<code>1</code> can work as a percent, you might have an easier time if we do our analysis with <em>actual</em> percentages.</strong></p>
+<p>To use “real” percentages, we can just multiply by 100.</p>
+<div class="sourceCode" id="cb60"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb60-1"><a href="linear-regression.html#cb60-1"></a>df[<span class="st">&#39;pct_minority&#39;</span>] <span class="op">=</span> df.pct_minority <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb60-2"><a href="linear-regression.html#cb60-2"></a>df[<span class="st">&#39;pct_white&#39;</span>] <span class="op">=</span> df.pct_white <span class="op">*</span> <span class="dv">100</span></span>
+<span id="cb60-3"><a href="linear-regression.html#cb60-3"></a>df.head()</span></code></pre></div>
+<div class='table-wrapper'>
+<table>
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:left;">
+address
+</th>
+<th style="text-align:right;">
+GEOID
+</th>
+<th style="text-align:right;">
+Geo_FIPS
+</th>
+<th style="text-align:right;">
+pct_white
+</th>
+<th style="text-align:right;">
+pct_minority
+</th>
+<th style="text-align:right;">
+wait_days
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+0
+</td>
+<td style="text-align:left;">
+3839 N 10TH ST
+</td>
+<td style="text-align:right;">
+55079004500
+</td>
+<td style="text-align:right;">
+55079004500
+</td>
+<td style="text-align:right;">
+2.405063
+</td>
+<td style="text-align:right;">
+97.59494
+</td>
+<td style="text-align:right;">
+1.250000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+1
+</td>
+<td style="text-align:left;">
+4900 W MELVINA ST
+</td>
+<td style="text-align:right;">
+55079003800
+</td>
+<td style="text-align:right;">
+55079003800
+</td>
+<td style="text-align:right;">
+8.824796
+</td>
+<td style="text-align:right;">
+91.17520
+</td>
+<td style="text-align:right;">
+8.833333
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+2
+</td>
+<td style="text-align:left;">
+2400 W WISCONSIN AV
+</td>
+<td style="text-align:right;">
+55079014900
+</td>
+<td style="text-align:right;">
+55079014900
+</td>
+<td style="text-align:right;">
+40.313725
+</td>
+<td style="text-align:right;">
+59.68627
+</td>
+<td style="text-align:right;">
+9.750000
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+3
+</td>
+<td style="text-align:left;">
+1800 W HAMPTON AV
+</td>
+<td style="text-align:right;">
+55079002300
+</td>
+<td style="text-align:right;">
+55079002300
+</td>
+<td style="text-align:right;">
+4.389407
+</td>
+<td style="text-align:right;">
+95.61059
+</td>
+<td style="text-align:right;">
+2.416667
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+4
+</td>
+<td style="text-align:left;">
+4718 N 19TH ST
+</td>
+<td style="text-align:right;">
+55079002300
+</td>
+<td style="text-align:right;">
+55079002300
+</td>
+<td style="text-align:right;">
+4.389407
+</td>
+<td style="text-align:right;">
+95.61059
+</td>
+<td style="text-align:right;">
+17.416667
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Now that we’ve adjusted our numbers, let’s try out the regression one more time:</p>
+<div class="sourceCode" id="cb61"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb61-1"><a href="linear-regression.html#cb61-1"></a><span class="im">import</span> statsmodels.api <span class="im">as</span> sm</span>
+<span id="cb61-2"><a href="linear-regression.html#cb61-2"></a>X <span class="op">=</span> df[[<span class="st">&#39;pct_minority&#39;</span>]]</span>
+<span id="cb61-3"><a href="linear-regression.html#cb61-3"></a>X <span class="op">=</span> sm.add_constant(X)</span>
+<span id="cb61-4"><a href="linear-regression.html#cb61-4"></a>y <span class="op">=</span> df.wait_days</span>
+<span id="cb61-5"><a href="linear-regression.html#cb61-5"></a></span>
+<span id="cb61-6"><a href="linear-regression.html#cb61-6"></a>model <span class="op">=</span> sm.OLS(y, X)</span>
+<span id="cb61-7"><a href="linear-regression.html#cb61-7"></a>result <span class="op">=</span> model.fit()</span>
+<span id="cb61-8"><a href="linear-regression.html#cb61-8"></a>result.summary()</span></code></pre></div>
+<pre><code>## &lt;class &#39;statsmodels.iolib.summary.Summary&#39;&gt;
+## &quot;&quot;&quot;
+##                             OLS Regression Results                            
+## ==============================================================================
+## Dep. Variable:              wait_days   R-squared:                       0.010
+## Model:                            OLS   Adj. R-squared:                  0.010
+## Method:                 Least Squares   F-statistic:                     126.4
+## Date:                Mon, 02 Dec 2019   Prob (F-statistic):           3.49e-29
+## Time:                        08:31:40   Log-Likelihood:                -50049.
+## No. Observations:               12783   AIC:                         1.001e+05
+## Df Residuals:                   12781   BIC:                         1.001e+05
+## Df Model:                           1                                         
+## Covariance Type:            nonrobust                                         
+## ================================================================================
+##                    coef    std err          t      P&gt;|t|      [0.025      0.975]
+## --------------------------------------------------------------------------------
+## const            6.0386      0.247     24.489      0.000       5.555       6.522
+## pct_minority     0.0396      0.004     11.242      0.000       0.033       0.047
+## ==============================================================================
+## Omnibus:                     6385.090   Durbin-Watson:                   1.411
+## Prob(Omnibus):                  0.000   Jarque-Bera (JB):            37480.668
+## Skew:                           2.405   Prob(JB):                         0.00
+## Kurtosis:                       9.873   Cond. No.                         161.
+## ==============================================================================
+## 
+## Warnings:
+## [1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+## &quot;&quot;&quot;</code></pre>
+<p>The numbers are much smaller, but you might find them easier to deal with.</p>
+<ul>
+<li><strong>The output:</strong> 1 percentage point increase in minorities, an additional .04 days</li>
+<li><strong>multipled by 10:</strong> 10 percentage point increase in minorities, an additional 0.4 days</li>
+<li><strong>multipled by 25:</strong> 25 percentage point increase in minorities, an additional 1 day</li>
+</ul>
+<p>You’re welcome to multiply, divide, or anything else to your regression units before you do the actual regerssion. Just think about what your final sentence might be and aim for those.</p>
+<p>Again, if you have two areas, one with a <code>pct_minority</code> of 37% and one with a <code>pct_minority</code> of 62%, you can expect pothole fixing to take an extra 1 day in the second area. And yes, this is not a 25% increase of 37% to 46%, this is an increase of 25 percenage points, 37% + 25% = 62%.</p>
+</div>
+<div id="meaning-of-const" class="section level4">
+<h4><span class="header-section-number">2.6.2.3</span> Meaning of const</h4>
+<p>Under <code>coef</code> there’s another coefficient we’ve been ignoring named <code>const</code>.</p>
+<pre><code>                   coef    std err          t      P&gt;|t|      [0.025      0.975]
+--------------------------------------------------------------------------------
+const            6.0386      0.247     24.489      0.000       5.555       6.522
+pct_minority     0.0396      0.004     11.242      0.000       0.033       0.047</code></pre>
+<p>The basic idea is that linear regression <em>loves</em> the number zero. By default, linear regression on statsmodels <strong>assumes that if you have a <code>pct_minority</code> of zero, <code>wait_days</code> will also be zero</strong>.</p>
+<p>Since that’s not true at <em>all</em>, you always need to add in this constant. What’s what the weird <code>.add_constant</code> thing was when we were building our model:</p>
+<div class="sourceCode" id="cb64"><pre class="sourceCode python"><code class="sourceCode python"><span id="cb64-1"><a href="linear-regression.html#cb64-1"></a>X <span class="op">=</span> df[[<span class="st">&#39;pct_minority&#39;</span>]]</span>
+<span id="cb64-2"><a href="linear-regression.html#cb64-2"></a>X <span class="op">=</span> sm.add_constant(X)</span></code></pre></div>
+<p>It means “Hey, model! Zero pct_minority doesn’t mean zero wait_days. Thanks!” And as a result, the model comes up with a <code>const</code> of 6.0386 - <strong>the number of days you’ll wait if pct_minority is zero.</strong></p>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="final-prep-for-analysis.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="alternative-techniques.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 1
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

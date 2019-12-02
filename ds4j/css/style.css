@@ -1,0 +1,308 @@
+.content {
+  flex: 1 1 auto;
+  margin: 0 auto;
+  padding: 0 4rem;
+  max-width: 1200px;
+}
+
+.content.text-based {
+  max-width: 960px;
+}
+
+.tile-subtitle {
+}
+
+@media (max-width: 600px) {
+  .content {
+    padding: 0 0.5rem;
+  }
+}
+
+@media (max-width: 960px) {
+  .content {
+    padding: 0 1.5rem;
+  }
+}
+
+.card-footer {
+  font-weight: bold;
+}
+
+.nav-holder {
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.output pre,
+.highlight pre {
+  padding: 10px;
+  font-size: 0.75em;
+  overflow-x: auto;
+}
+
+.highlight pre {
+  margin-bottom: 0;
+}
+
+.output pre {
+  margin-top: 0;
+  background: #efefef;
+}
+
+.card {
+  border: 0;
+  box-shadow: 0 0.25rem 1rem rgba(48, 55, 66, 0.15);
+  height: 100%;
+}
+
+.card p {
+  margin: 0;
+}
+
+.column {
+  padding: 0.4rem;
+}
+
+.footer {
+  margin-top: 2rem;
+  padding-top: 1rem;
+  padding-bottom: 2rem;
+}
+
+.output_png {
+  text-align: center;
+}
+
+.output {
+  margin-bottom: 1.2em;
+}
+
+.text_cell h1,
+.text_cell h2,
+.text_cell h3 {
+  margin-top: 1.2em;
+}
+
+h1 a.anchor-link {
+  display: none;
+}
+
+a.anchor-link {
+  /* display: none; */
+  margin-left: 10px;
+}
+
+a.anchor-link {
+  position: relative;
+}
+
+.output_html {
+  font-size: 0.75em;
+}
+
+.output_html * {
+  font-size: 1em;
+}
+
+div.output_subarea {
+  overflow-x: auto;
+}
+
+.readings ul {
+  margin-left: 0;
+}
+
+.readings li {
+  list-style-type: none;
+  margin: 0 0 1.2rem;
+}
+
+/* Table styles */
+
+caption {
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: #777777;
+  text-align: left;
+}
+.rendered_html table {
+  margin-left: auto;
+  margin-right: auto;
+  border: 1px solid black;
+  border-collapse: collapse;
+}
+.rendered_html tr,
+.rendered_html th,
+.rendered_html td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  margin: 1em 2em;
+}
+.rendered_html td,
+.rendered_html th {
+  text-align: left;
+  vertical-align: middle;
+  padding: 4px;
+}
+.rendered_html th {
+  font-weight: bold;
+}
+.rendered_html * + table {
+  margin-top: 1em;
+}
+
+.rendered_html table {
+  margin-left: auto;
+  margin-right: auto;
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+.rendered_html tr,
+.rendered_html th,
+.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+.rendered_html th {
+  font-weight: bold;
+}
+.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+.rendered_html * + table {
+  margin-top: 1em;
+}
+
+.chapter-nav {
+  /* background: #b980ff; */
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  margin-bottom: 2rem;
+}
+
+.chapter-nav > div {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 30px;
+}
+
+.chapter-nav a {
+  /* color: white; */
+}
+
+.access-link {
+  margin-bottom: 1.2rem;
+}
+
+.chapter-nav > div a:nth-child(2) {
+  text-align: right;
+}
+
+.example-tile-icon {
+  align-content: space-around;
+  align-items: center;
+  background: #5755d9;
+  border-radius: 0.1rem;
+  color: #fff;
+  display: flex;
+  font-size: 1.2rem;
+  height: 2rem;
+  width: 2rem;
+}
+
+.example-tile-icon i {
+  margin: auto;
+}
+
+/* body {
+    background: #f4f4f4;
+} 
+
+.bold-header {
+    padding: 30px 0;
+    background: #fff880;
+}
+.article {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 30px;
+}
+
+.title {
+    font-family: Lato;
+}
+.is-size-1 {
+    font-family: 'Bangers';
+    font-size: 5em !important;
+    color: #363636
+}
+
+a {
+    color: #e76d6d;
+}
+
+a.tag {
+}
+
+h2.title.is-size-4 {
+    padding: 10px 15px;
+    background: #fff880;
+    display: inline-block;
+    color: #363636;
+}
+
+.title.is-size-5 {
+    margin-bottom: 0.5rem
+}
+
+.content:not(:last-child) {
+    margin-bottom: 3rem
+}
+
+.title {
+    font-weight: normal !important;
+}
+
+.articles > .box {
+    margin-bottom: 0 !important;
+    box-shadow: 0 2px 3px rgba(10,10,10,.1);
+}
+
+.articles .box img {
+    width: 100%;
+    height: 150px;
+    background: #fff880;
+}
+
+.section {
+    max-width: 960px;
+    margin: 0 auto;
+}
+
+
+
+.with-note-under-title h3.title {
+    margin-bottom: 0.5rem;
+}
+
+.with-note-under-title .note {
+    font-size: 75%;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+} */

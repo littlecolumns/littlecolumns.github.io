@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <title>3.3 Data: Unemployment | _main.utf8.md</title>
+  <meta name="description" content="" />
+  <meta name="generator" content="bookdown 0.14 and GitBook 2.6.7" />
+
+  <meta property="og:title" content="3.3 Data: Unemployment | _main.utf8.md" />
+  <meta property="og:type" content="book" />
+  
+  
+  
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="3.3 Data: Unemployment | _main.utf8.md" />
+  
+  
+  
+
+
+
+
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  
+  
+<link rel="prev" href="data-life-expectancy.html"/>
+<link rel="next" href="data-demographics.html"/>
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-clipboard.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+code.sourceCode > span { display: inline-block; line-height: 1.25; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  { color: #cccccc; background-color: #303030; }
+@media screen {
+code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ffcfaf; } /* Alert */
+code span.an { color: #7f9f7f; font-weight: bold; } /* Annotation */
+code span.at { } /* Attribute */
+code span.bn { color: #dca3a3; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #f0dfaf; } /* ControlFlow */
+code span.ch { color: #dca3a3; } /* Char */
+code span.cn { color: #dca3a3; font-weight: bold; } /* Constant */
+code span.co { color: #7f9f7f; } /* Comment */
+code span.cv { color: #7f9f7f; font-weight: bold; } /* CommentVar */
+code span.do { color: #7f9f7f; } /* Documentation */
+code span.dt { color: #dfdfbf; } /* DataType */
+code span.dv { color: #dcdccc; } /* DecVal */
+code span.er { color: #c3bf9f; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #c0bed1; } /* Float */
+code span.fu { color: #efef8f; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #7f9f7f; font-weight: bold; } /* Information */
+code span.kw { color: #f0dfaf; } /* Keyword */
+code span.op { color: #f0efd0; } /* Operator */
+code span.ot { color: #efef8f; } /* Other */
+code span.pp { color: #ffcfaf; font-weight: bold; } /* Preprocessor */
+code span.sc { color: #dca3a3; } /* SpecialChar */
+code span.ss { color: #cc9393; } /* SpecialString */
+code span.st { color: #cc9393; } /* String */
+code span.va { } /* Variable */
+code span.vs { color: #cc9393; } /* VerbatimString */
+code span.wa { color: #7f9f7f; font-weight: bold; } /* Warning */
+</style>
+
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li class="chapter" data-level="1" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i><b>1</b> Introduction</a></li>
+<li class="chapter" data-level="2" data-path="preface.html"><a href="preface.html"><i class="fa fa-check"></i><b>2</b> Preface</a><ul>
+<li class="chapter" data-level="2.0.1" data-path="preface.html"><a href="preface.html#the-original-story"><i class="fa fa-check"></i><b>2.0.1</b> The original story</a></li>
+</ul></li>
+<li class="chapter" data-level="3" data-path="the-data.html"><a href="the-data.html"><i class="fa fa-check"></i><b>3</b> The Data</a><ul>
+<li class="chapter" data-level="3.1" data-path="turning-our-question-into-measureables.html"><a href="turning-our-question-into-measureables.html"><i class="fa fa-check"></i><b>3.1</b> Turning our question into measureables</a></li>
+<li class="chapter" data-level="3.2" data-path="data-life-expectancy.html"><a href="data-life-expectancy.html"><i class="fa fa-check"></i><b>3.2</b> Data: Life expectancy</a><ul>
+<li class="chapter" data-level="3.2.1" data-path="data-life-expectancy.html"><a href="data-life-expectancy.html#the-data-dictionary"><i class="fa fa-check"></i><b>3.2.1</b> The data dictionary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.3" data-path="data-unemployment.html"><a href="data-unemployment.html"><i class="fa fa-check"></i><b>3.3</b> Data: Unemployment</a><ul>
+<li class="chapter" data-level="3.3.1" data-path="data-unemployment.html"><a href="data-unemployment.html#picking-a-data-source-editorial-choice"><i class="fa fa-check"></i><b>3.3.1</b> Picking a data source (editorial choice)</a></li>
+<li class="chapter" data-level="3.3.2" data-path="data-unemployment.html"><a href="data-unemployment.html#picking-a-survey-year"><i class="fa fa-check"></i><b>3.3.2</b> Picking a survey year</a></li>
+<li class="chapter" data-level="3.3.3" data-path="data-unemployment.html"><a href="data-unemployment.html#picking-an-unemployment-table"><i class="fa fa-check"></i><b>3.3.3</b> Picking an unemployment table</a></li>
+<li class="chapter" data-level="3.3.4" data-path="data-unemployment.html"><a href="data-unemployment.html#the-data-dictionary-1"><i class="fa fa-check"></i><b>3.3.4</b> The data dictionary</a></li>
+</ul></li>
+<li class="chapter" data-level="3.4" data-path="data-demographics.html"><a href="data-demographics.html"><i class="fa fa-check"></i><b>3.4</b> Data: Demographics</a></li>
+<li class="chapter" data-level="3.5" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html"><i class="fa fa-check"></i><b>3.5</b> Combining our datasets</a><ul>
+<li class="chapter" data-level="3.5.1" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#reading-in-life-expectancy"><i class="fa fa-check"></i><b>3.5.1</b> Reading in life expectancy</a></li>
+<li class="chapter" data-level="3.5.2" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#reading-in-unemployment"><i class="fa fa-check"></i><b>3.5.2</b> Reading in unemployment</a></li>
+<li class="chapter" data-level="3.5.3" data-path="combining-our-datasets.html"><a href="combining-our-datasets.html#final-joining"><i class="fa fa-check"></i><b>3.5.3</b> Final joining</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="4" data-path="analyzing-our-data.html"><a href="analyzing-our-data.html"><i class="fa fa-check"></i><b>4</b> Analyzing our data</a><ul>
+<li class="chapter" data-level="4.1" data-path="linear-regression.html"><a href="linear-regression.html"><i class="fa fa-check"></i><b>4.1</b> Linear Regression</a></li>
+<li class="chapter" data-level="4.2" data-path="interpreting-coefficients.html"><a href="interpreting-coefficients.html"><i class="fa fa-check"></i><b>4.2</b> Interpreting coefficients</a><ul>
+<li class="chapter" data-level="4.2.1" data-path="interpreting-coefficients.html"><a href="interpreting-coefficients.html#understanding-const"><i class="fa fa-check"></i><b>4.2.1</b> Understanding const</a></li>
+</ul></li>
+</ul></li>
+<li class="chapter" data-level="5" data-path="improving-our-analysis.html"><a href="improving-our-analysis.html"><i class="fa fa-check"></i><b>5</b> Improving our analysis</a><ul>
+<li class="chapter" data-level="5.0.1" data-path="improving-our-analysis.html"><a href="improving-our-analysis.html#reading-in-and-processing-our-data"><i class="fa fa-check"></i><b>5.0.1</b> Reading in and processing our data</a></li>
+<li class="chapter" data-level="5.1" data-path="performing-the-multivariate-regression.html"><a href="performing-the-multivariate-regression.html"><i class="fa fa-check"></i><b>5.1</b> Performing the multivariate regression</a></li>
+</ul></li>
+<li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./"></a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="data-unemployment" class="section level2">
+<h2><span class="header-section-number">3.3</span> Data: Unemployment</h2>
+<p>Unemployment seems like an easy thing to find a number for, but there are a lot of gotchas that make this a meaningful part of the project.</p>
+<div id="picking-a-data-source-editorial-choice" class="section level3">
+<h3><span class="header-section-number">3.3.1</span> Picking a data source (editorial choice)</h3>
+<p>There are a <em>lot</em> of different places you could get unemployment numbers for the United States, at all sorts of different levels. You can find a breakdown on sites like <a href="https://censusreporter.org/topics/employment/">censusreporter.org</a>, but the Census Bureau <a href="https://www.census.gov/topics/employment/labor-force/guidance.html">has a page all about it!</a></p>
+<p>The two the Census Bureau calls attention to are the the Current Population Survey (CPS) and the American Community Survey (ACS). CPS is the source of the monthly “jobs report” politicians talk about, while ACS is a larger and more granular study.</p>
+<p>The important thing here is we’re looking for data <strong>at the census tract level</strong>. Browsing the site linked above, the Census Bureau drops a few hints that ACS is going to be our source, but about halfway down the page comes out and says:</p>
+<blockquote>
+<p><strong>Because of its large sample size, the ACS will have advantages over the CPS in producing estimates in the following circumstances:</strong>
+to characterize <strong>small geographic areas for which CPS (or Local Area Unemployment Statistics Program) estimates are not available</strong>, and for comparisons among such areas and between such areas and larger ones;</p>
+<p>The CPS provides a monthly snapshot of national-level employment and unemployment statistics with less than a 3-week turnaround between the end of data collection in any one month and release of the statistics for that month by the BLS. The ACS does not produce monthly estimates because <strong>it has been optimized instead to produce accurate estimates for geographic areas as small as census tracts and block groups.</strong></p>
+</blockquote>
+<p>Looks like the ACS is our source!</p>
+<p>We’re going to obtain our ACS data through <a href="https://socialexplorer.com">Social Explorer</a> (if you’re affiliated with a workplace or school, you might have a free “professional” plan).</p>
+</div>
+<div id="picking-a-survey-year" class="section level3">
+<h3><span class="header-section-number">3.3.2</span> Picking a survey year</h3>
+<p>Once of the first questions we get from Social Explorer is <a href="https://www.socialexplorer.com/data/metadata/">which ACS survey</a> are we interested in. American Community Survey data is released every year, and is produced covering different chunks of years. For example:</p>
+<ul>
+<li>ACS 2010 (1-Year Estimates)</li>
+<li>ACS 2010 (3-Year Estimates)</li>
+<li>ACS 2010 (5-Year Estimates)</li>
+<li>ACS 2013 (3-Year Estimates)</li>
+<li>ACS 2013 (5-Year Estimates)</li>
+<li>ACS 2015 (1-Year Estimates)</li>
+<li>ACS 2015 (5-Year Estimates)</li>
+<li>ACS 2017 (1-Year Estimates)</li>
+<li>ACS 2017 (5-Year Estimates)</li>
+</ul>
+<p>Before we pick one, let’s remember what our USALEEP life expectancy dataset covers:</p>
+<blockquote>
+<p>most of the census tracts in the United States for the period 2010-2015</p>
+</blockquote>
+<p>In this case, we want the ACS dataset that <strong>most closely matches</strong> the time range of our life expectancy numbers. Yes, there is newer unemployment data (2017), but we shouldn’t compare the newest unemployment numbers with older life expectancy data. Things might have changed the two measurements!</p>
+<p>You might also be tempted to grab a single year, right in the middle of our range - 2013, for example. First, ACS 1-year have much smaller sample sizes than 3- or 5-year datasets, so they aren’t nearly as useful. Secondly - specific to this case - only the 5-year datasets include census tract information.</p>
+<p>This time around, the 2015 5-year dataset is going to be our best bet. With samples pulled from 2011-2015, it matches up very well with our life expectancy.</p>
+<blockquote>
+<p><strong>Doesn’t life expectancy lag behind (…and in front of) geographic factors?</strong> That’s a good question, let’s remember it as a discussion topics.</p>
+</blockquote>
+</div>
+<div id="picking-an-unemployment-table" class="section level3">
+<h3><span class="header-section-number">3.3.3</span> Picking an unemployment table</h3>
+<p>Inside of the American Community Survey, there are multiple tables that cover unemployment, some of which are generated by the ACS and some of which are simpler collections created by Social Explorer.</p>
+<p>If you browse the <a href="https://www.socialexplorer.com/data/ACS2015_5yr/metadata/?ds=ACS15_5yr">list of available tables</a>, there are <strong>over 20 tables that include the term “employment.”</strong> They’re broken down by all sorts of categories like sex, age, education, disability status and more:</p>
+<p>|—|—|
+|code|description|
+|—|—|
+|<strong>B23001</strong>| Sex by Age by Employment Status for the Population 16 Years and Over|
+|<strong>C23002A</strong>| Sex by Age by Employment Status for the Population 16 Years and Over (White Alone)|
+|<strong>C23002B</strong>| Sex by Age by Employment Status for the Population 16 Years and Over (Black or African American Alone)|
+|<strong>B23006</strong>| Educational Attainment by Employment Status for the Population 25 to 64 Years|
+|<strong>B23025</strong>| Employment Status for the Population 16 Years and Over|
+| |…and many, many more.|</p>
+<p>We’ll be using <strong>B23025: Employment Status for the Population 16 Years and Over</strong>, because it’s the simplest breakdown that can give us a solid picture of the situation in a given census tract. More importantly, it’s what the AP used.</p>
+<p>To make this decision, it might have helped to inspect the data for each table. If you you can <a href="https://www.socialexplorer.com/data/ACS2015_5yr/metadata/?ds=ACS15_5yr&amp;table=B23025">click through to the table details</a> you can see the actual makeup of the table:</p>
+<ul>
+<li>Total
+<ul>
+<li>In Labor Force
+<ul>
+<li>Civilian Labor Force
+<ul>
+<li>Employed</li>
+<li>Unemployed</li>
+</ul></li>
+<li>Armed Forces</li>
+</ul></li>
+<li>Not in Labor Force</li>
+</ul></li>
+</ul>
+<p>With this, we’ll be able to easily see how many people in each census tract are in the labor force but not working.</p>
+</div>
+<div id="the-data-dictionary-1" class="section level3">
+<h3><span class="header-section-number">3.3.4</span> The data dictionary</h3>
+<p>When you download your data, make sure you scroll to the bottom and get the <strong>Data Dictionary</strong>. The dataset itself is full of weird codes, and the data dictionary will enable us to understand them.</p>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="data-life-expectancy.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="data-demographics.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/clipboard.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-clipboard.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 1
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": null,
+"toc": {
+"collapse": "subsection",
+"scroll_highlight": true
+}
+});
+});
+</script>
+
+</body>
+
+</html>

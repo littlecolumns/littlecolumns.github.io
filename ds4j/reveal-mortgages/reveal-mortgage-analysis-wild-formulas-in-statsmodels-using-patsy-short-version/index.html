@@ -1,0 +1,1041 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Reveal Mortgage Analysis - Wild formulas in statsmodels using Patsy (short version)</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="content text-based">
+  <div class="columns">
+    <div class="column col-12 notebook">
+      <ul class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Projects</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/reveal-mortgages/">Analyzing mortgage rejections for racial bias</a>
+        </li>
+        <li class="breadcrumb-item">
+          <a href="/ds4j/reveal-mortgages/reveal-mortgage-analysis-wild-formulas-in-statsmodels-using-patsy-short-version">Reveal Mortgage Analysis - Wild formulas in statsmodels using Patsy (short version)</a>
+        </li>
+      </ul>
+
+      <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Lending-disparities-using-Logistic-Regression">Lending disparities using Logistic Regression<a class="anchor-link" href="#Lending-disparities-using-Logistic-Regression">#</a></h1><p><strong>The story:</strong> <a href="https://www.revealnews.org/article/for-people-of-color-banks-are-shutting-the-door-to-homeownership/">https://www.revealnews.org/article/for-people-of-color-banks-are-shutting-the-door-to-homeownership/</a></p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p class="reading-options">
+  <a class="btn" href="/ds4j/reveal-mortgages/reveal-mortgage-analysis-wild-formulas-in-statsmodels-using-patsy-short-version">
+    <i class="fa fa-sm fa-book"></i>
+    Read online
+  </a>
+  <a class="btn" href="/ds4j/reveal-mortgages/notebooks/Reveal Mortgage Analysis - Wild formulas in statsmodels using Patsy (short version).ipynb">
+    <i class="fa fa-sm fa-download"></i>
+    Download notebook
+  </a>
+  <a class="btn" href="#">
+    <i class="fa fa-sm fa-laptop"></i>
+    Interactive version
+  </a>
+</p>
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Setup">Setup<a class="anchor-link" href="#Setup">#</a></h1><p>Import pandas as usual, but also import numpy. We'll need it for logarithms and exponents.</p>
+<p>Some of our datasets have a lot of columns, so you'll also want to use <code>pd.set_option</code> to display up to 100 columns or so.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_columns&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.max_rows&quot;</span><span class="p">,</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">set_option</span><span class="p">(</span><span class="s2">&quot;display.float_format&quot;</span><span class="p">,</span><span class="s1">&#39;</span><span class="si">{:,.5f}</span><span class="s1">&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Read-in-your-data">Read in your data<a class="anchor-link" href="#Read-in-your-data">#</a></h1><p>We're using pre-cleaned data this time, with the mortage and census data joined together and the unwanted rows removed.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># We&#39;re just looking at Philly</span>
+<span class="n">merged</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="s2">&quot;data/mortgage-census-cleaned-merged.csv&quot;</span><span class="p">)</span>
+<span class="n">merged</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>census_tract</th>
+      <th>county_code</th>
+      <th>state_code</th>
+      <th>applicant_sex</th>
+      <th>income</th>
+      <th>loan_amount</th>
+      <th>loan_type</th>
+      <th>property_type</th>
+      <th>occupancy</th>
+      <th>action_type</th>
+      <th>loan_purpose</th>
+      <th>agency_code</th>
+      <th>tract_to_msa_income_percent</th>
+      <th>applicant_race</th>
+      <th>co_applicant_sex</th>
+      <th>loan_denied</th>
+      <th>co_applicant</th>
+      <th>STATEA</th>
+      <th>COUNTYA</th>
+      <th>TRACTA</th>
+      <th>pop_total</th>
+      <th>pop_white</th>
+      <th>pop_black</th>
+      <th>pop_amer_indian</th>
+      <th>pop_asian</th>
+      <th>pop_pac_islander</th>
+      <th>pop_hispanic</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>401900</td>
+      <td>45</td>
+      <td>42</td>
+      <td>female</td>
+      <td>59</td>
+      <td>112</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>OCC</td>
+      <td>133.09000</td>
+      <td>white</td>
+      <td>5</td>
+      <td>0</td>
+      <td>no</td>
+      <td>42</td>
+      <td>45</td>
+      <td>401900</td>
+      <td>4219</td>
+      <td>2064</td>
+      <td>1719</td>
+      <td>0</td>
+      <td>224</td>
+      <td>0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>401900</td>
+      <td>45</td>
+      <td>42</td>
+      <td>male</td>
+      <td>63</td>
+      <td>192</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NCUA</td>
+      <td>133.09000</td>
+      <td>na</td>
+      <td>5</td>
+      <td>0</td>
+      <td>no</td>
+      <td>42</td>
+      <td>45</td>
+      <td>401900</td>
+      <td>4219</td>
+      <td>2064</td>
+      <td>1719</td>
+      <td>0</td>
+      <td>224</td>
+      <td>0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>401900</td>
+      <td>45</td>
+      <td>42</td>
+      <td>female</td>
+      <td>80</td>
+      <td>105</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>FDIC</td>
+      <td>133.09000</td>
+      <td>black</td>
+      <td>1</td>
+      <td>0</td>
+      <td>yes</td>
+      <td>42</td>
+      <td>45</td>
+      <td>401900</td>
+      <td>4219</td>
+      <td>2064</td>
+      <td>1719</td>
+      <td>0</td>
+      <td>224</td>
+      <td>0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>401900</td>
+      <td>45</td>
+      <td>42</td>
+      <td>female</td>
+      <td>84</td>
+      <td>128</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>NCUA</td>
+      <td>133.09000</td>
+      <td>white</td>
+      <td>1</td>
+      <td>0</td>
+      <td>yes</td>
+      <td>42</td>
+      <td>45</td>
+      <td>401900</td>
+      <td>4219</td>
+      <td>2064</td>
+      <td>1719</td>
+      <td>0</td>
+      <td>224</td>
+      <td>0</td>
+      <td>38</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>401900</td>
+      <td>45</td>
+      <td>42</td>
+      <td>female</td>
+      <td>26</td>
+      <td>168</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3</td>
+      <td>1</td>
+      <td>NCUA</td>
+      <td>133.09000</td>
+      <td>black</td>
+      <td>5</td>
+      <td>1</td>
+      <td>no</td>
+      <td>42</td>
+      <td>45</td>
+      <td>401900</td>
+      <td>4219</td>
+      <td>2064</td>
+      <td>1719</td>
+      <td>0</td>
+      <td>224</td>
+      <td>0</td>
+      <td>38</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Formulas-and-calculations-in-statsmodels-formulas">Formulas and calculations in statsmodels formulas<a class="anchor-link" href="#Formulas-and-calculations-in-statsmodels-formulas">#</a></h1><p>Instead of building new columns in pandas, <strong>we're just going to tell statsmodels to do it for us</strong>. This is using something called <a href="https://patsy.readthedocs.io/en/latest/formulas.html">Patsy</a>, imitating the programming language R.</p>
+<table>
+<thead><tr>
+<th>description</th>
+<th>pandas style</th>
+<th>formula style</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Multiply column</td>
+<td><code>df.colname * 100</code></td>
+<td><code>np.multiply(colname, 100)</code></td>
+</tr>
+<tr>
+<td>Divide columns</td>
+<td><code>df.loan_amount / df.income</code></td>
+<td><code>np.divide(loan_amount, income)</code></td>
+</tr>
+<tr>
+<td>Percentage</td>
+<td><code>df.pop_black / pop_total * 100</code></td>
+<td><code>np.multiply(pop_black / pop_total, 100)</code></td>
+</tr>
+<tr>
+<td>Calculate log</td>
+<td><code>np.log(income)</code></td>
+<td><code>np.log(income)</code></td>
+</tr>
+<tr>
+<td>One-hot encoding</td>
+<td><code>pd.get_dummies(df.agency_code).drop('FDIC', axis=1)</code></td>
+<td><code>C(agency_code, Treatment('FDIC')</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote><p>If you haven't heard of one-hot encoding before, I recommend reading the longer version of this notebook! Or looking at what happens down below and thinking it through.</p>
+</blockquote>
+<p>If we follow Reveal's methodology, we have a nice long list of features to include in our formula. Turning them all into a statsmodel/Patsy formula, the result looks like this:</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">statsmodels.formula.api</span> <span class="k">as</span> <span class="nn">smf</span>
+
+<span class="n">model</span> <span class="o">=</span> <span class="n">smf</span><span class="o">.</span><span class="n">logit</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;</span>
+<span class="s2">    loan_denied ~ </span>
+<span class="s2">        tract_to_msa_income_percent</span>
+<span class="s2">        + np.log(income)</span>
+<span class="s2">        + np.log(loan_amount)</span>
+<span class="s2">        + np.divide(loan_amount, income)</span>
+<span class="s2">        + C(co_applicant, Treatment(&#39;no&#39;))</span>
+<span class="s2">        + C(applicant_sex, Treatment(&#39;female&#39;))</span>
+<span class="s2">        + C(applicant_race, Treatment(&#39;white&#39;))</span>
+<span class="s2">        + C(agency_code, Treatment(&#39;FDIC&#39;))</span>
+<span class="s2">        + np.multiply(pop_hispanic / pop_total, 100)</span>
+<span class="s2">        + np.multiply(pop_black / pop_total, 100)</span>
+<span class="s2">        + np.multiply(pop_amer_indian / pop_total, 100)</span>
+<span class="s2">        + np.multiply(pop_asian / pop_total, 100)</span>
+<span class="s2">        + np.multiply(pop_pac_islander / pop_total, 100)</span>
+<span class="s2">&quot;&quot;&quot;</span><span class="p">,</span> <span class="n">data</span><span class="o">=</span><span class="n">merged</span><span class="p">)</span>
+
+<span class="n">result</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">()</span>
+<span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+<div class="output_subarea output_stream output_stdout output_text">
+<pre>Optimization terminated successfully.
+         Current function value: 0.334016
+         Iterations 7
+</pre>
+</div>
+</div>
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>      <td>loan_denied</td>   <th>  No. Observations:  </th>   <td> 10107</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td> 10082</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>    24</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Tue, 05 Nov 2019</td> <th>  Pseudo R-squ.:     </th>   <td>0.09749</td> 
+</tr>
+<tr>
+  <th>Time:</th>                <td>12:57:59</td>     <th>  Log-Likelihood:    </th>  <td> -3375.9</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -3740.6</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>1.629e-138</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+                            <td></td>                              <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                                            <td>   -0.6024</td> <td>    0.306</td> <td>   -1.971</td> <td> 0.049</td> <td>   -1.202</td> <td>   -0.003</td>
+</tr>
+<tr>
+  <th>C(co_applicant, Treatment('no'))[T.unknown]</th>          <td>    0.3957</td> <td>    0.207</td> <td>    1.914</td> <td> 0.056</td> <td>   -0.010</td> <td>    0.801</td>
+</tr>
+<tr>
+  <th>C(co_applicant, Treatment('no'))[T.yes]</th>              <td>   -0.0958</td> <td>    0.078</td> <td>   -1.222</td> <td> 0.222</td> <td>   -0.249</td> <td>    0.058</td>
+</tr>
+<tr>
+  <th>C(applicant_sex, Treatment('female'))[T.male]</th>        <td>    0.1213</td> <td>    0.070</td> <td>    1.722</td> <td> 0.085</td> <td>   -0.017</td> <td>    0.259</td>
+</tr>
+<tr>
+  <th>C(applicant_sex, Treatment('female'))[T.na]</th>          <td>   -0.1091</td> <td>    0.176</td> <td>   -0.618</td> <td> 0.537</td> <td>   -0.455</td> <td>    0.237</td>
+</tr>
+<tr>
+  <th>C(applicant_race, Treatment('white'))[T.asian]</th>       <td>    0.3783</td> <td>    0.105</td> <td>    3.595</td> <td> 0.000</td> <td>    0.172</td> <td>    0.584</td>
+</tr>
+<tr>
+  <th>C(applicant_race, Treatment('white'))[T.black]</th>       <td>    0.7496</td> <td>    0.115</td> <td>    6.506</td> <td> 0.000</td> <td>    0.524</td> <td>    0.975</td>
+</tr>
+<tr>
+  <th>C(applicant_race, Treatment('white'))[T.hawaiian]</th>    <td>    1.0989</td> <td>    0.464</td> <td>    2.368</td> <td> 0.018</td> <td>    0.189</td> <td>    2.008</td>
+</tr>
+<tr>
+  <th>C(applicant_race, Treatment('white'))[T.latino]</th>      <td>    0.3232</td> <td>    0.164</td> <td>    1.970</td> <td> 0.049</td> <td>    0.002</td> <td>    0.645</td>
+</tr>
+<tr>
+  <th>C(applicant_race, Treatment('white'))[T.na]</th>          <td>    0.4511</td> <td>    0.119</td> <td>    3.798</td> <td> 0.000</td> <td>    0.218</td> <td>    0.684</td>
+</tr>
+<tr>
+  <th>C(applicant_race, Treatment('white'))[T.native_amer]</th> <td>    1.0546</td> <td>    0.591</td> <td>    1.785</td> <td> 0.074</td> <td>   -0.103</td> <td>    2.213</td>
+</tr>
+<tr>
+  <th>C(agency_code, Treatment('FDIC'))[T.CFPB]</th>            <td>    1.1066</td> <td>    0.136</td> <td>    8.158</td> <td> 0.000</td> <td>    0.841</td> <td>    1.372</td>
+</tr>
+<tr>
+  <th>C(agency_code, Treatment('FDIC'))[T.FRS]</th>             <td>   -0.1133</td> <td>    0.221</td> <td>   -0.513</td> <td> 0.608</td> <td>   -0.546</td> <td>    0.319</td>
+</tr>
+<tr>
+  <th>C(agency_code, Treatment('FDIC'))[T.HUD]</th>             <td>    0.1170</td> <td>    0.140</td> <td>    0.837</td> <td> 0.402</td> <td>   -0.157</td> <td>    0.391</td>
+</tr>
+<tr>
+  <th>C(agency_code, Treatment('FDIC'))[T.NCUA]</th>            <td>    1.3009</td> <td>    0.153</td> <td>    8.507</td> <td> 0.000</td> <td>    1.001</td> <td>    1.601</td>
+</tr>
+<tr>
+  <th>C(agency_code, Treatment('FDIC'))[T.OCC]</th>             <td>    0.3160</td> <td>    0.201</td> <td>    1.575</td> <td> 0.115</td> <td>   -0.077</td> <td>    0.709</td>
+</tr>
+<tr>
+  <th>tract_to_msa_income_percent</th>                          <td>    0.0017</td> <td>    0.001</td> <td>    2.627</td> <td> 0.009</td> <td>    0.000</td> <td>    0.003</td>
+</tr>
+<tr>
+  <th>np.log(income)</th>                                       <td>   -0.3555</td> <td>    0.070</td> <td>   -5.104</td> <td> 0.000</td> <td>   -0.492</td> <td>   -0.219</td>
+</tr>
+<tr>
+  <th>np.log(loan_amount)</th>                                  <td>   -0.2283</td> <td>    0.056</td> <td>   -4.060</td> <td> 0.000</td> <td>   -0.338</td> <td>   -0.118</td>
+</tr>
+<tr>
+  <th>np.divide(loan_amount, income)</th>                       <td>    0.0110</td> <td>    0.007</td> <td>    1.476</td> <td> 0.140</td> <td>   -0.004</td> <td>    0.026</td>
+</tr>
+<tr>
+  <th>np.multiply(pop_hispanic / pop_total, 100)</th>           <td>    0.0072</td> <td>    0.004</td> <td>    2.050</td> <td> 0.040</td> <td>    0.000</td> <td>    0.014</td>
+</tr>
+<tr>
+  <th>np.multiply(pop_black / pop_total, 100)</th>              <td>    0.0062</td> <td>    0.002</td> <td>    3.884</td> <td> 0.000</td> <td>    0.003</td> <td>    0.009</td>
+</tr>
+<tr>
+  <th>np.multiply(pop_amer_indian / pop_total, 100)</th>        <td>   -0.2571</td> <td>    0.097</td> <td>   -2.652</td> <td> 0.008</td> <td>   -0.447</td> <td>   -0.067</td>
+</tr>
+<tr>
+  <th>np.multiply(pop_asian / pop_total, 100)</th>              <td>    0.0107</td> <td>    0.004</td> <td>    2.427</td> <td> 0.015</td> <td>    0.002</td> <td>    0.019</td>
+</tr>
+<tr>
+  <th>np.multiply(pop_pac_islander / pop_total, 100)</th>       <td>    0.0904</td> <td>    0.159</td> <td>    0.568</td> <td> 0.570</td> <td>   -0.221</td> <td>    0.402</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<h1 id="Renaming-our-output-fields">Renaming our output fields<a class="anchor-link" href="#Renaming-our-output-fields">#</a></h1><p>If we love the formula method but hate the feature names, <strong>we can rename them.</strong> It isn't the easiest thing that's ever happened, but it isn't <em>so</em> bad.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="c1"># Copy the names to a pd.Series for easy search/replace</span>
+<span class="c1"># We&#39;ll also keep a safe copy to make double-checking easy later</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Series</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">xnames</span><span class="p">)</span>
+<span class="n">originals</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">names</span><span class="o">.</span><span class="n">copy</span><span class="p">())</span>
+
+<span class="c1"># Reformat &#39;C(agency_code, Treatment(&#39;FDIC&#39;))[T.FRS]&#39; as &#39;agency_code_FRS&#39;</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;, ?Treatment\(.*\)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;&quot;</span><span class="p">)</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;C\(([\w]+)&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1_&quot;</span><span class="p">)</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="sa">r</span><span class="s2">&quot;\[T.(.*)\]&quot;</span><span class="p">,</span> <span class="sa">r</span><span class="s2">&quot;\1&quot;</span><span class="p">)</span>
+
+<span class="c1"># Manually replace other ones</span>
+<span class="n">names</span> <span class="o">=</span> <span class="n">names</span><span class="o">.</span><span class="n">replace</span><span class="p">({</span>
+    <span class="s1">&#39;np.multiply(pop_hispanic / pop_total, 100)&#39;</span><span class="p">:</span> <span class="s1">&#39;pop_hispanic&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;np.multiply(pop_black / pop_total, 100)&#39;</span><span class="p">:</span> <span class="s1">&#39;pop_black&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;np.multiply(pop_amer_indian / pop_total, 100)&#39;</span><span class="p">:</span> <span class="s1">&#39;pop_amer_indian&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;np.multiply(pop_asian / pop_total, 100)&#39;</span><span class="p">:</span> <span class="s1">&#39;pct_asian&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;np.multiply(pop_pac_islander / pop_total, 100)&#39;</span><span class="p">:</span> <span class="s1">&#39;pop_pac_islander&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;np.log(income)&#39;</span><span class="p">:</span> <span class="s1">&#39;log_income&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;np.log(loan_amount)&#39;</span><span class="p">:</span> <span class="s1">&#39;log_loan&#39;</span><span class="p">,</span>
+    <span class="s1">&#39;np.divide(loan_amount, income)&#39;</span><span class="p">:</span> <span class="s1">&#39;loan_income_ratio&#39;</span><span class="p">,</span>    
+<span class="p">})</span>
+
+<span class="n">original_names</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">xnames</span>
+<span class="c1"># Assign back into the model for display</span>
+<span class="n">model</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">xnames</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">names</span><span class="p">)</span>
+
+<span class="c1"># Redo our summary, and we get nice output!</span>
+<span class="n">result</span><span class="o">.</span><span class="n">summary</span><span class="p">()</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<table class="simpletable">
+<caption>Logit Regression Results</caption>
+<tr>
+  <th>Dep. Variable:</th>      <td>loan_denied</td>   <th>  No. Observations:  </th>   <td> 10107</td>  
+</tr>
+<tr>
+  <th>Model:</th>                 <td>Logit</td>      <th>  Df Residuals:      </th>   <td> 10082</td>  
+</tr>
+<tr>
+  <th>Method:</th>                 <td>MLE</td>       <th>  Df Model:          </th>   <td>    24</td>  
+</tr>
+<tr>
+  <th>Date:</th>            <td>Tue, 05 Nov 2019</td> <th>  Pseudo R-squ.:     </th>   <td>0.09749</td> 
+</tr>
+<tr>
+  <th>Time:</th>                <td>12:58:11</td>     <th>  Log-Likelihood:    </th>  <td> -3375.9</td> 
+</tr>
+<tr>
+  <th>converged:</th>             <td>True</td>       <th>  LL-Null:           </th>  <td> -3740.6</td> 
+</tr>
+<tr>
+  <th>Covariance Type:</th>     <td>nonrobust</td>    <th>  LLR p-value:       </th> <td>1.629e-138</td>
+</tr>
+</table>
+<table class="simpletable">
+<tr>
+               <td></td>                  <th>coef</th>     <th>std err</th>      <th>z</th>      <th>P>|z|</th>  <th>[0.025</th>    <th>0.975]</th>  
+</tr>
+<tr>
+  <th>Intercept</th>                   <td>   -0.6024</td> <td>    0.306</td> <td>   -1.971</td> <td> 0.049</td> <td>   -1.202</td> <td>   -0.003</td>
+</tr>
+<tr>
+  <th>co_applicant_unknown</th>        <td>    0.3957</td> <td>    0.207</td> <td>    1.914</td> <td> 0.056</td> <td>   -0.010</td> <td>    0.801</td>
+</tr>
+<tr>
+  <th>co_applicant_yes</th>            <td>   -0.0958</td> <td>    0.078</td> <td>   -1.222</td> <td> 0.222</td> <td>   -0.249</td> <td>    0.058</td>
+</tr>
+<tr>
+  <th>applicant_sex_male</th>          <td>    0.1213</td> <td>    0.070</td> <td>    1.722</td> <td> 0.085</td> <td>   -0.017</td> <td>    0.259</td>
+</tr>
+<tr>
+  <th>applicant_sex_na</th>            <td>   -0.1091</td> <td>    0.176</td> <td>   -0.618</td> <td> 0.537</td> <td>   -0.455</td> <td>    0.237</td>
+</tr>
+<tr>
+  <th>applicant_race_asian</th>        <td>    0.3783</td> <td>    0.105</td> <td>    3.595</td> <td> 0.000</td> <td>    0.172</td> <td>    0.584</td>
+</tr>
+<tr>
+  <th>applicant_race_black</th>        <td>    0.7496</td> <td>    0.115</td> <td>    6.506</td> <td> 0.000</td> <td>    0.524</td> <td>    0.975</td>
+</tr>
+<tr>
+  <th>applicant_race_hawaiian</th>     <td>    1.0989</td> <td>    0.464</td> <td>    2.368</td> <td> 0.018</td> <td>    0.189</td> <td>    2.008</td>
+</tr>
+<tr>
+  <th>applicant_race_latino</th>       <td>    0.3232</td> <td>    0.164</td> <td>    1.970</td> <td> 0.049</td> <td>    0.002</td> <td>    0.645</td>
+</tr>
+<tr>
+  <th>applicant_race_na</th>           <td>    0.4511</td> <td>    0.119</td> <td>    3.798</td> <td> 0.000</td> <td>    0.218</td> <td>    0.684</td>
+</tr>
+<tr>
+  <th>applicant_race_native_amer</th>  <td>    1.0546</td> <td>    0.591</td> <td>    1.785</td> <td> 0.074</td> <td>   -0.103</td> <td>    2.213</td>
+</tr>
+<tr>
+  <th>agency_code_CFPB</th>            <td>    1.1066</td> <td>    0.136</td> <td>    8.158</td> <td> 0.000</td> <td>    0.841</td> <td>    1.372</td>
+</tr>
+<tr>
+  <th>agency_code_FRS</th>             <td>   -0.1133</td> <td>    0.221</td> <td>   -0.513</td> <td> 0.608</td> <td>   -0.546</td> <td>    0.319</td>
+</tr>
+<tr>
+  <th>agency_code_HUD</th>             <td>    0.1170</td> <td>    0.140</td> <td>    0.837</td> <td> 0.402</td> <td>   -0.157</td> <td>    0.391</td>
+</tr>
+<tr>
+  <th>agency_code_NCUA</th>            <td>    1.3009</td> <td>    0.153</td> <td>    8.507</td> <td> 0.000</td> <td>    1.001</td> <td>    1.601</td>
+</tr>
+<tr>
+  <th>agency_code_OCC</th>             <td>    0.3160</td> <td>    0.201</td> <td>    1.575</td> <td> 0.115</td> <td>   -0.077</td> <td>    0.709</td>
+</tr>
+<tr>
+  <th>tract_to_msa_income_percent</th> <td>    0.0017</td> <td>    0.001</td> <td>    2.627</td> <td> 0.009</td> <td>    0.000</td> <td>    0.003</td>
+</tr>
+<tr>
+  <th>log_income</th>                  <td>   -0.3555</td> <td>    0.070</td> <td>   -5.104</td> <td> 0.000</td> <td>   -0.492</td> <td>   -0.219</td>
+</tr>
+<tr>
+  <th>log_loan</th>                    <td>   -0.2283</td> <td>    0.056</td> <td>   -4.060</td> <td> 0.000</td> <td>   -0.338</td> <td>   -0.118</td>
+</tr>
+<tr>
+  <th>loan_income_ratio</th>           <td>    0.0110</td> <td>    0.007</td> <td>    1.476</td> <td> 0.140</td> <td>   -0.004</td> <td>    0.026</td>
+</tr>
+<tr>
+  <th>pop_hispanic</th>                <td>    0.0072</td> <td>    0.004</td> <td>    2.050</td> <td> 0.040</td> <td>    0.000</td> <td>    0.014</td>
+</tr>
+<tr>
+  <th>pop_black</th>                   <td>    0.0062</td> <td>    0.002</td> <td>    3.884</td> <td> 0.000</td> <td>    0.003</td> <td>    0.009</td>
+</tr>
+<tr>
+  <th>pop_amer_indian</th>             <td>   -0.2571</td> <td>    0.097</td> <td>   -2.652</td> <td> 0.008</td> <td>   -0.447</td> <td>   -0.067</td>
+</tr>
+<tr>
+  <th>pct_asian</th>                   <td>    0.0107</td> <td>    0.004</td> <td>    2.427</td> <td> 0.015</td> <td>    0.002</td> <td>    0.019</td>
+</tr>
+<tr>
+  <th>pop_pac_islander</th>            <td>    0.0904</td> <td>    0.159</td> <td>    0.568</td> <td> 0.570</td> <td>   -0.221</td> <td>    0.402</td>
+</tr>
+</table>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>Everything about our model still works great!</p>
+<p>We can build a coefficient/odds ratio/p-value table without any trouble at all.</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span><span class="n">feature_names</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">index</span>
+<span class="n">coefficients</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">values</span>
+
+<span class="n">coefs</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+    <span class="s1">&#39;coef&#39;</span><span class="p">:</span> <span class="n">coefficients</span><span class="p">,</span>
+    <span class="s1">&#39;odds ratio&#39;</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">result</span><span class="o">.</span><span class="n">params</span><span class="o">.</span><span class="n">values</span><span class="p">),</span>
+    <span class="s1">&#39;pvalue&#39;</span><span class="p">:</span> <span class="n">result</span><span class="o">.</span><span class="n">pvalues</span><span class="p">,</span>
+    <span class="s1">&#39;original&#39;</span><span class="p">:</span> <span class="n">originals</span>
+<span class="p">})</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s1">&#39;odds ratio&#39;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">coefs</span>
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+<div class="output_wrapper">
+<div class="output">
+
+<div class="output_area">
+
+
+<div class="output_html rendered_html output_subarea output_execute_result">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>coef</th>
+      <th>odds ratio</th>
+      <th>pvalue</th>
+      <th>original</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>agency_code_NCUA</th>
+      <td>1.30091</td>
+      <td>3.67262</td>
+      <td>0.00000</td>
+      <td>C(agency_code, Treatment('FDIC'))[T.NCUA]</td>
+    </tr>
+    <tr>
+      <th>agency_code_CFPB</th>
+      <td>1.10661</td>
+      <td>3.02410</td>
+      <td>0.00000</td>
+      <td>C(agency_code, Treatment('FDIC'))[T.CFPB]</td>
+    </tr>
+    <tr>
+      <th>applicant_race_hawaiian</th>
+      <td>1.09891</td>
+      <td>3.00090</td>
+      <td>0.01787</td>
+      <td>C(applicant_race, Treatment('white'))[T.hawaiian]</td>
+    </tr>
+    <tr>
+      <th>applicant_race_native_amer</th>
+      <td>1.05461</td>
+      <td>2.87087</td>
+      <td>0.07426</td>
+      <td>C(applicant_race, Treatment('white'))[T.native...</td>
+    </tr>
+    <tr>
+      <th>applicant_race_black</th>
+      <td>0.74963</td>
+      <td>2.11622</td>
+      <td>0.00000</td>
+      <td>C(applicant_race, Treatment('white'))[T.black]</td>
+    </tr>
+    <tr>
+      <th>applicant_race_na</th>
+      <td>0.45112</td>
+      <td>1.57007</td>
+      <td>0.00015</td>
+      <td>C(applicant_race, Treatment('white'))[T.na]</td>
+    </tr>
+    <tr>
+      <th>co_applicant_unknown</th>
+      <td>0.39570</td>
+      <td>1.48543</td>
+      <td>0.05568</td>
+      <td>C(co_applicant, Treatment('no'))[T.unknown]</td>
+    </tr>
+    <tr>
+      <th>applicant_race_asian</th>
+      <td>0.37826</td>
+      <td>1.45974</td>
+      <td>0.00032</td>
+      <td>C(applicant_race, Treatment('white'))[T.asian]</td>
+    </tr>
+    <tr>
+      <th>applicant_race_latino</th>
+      <td>0.32318</td>
+      <td>1.38151</td>
+      <td>0.04881</td>
+      <td>C(applicant_race, Treatment('white'))[T.latino]</td>
+    </tr>
+    <tr>
+      <th>agency_code_OCC</th>
+      <td>0.31598</td>
+      <td>1.37160</td>
+      <td>0.11521</td>
+      <td>C(agency_code, Treatment('FDIC'))[T.OCC]</td>
+    </tr>
+    <tr>
+      <th>applicant_sex_male</th>
+      <td>0.12133</td>
+      <td>1.12900</td>
+      <td>0.08514</td>
+      <td>C(applicant_sex, Treatment('female'))[T.male]</td>
+    </tr>
+    <tr>
+      <th>agency_code_HUD</th>
+      <td>0.11701</td>
+      <td>1.12413</td>
+      <td>0.40245</td>
+      <td>C(agency_code, Treatment('FDIC'))[T.HUD]</td>
+    </tr>
+    <tr>
+      <th>pop_pac_islander</th>
+      <td>0.09038</td>
+      <td>1.09459</td>
+      <td>0.56988</td>
+      <td>np.multiply(pop_pac_islander / pop_total, 100)</td>
+    </tr>
+    <tr>
+      <th>loan_income_ratio</th>
+      <td>0.01096</td>
+      <td>1.01102</td>
+      <td>0.13984</td>
+      <td>np.divide(loan_amount, income)</td>
+    </tr>
+    <tr>
+      <th>pct_asian</th>
+      <td>0.01069</td>
+      <td>1.01074</td>
+      <td>0.01522</td>
+      <td>np.multiply(pop_asian / pop_total, 100)</td>
+    </tr>
+    <tr>
+      <th>pop_hispanic</th>
+      <td>0.00719</td>
+      <td>1.00721</td>
+      <td>0.04041</td>
+      <td>np.multiply(pop_hispanic / pop_total, 100)</td>
+    </tr>
+    <tr>
+      <th>pop_black</th>
+      <td>0.00623</td>
+      <td>1.00625</td>
+      <td>0.00010</td>
+      <td>np.multiply(pop_black / pop_total, 100)</td>
+    </tr>
+    <tr>
+      <th>tract_to_msa_income_percent</th>
+      <td>0.00175</td>
+      <td>1.00175</td>
+      <td>0.00862</td>
+      <td>tract_to_msa_income_percent</td>
+    </tr>
+    <tr>
+      <th>co_applicant_yes</th>
+      <td>-0.09583</td>
+      <td>0.90862</td>
+      <td>0.22154</td>
+      <td>C(co_applicant, Treatment('no'))[T.yes]</td>
+    </tr>
+    <tr>
+      <th>applicant_sex_na</th>
+      <td>-0.10905</td>
+      <td>0.89668</td>
+      <td>0.53657</td>
+      <td>C(applicant_sex, Treatment('female'))[T.na]</td>
+    </tr>
+    <tr>
+      <th>agency_code_FRS</th>
+      <td>-0.11333</td>
+      <td>0.89285</td>
+      <td>0.60766</td>
+      <td>C(agency_code, Treatment('FDIC'))[T.FRS]</td>
+    </tr>
+    <tr>
+      <th>log_loan</th>
+      <td>-0.22825</td>
+      <td>0.79592</td>
+      <td>0.00005</td>
+      <td>np.log(loan_amount)</td>
+    </tr>
+    <tr>
+      <th>pop_amer_indian</th>
+      <td>-0.25706</td>
+      <td>0.77332</td>
+      <td>0.00801</td>
+      <td>np.multiply(pop_amer_indian / pop_total, 100)</td>
+    </tr>
+    <tr>
+      <th>log_income</th>
+      <td>-0.35546</td>
+      <td>0.70085</td>
+      <td>0.00000</td>
+      <td>np.log(income)</td>
+    </tr>
+    <tr>
+      <th>Intercept</th>
+      <td>-0.60242</td>
+      <td>0.54748</td>
+      <td>0.04874</td>
+      <td>Intercept</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+</div>
+
+</div>
+
+</div>
+</div>
+
+</div>
+<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
+<div class="text_cell_render border-box-sizing rendered_html">
+<p>And then you're all set!</p>
+
+</div>
+</div>
+</div>
+<div class="cell border-box-sizing code_cell rendered">
+<div class="input">
+
+<div class="inner_cell">
+    <div class="input_area">
+<div class=" highlight hl-ipython3"><pre><span></span> 
+</pre></div>
+
+    </div>
+</div>
+</div>
+
+</div>
+ 
+
+
+    </div>
+  </div>
+</div>
+
+<script>
+  [...document.querySelectorAll(".code_cell")].filter(cell => cell.innerText.trim().length === 0).forEach(cell => cell.remove())
+</script>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

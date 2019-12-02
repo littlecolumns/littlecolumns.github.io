@@ -1,0 +1,379 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Bias in the jury selection process</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="hero">
+    <div class="hero-body">
+        <div class="content">
+            <h1>Bias in the jury selection process</h1>
+            <p>When selecting a jury, both the defense and the prosecution are allowed to strike potential jurors from the pool. While the potential jurors provide answers to a questionnaire, what kind of role might race play in their selection or rejection?</p>
+            
+            <p>
+                
+                <a href="/ds4j/logistic-regression" class="chip">logistic regression</a>
+                
+                <a href="/ds4j/odds-ratio-log-odds-ratio" class="chip">odds ratio/log odds ratio</a>
+                
+                <a href="/ds4j/p-values" class="chip">p values</a>
+                
+                <a href="/ds4j/race" class="chip">race</a>
+                
+            </p>
+            
+        </div>
+    </div>
+</div>
+<div class="chapter-nav bg-secondary">
+    <div class="content">
+        
+        <a href="../reveal-mortgages/">&larr;&nbsp;Analyzing mortgage rejections for racial bias</a>
+        
+        
+        <a href="../reuters-asylum/">Analyzing the impact of particular judges on the US asylum process&nbsp;&rarr;</a>
+        
+    </div>
+</div>
+<section class="section">
+    <div class="content">
+
+        <div class="columns">
+            <div class="column col-5 col-md-12 readings">
+                <h3>Readings and links</h3>
+                <ul>
+<li><a href="https://features.apmreports.org/in-the-dark/curtis-flowers-trial-six-jury-selection/">How did Curtis Flowers end up with a nearly all-white jury?</a></li>
+<li><a href="https://www.apmreports.org/in-the-dark/season-two">In the Dark, Season Two</a></li>
+<li><a href="https://github.com/APM-Reports/jury-data">GitHub repo</a> with code and data</li>
+<li><a href="https://www.apmreports.org/files/peremptory_strike_methodology.pdf">Whitepaper</a> for the analysis</li>
+</ul>
+            </div>
+            <div class="column col-7 col-md-12">
+                <h3>Summary</h3>
+                <p>Building on our experience with logistic regression, can we find bias in the jury selection process? Our feature encoding is pretty easy, but there are a <em>lot</em> of things we'll be controlling for.</p>
+            </div>
+        </div>
+
+        
+        <h3>Notebooks, Assignments, and Walkthroughs</h3>
+        
+
+        
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/apm-reports-jury-bias/in-the-dark-combining-datasets-and-cleaning-the-data">Combining and cleaning the initial dataset</a></h4>
+        <p>Cleaning the dataset</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/apm-reports-jury-bias/in-the-dark-combining-datasets-and-cleaning-the-data/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/apm-reports-jury-bias/notebooks/In The Dark - Combining datasets and cleaning the data.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/apm-reports-jury-bias/notebooks/In The Dark - Combining datasets and cleaning the data.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/apm-reports-jury-bias/in-the-dark-feature-selection-with-p-values">Picking what matters and what doesn&#39;t in a regression</a></h4>
+        <p>How to use the statistical measure &#34;p-value&#34; to pick which features to include in your regression model. Also known as &#34;feature selection.&#34;</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/apm-reports-jury-bias/in-the-dark-feature-selection-with-p-values/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/apm-reports-jury-bias/notebooks/In The Dark - Feature selection with p values.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/apm-reports-jury-bias/notebooks/In The Dark - Feature selection with p values.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/apm-reports-jury-bias/in-the-dark-jury-selection-regression-walkthrough">Analyzing data using statsmodels formulas</a></h4>
+        <p>Perform some cleaning and the main logistic regression using the formula method in the statsmodels package.</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/apm-reports-jury-bias/in-the-dark-jury-selection-regression-walkthrough/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/apm-reports-jury-bias/notebooks/In The Dark - Jury selection regression walkthrough.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/apm-reports-jury-bias/notebooks/In The Dark - Jury selection regression walkthrough.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/apm-reports-jury-bias/in-the-dark-alternative-formula-methods">Alternative techniques with statsmodels formulas</a></h4>
+        <p>Using casting-as-categorical in statsmodels formulas to approach this in another way. Not the same as</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/apm-reports-jury-bias/in-the-dark-alternative-formula-methods/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/apm-reports-jury-bias/notebooks/In The Dark - Alternative formula methods.ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/apm-reports-jury-bias/notebooks/In The Dark - Alternative formula methods.ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        
+        
+
+        
+    </div>
+</section>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>

@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="en-US">
+
+<head>
+  <meta charset="utf-8">
+  <title>Predicting delays in patching potholes based on demographics</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet">
+  <!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+  <link rel="stylesheet" href="/ds4j/css/spectre.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-exp.min.css">
+  <link rel="stylesheet" href="/ds4j/css/spectre-icons.min.css">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="/ds4j/css/style.css" rel="stylesheet">
+  <link href="/ds4j/css/highlight.css" rel="stylesheet">
+</head>
+
+<body>
+  <div class="nav-holder bg-secondary">
+  <div class='content'>
+    <header class="navbar">
+      <section class="navbar-section">
+        <a href="/ds4j/" class="navbar-brand mr-2">DS4J</a>
+      </section>
+      <section class="navbar-section">
+        <a href="/ds4j/projects" class="btn btn-link">Projects</a>
+        <a href="/ds4j/topics" class="btn btn-link">Topics</a>
+        <a href="/ds4j/curriculum" class="btn btn-link">Curriculum</a>
+        <a href="/ds4j/about" class="btn btn-link">About</a>
+      </section>
+    </header>
+  </div>
+</div>
+  
+<div class="hero">
+    <div class="hero-body">
+        <div class="content">
+            <h1>Predicting delays in patching potholes based on demographics</h1>
+            <p>An analysis of the relationship between race and city sanitation services in Milwaukee.</p>
+            
+            <p>
+                
+                <a href="/ds4j/linear-regression" class="chip">linear regression</a>
+                
+                <a href="/ds4j/multivariate-regression" class="chip">multivariate regression</a>
+                
+            </p>
+            
+        </div>
+    </div>
+</div>
+<div class="chapter-nav bg-secondary">
+    <div class="content">
+        
+        <a href="../fivethirtyeight-p-hacking/">&larr;&nbsp;p values and p-hacking</a>
+        
+        
+        <a href="../dmn-texas-school-cheating/">Finding cheating schools in Texas with linear regression&nbsp;&rarr;</a>
+        
+    </div>
+</div>
+<section class="section">
+    <div class="content">
+
+        <div class="columns">
+            <div class="column col-5 col-md-12 readings">
+                <h3>Readings and links</h3>
+                <ul>
+<li><a href="http://archive.jsonline.com/news/milwaukee/32580074.html">Milwaukee database, statistical software show pothole disparity</a> </li>
+<li><a href="https://web.archive.org/web/20081223094123/http://www.jsonline.com/news/milwaukee/32580034.html">Race gap found in pothole patching</a></li>
+</ul>
+            </div>
+            <div class="column col-7 col-md-12">
+                <h3>Summary</h3>
+                <p>This chapter reviews a piece from the Milwaukee Journal Sentinel that requires a unique combination of geographic data cleaning along with a linear regression using census data.</p>
+<p>After requesting pothole fill data from the city, we would receive given a file containing the addresses of reported potholes, along with the time the potholes were reported and fixed. To turn this into geographic data, we need to convert these addresses to latitude/longitude pairs (geocoding), and then use a spatial join to find out which census tract each address is in.</p>
+<p>For each cesus tract, the Census Bureau publishes data on race, income, and population. We'll then downloaded this data and join it to the potholes dataset, allowing us to see the demographic details at each pothole's location.</p>
+<p>Once all the data is in one place - how long it took the potholes to be fixed along with demographic data for each pothole's location - we are finally able to use a linear regression to determine how an area's demographics relate to the number of days it takes to fix a pothole.</p>
+<p>The original piece uses more features than just race, but in its current incarnation our analysis only uses race. Combining with the same dataset as <a href="/ds4j/ap-regression-unemployment/">the AP regression on life expectancy</a> would be a quick upgrade.</p>
+            </div>
+        </div>
+
+        
+        <h3>Notebooks, Assignments, and Walkthroughs</h3>
+        
+        
+        <div class="columns">
+  <div class="column col-8 col-sm-12">
+    <h4><a href="/ds4j/milwaukee-potholes/walkthrough/">Complete walkthrough</a></strong></h4>
+    <p>A start-to-finish walkthrough of the Milwaukee Journal-Sentinel&#39;s analysis.</p>
+  </div>
+  <div class="column col-4 col-sm-12">
+    
+    
+    
+    
+    <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/milwaukee-potholes/walkthrough/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Multi-page walkthrough
+            </small>
+    </div>
+</div>
+
+    
+    
+    
+    <!--
+      <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-user fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/milwaukee-potholes/walkthrough/">Read online, no code</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Multi-page walkthrough
+            </small>
+    </div>
+</div>
+    -->
+  </div>
+</div>
+        <div class="divider"></div>
+        
+        
+
+        
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/milwaukee-potholes/homework-milwaukee-journal-sentinel-and-potholes-completed">Pothole geographic analysis and linear regression, complete walkthrough (Homework, completed version)</a></h4>
+        <p>A start-to-finish analysis of pothole fill times in Milwaukee, including the geographic parts and the linear regression. (homework, completed)</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/milwaukee-potholes/homework-milwaukee-journal-sentinel-and-potholes-completed/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/milwaukee-potholes/notebooks/Homework - Milwaukee Journal Sentinel and potholes (Completed).ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/milwaukee-potholes/notebooks/Homework - Milwaukee Journal Sentinel and potholes (Completed).ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        <div class="columns">
+    <div class="column col-8 col-sm-12">
+        <h4><a href="/ds4j/milwaukee-potholes/homework-milwaukee-journal-sentinel-and-potholes-no-merging">Pothole demographics linear regression, no spatial analysis (Homework, completed version)</a></h4>
+        <p>A quicker version of the full analysis, skipping the whole QGIS/spatial analysis parts. (homework, completed)</p>
+    </div>
+    <div class="column col-4 col-sm-12 access-link">
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-book fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/milwaukee-potholes/homework-milwaukee-journal-sentinel-and-potholes-no-merging/">Read online</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-download fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="/ds4j/milwaukee-potholes/notebooks/Homework - Milwaukee Journal Sentinel and potholes (No merging).ipynb">Download notebook</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+
+        
+        
+        
+        <div class="tile tile-centered">
+    <div class="tile-icon">
+        <div class="example-tile-icon"><i class="fa fa-laptop fa-sm"></i></div>
+    </div>
+    <div class="tile-content">
+        <div class="tile-title"><a href="https://colab.research.google.com/github/littlecolumns/ds4j-notebooks/blob/master/milwaukee-potholes/notebooks/Homework - Milwaukee Journal Sentinel and potholes (No merging).ipynb">Interactive version</a></div>
+        <small class="tile-subtitle text-gray">
+            
+            Jupyter Notebook
+            </small>
+    </div>
+</div>
+    </div>
+</div>
+        <div class="divider"></div>
+        
+        
+        
+
+        
+        <div class="columns">
+            <div class="column col-sm-8">
+                <h3>Discussion topics</h3>
+                <p><strong>Blah blah blah</strong></p>
+<p>Details details details details details details .</p>
+<p><strong>Blah blah blah</strong></p>
+<p>Details details details details details details .</p>
+<p><strong>Blah blah blah</strong></p>
+<p>Details details details details details details .</p>
+            </div>
+        </div> 
+    </div>
+</section>
+
+  <div class="footer bg-secondary">
+  <div class="content">
+    <div class="columns">
+      <div class="column col-6 col-sm-12">
+        <p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+        <p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+        <p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+      </div>
+      <div class="column col-3 col-sm-6">
+        <p><strong>Quick links</strong></p>
+        <!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+      </div>
+      <div class="column col-3 col-sm6">
+        <p><strong>Contact</strong></p>
+        <p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src="/ds4j/js/tocbot.js"></script>
+
+  <script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: '.js-toc',
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.notebook',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'nav',
+      listItemClass: 'nav-item',
+      headingLabelCallback: function (label) {
+        return label.replace("#", "")
+      }
+    });
+  </script>
+
+</body>
+
+</html>
