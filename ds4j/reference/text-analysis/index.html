@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+<meta charset="utf-8"/>
+<title>Text Analysis</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.11.2/css/all.min.css" rel="stylesheet"/>
+<!-- <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.5/css/bulma.min.css" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Raleway:400,700|Open+Sans:400,700&display=swap" rel="stylesheet"> -->
+<link href="/ds4j/css/spectre.min.css" rel="stylesheet"/>
+<link href="/ds4j/css/spectre-exp.min.css" rel="stylesheet"/>
+<link href="/ds4j/css/spectre-icons.min.css" rel="stylesheet"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link href="/ds4j/css/style.css" rel="stylesheet"/>
+<link href="/ds4j/css/highlight.css" rel="stylesheet"/>
+</head>
+<body>
+<div class="nav-holder bg-secondary">
+<div class="content">
+<header class="navbar">
+<section class="navbar-section">
+<a class="navbar-brand mr-2" href="/ds4j/">DS4J</a>
+</section>
+<section class="navbar-section">
+<a class="btn btn-link" href="/ds4j/projects">Projects</a>
+<a class="btn btn-link" href="/ds4j/topics">Topics</a>
+<a class="btn btn-link" href="/ds4j/curriculum">Curriculum</a>
+<a class="btn btn-link" href="/ds4j/about">About</a>
+</section>
+</header>
+</div>
+</div>
+<div class="columns col-gapless">
+<div class="column col-auto bg-dark col-sm-12">
+<div class="sidebar-holder">
+<div class="accordion-container">
+<div class="accordion">
+<input checked="checked" hidden="" id="accordion-text-analysis" name="docs-accordion-checkbox" type="checkbox"/>
+<a class="accordion-header c-hand" for="accordion-text-analysis" href="/ds4j/reference/text-analysis/">Text Analysis</a>
+<div class="accordion-body ref-nav-text-analysis">
+</div>
+<input hidden="" id="accordion-regression" name="docs-accordion-checkbox" type="checkbox"/>
+<a class="accordion-header c-hand" for="accordion-regression" href="/ds4j/reference/regression/">Regression</a>
+<div class="accordion-body ref-nav-regression">
+</div>
+<input hidden="" id="accordion-classification" name="docs-accordion-checkbox" type="checkbox"/>
+<a class="accordion-header c-hand" for="accordion-classification" href="/ds4j/reference/classification/">Classification</a>
+<div class="accordion-body ref-nav-classification">
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="column with-sidebar col-sm-12">
+<div class="hero">
+<div class="hero-body">
+<div class="content">
+<h1>Text Analysis</h1>
+</div>
+</div>
+</div>
+<section class="section">
+<div class="content" id="page-content"><html><body><div class="ref-holder"><h2 id="simple-counts">Simple counts</h2><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="word-counts-one-document">Word counts, one document</h3>
+
+<p>The built-in <code>Counter</code> tool is a easy way to count words in a single document.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s1">'We saw her duck'</span>
+<span class="n">counted</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="top-words-one-document">Top words, one document</h3>
+
+<p>If you only have one document and you'd like to count the words in it, <code>Counter</code> makes it easy to find the top <em>n</em> terms. If you'd like more, just change <code>.most_common(3)</code> to a larger number.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">Counter</span>
+
+<span class="n">text</span> <span class="o">=</span> <span class="s2">"""</span>
+<span class="s2">Time flies like an arrow;</span>
+<span class="s2">fruit flies like a banana</span>
+<span class="s2">"""</span>
+
+<span class="c1"># Count the words, print top three</span>
+<span class="n">counted</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">(</span><span class="n">text</span><span class="p">)</span>
+<span class="n">counted</span><span class="o">.</span><span class="n">most_common</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="word-counts">Word counts</h3>
+
+<p>If you have multiple documents or are doing machine learning, a <code>CountVectorizer</code> from scikit-learn might be a better option than <code>Counter</code>. If you're just doing simple work, though, <code>Counter</code> should be fine.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+<span class="c1"># Make a vectorizer</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+
+<span class="c1"># Learn and count the words in df.content</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="words-used-yesno-v1">Words used, yes/no v.1</h3>
+
+<p>This will give you a dataframe where each column is a word, and each row has a <code>0</code> or <code>1</code> as to whether it contains the word or not.</p>
+<p>Instead of getting fancy with scikit-learn or spaCy, you can just make a dataframe that uses <code>.str.contains</code> to see if there's a word inside. You'll use this one <strong>when there is a short list of specific words.</strong></p>
+<p>You use <code>.astype(int)</code> to change the result from <code>True</code> and <code>False</code> to <code>1</code> and <code>0</code>.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="c1"># Create a dataframe of 1's and 0's for each of the words</span>
+<span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">({</span>
+  <span class="s1">'cat'</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">'cat'</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+  <span class="s1">'dog'</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">'dog'</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">),</span>
+  <span class="s1">'mouse'</span><span class="p">:</span> <span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="s1">'mouse'</span><span class="p">,</span> <span class="n">na</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span>
+<span class="p">})</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="words-used-yesno-v2">Words used, yes/no v.2</h3>
+
+<p>Sometimes you only want to say whether a word is included or not, you don't really care about it being said three or four or sixteen times.</p>
+<p>To make this work, you pass <code>binary=True</code> to your <code>CountVectorizer</code>, and it will only give you ones and zeroes, for text appearing or not appearing.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+<span class="c1"># Make a vectorizer that only says 0/1</span>
+<span class="c1"># instead of counting</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">(</span><span class="n">binary</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="standard-tf-idf">Standard TF-IDF</h3>
+
+<p>TF-IDF adjusts for both the length of a document, how often a word shows up in the document, and how frequently the word appears in the entire dataset.</p>
+
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="c1"># Make a TF-IDF vectorizer</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">()</span>
+
+<span class="c1"># Learn and count the words in df.content</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><h2 id="advanced-counts">Advanced counts</h2><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="counting-n-grams">Counting n-grams</h3>
+
+<p>Passing <code>ngrams=(x,y)</code> will count multi-token phrases instead of just one word at a time.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="c1"># Count 1- and 2-token phrases</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">ngrams</span><span class="o">=</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="mi">2</span><span class="p">))</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="stem-and-vectorize">Stem and vectorize</h3>
+
+<p>We're using <a href="https://pypi.org/project/PyStemmer/">pyStemmer</a> instead of NLTK's Snowball or Porter stemmers because it's much much faster. This example is for English.</p>
+<p>In an ideal world we'd use <a href="http://spacy.io/">spaCy</a>. This will <strong>not</strong> work with ngrams.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+<span class="kn">import</span> <span class="nn">Stemmer</span>
+
+<span class="c1"># English stemmer from pyStemmer</span>
+<span class="n">stemmer</span> <span class="o">=</span> <span class="n">Stemmer</span><span class="o">.</span><span class="n">Stemmer</span><span class="p">(</span><span class="s1">'en'</span><span class="p">)</span>
+
+<span class="n">analyzer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span><span class="o">.</span><span class="n">build_analyzer</span><span class="p">()</span>
+
+<span class="c1"># Override CountVectorizer</span>
+<span class="k">class</span> <span class="nc">StemmedCountVectorizer</span><span class="p">(</span><span class="n">CountVectorizer</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">build_analyzer</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">analyzer</span> <span class="o">=</span> <span class="nb">super</span><span class="p">(</span><span class="n">CountVectorizer</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="n">build_analyzer</span><span class="p">()</span>
+        <span class="k">return</span> <span class="k">lambda</span> <span class="n">doc</span><span class="p">:</span> <span class="n">stemmer</span><span class="o">.</span><span class="n">stemWords</span><span class="p">(</span><span class="n">analyzer</span><span class="p">(</span><span class="n">doc</span><span class="p">))</span>
+
+<span class="c1"># Create a new StemmedCountVectorizer</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">StemmedCountVectorizer</span><span class="p">()</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="word-use-percentages">Word use percentages</h3>
+
+<p>In the sentence "Buffalo cannot buffalo here," the word <strong>buffalo</strong> will get a score of <code>0.5</code>, while <strong>cannot</strong> and <strong>here</strong> both get a <code>0.25</code>. Typically this number will go through a number of adjustments to be "real" TF-IDF, but setting these options for the vectorizer make it simple percentages.</p>
+
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="c1"># Vectorizer only counts percentages of words,</span>
+<span class="c1"># not real TF-IDF</span>
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">use_idf</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">norm</span><span class="o">=</span><span class="s1">'l1'</span><span class="p">)</span>
+
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><h2 id="using-the-vectorizer">Using the vectorizer</h2><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="display-counts-as-dataframe">Display counts as dataframe</h3>
+
+<p>You'll need to convert to "sparse matrix" of word counts using <code>.toarray()</code>, but after that it's easy to send it into a dataframe. To make each column be named after the word it's counting, you'll need the <code>columns=</code> line.</p>
+<p>If you have a short description in each row of your original dataframe - a speaker, a filename, etc - you can also send that to your new dataframe as <code>index=</code>.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># Convert the matrix of counts to a dataframe</span>
+<span class="n">words_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="specific-word-counts">Specific word counts</h3>
+
+<p>Your word count dataframe is the same as a normal dataframe. If you'd like to pick the count of a single word, you can just ask for that column. You can also ask for multiple words at a time, e.g. <code>words_df[['fluffy', 'scratchy']]</code>.</p>
+<p>If you're using a <code>TfidfVectorizer</code>, note that the number will <strong>not</strong> be a count. It also won't be a percentage, unless you used <code>use_idf=False</code> and <code>norm='l1'</code> when creating the vectorizer.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># Convert the matrix of counts to a dataframe</span>
+<span class="n">words_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+
+<span class="c1"># How many times was one word used</span>
+<span class="n">words_df</span><span class="p">[</span><span class="s1">'fluffy'</span><span class="p">]</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="add-word-counts">Add word counts</h3>
+
+<p>If you have a dataframe of word counts, you can see how many times a combination of words appears by creating a subset using pandas and <code>.sum(axis=1)</code>. If the first row uses "fluffy" twice and "scratchy" once, it will return a <code>3</code>.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">CountVectorizer</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">CountVectorizer</span><span class="p">()</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="n">words_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">matrix</span><span class="o">.</span><span class="n">toarray</span><span class="p">(),</span>
+                        <span class="n">columns</span><span class="o">=</span><span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">())</span>
+
+<span class="c1"># Get selected word counts, add across the row</span>
+<span class="n">words_df</span><span class="p">[[</span><span class="s1">'fluffy'</span><span class="p">,</span> <span class="s1">'scratchy'</span><span class="p">,</span> <span class="s1">'magic'</span><span class="p">]]</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div></div>
+</div>
+</body></html><html><body><div class="columns">
+<div class="column col-5 col-sm-12 ref-expl"><h3 id="words-in-vectorizer">Words in vectorizer</h3>
+
+<p>This will get you a list of all of the words the vectorizer has seen (make sure you <code>.fit_transform</code> or <code>.fit</code> it first!) work with both a <code>CountVectorizer</code> as well as a <code>TfidfVectorizer</code>.</p>
+</div>
+<div class="column col-7 col-sm-12 ref-code"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="kn">import</span> <span class="n">TfidfVectorizer</span>
+
+<span class="n">vectorizer</span> <span class="o">=</span> <span class="n">TfidfVectorizer</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">vectorizer</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">content</span><span class="p">)</span>
+
+<span class="c1"># Show the words from .fit_transform</span>
+<span class="n">vectorizer</span><span class="o">.</span><span class="n">get_feature_names</span><span class="p">()</span>
+</pre></div></div>
+</div>
+</body></html></div></body></html>
+
+</div>
+</section>
+<script>
+    let refNavSelector = ".ref-nav-text-analysis"
+</script>
+</div>
+</div>
+<div class="footer bg-secondary">
+<div class="content">
+<div class="columns">
+<div class="column col-6 col-sm-12">
+<p><strong>Hi, welcome to Data Science for Journalism!</strong></p>
+<p>There's been a lot of buzz about machine learning and "artificial intelligence" being used in stories over
+          the past few years. It's mostly not that complicated - a little stats, a classifier here or there - but it's
+          hard to know where to start without a little help.</p>
+<p>Hopefully this site can be that help! <a href="/ds4j/about">Learn more about this project here.</a></p>
+</div>
+<div class="column col-3 col-sm-6">
+<p><strong>Quick links</strong></p>
+<!-- <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p>
+        <p><a href="#">Something here</a></p> -->
+</div>
+<div class="column col-3 col-sm6">
+<p><strong>Contact</strong></p>
+<p><a href="mailto:hello@littlecolumns.com">hello@littlecolumns.com</a></p>
+</div>
+</div>
+</div>
+</div>
+<script src="/ds4j/js/tocbot.js"></script>
+<script>
+    try {
+      let toc = document.createElement("div")
+      toc.setAttribute('class', 'js-toc')
+      document.querySelector(".reading-options").parentNode.appendChild(toc)
+    } catch (err) {
+
+    }
+
+    // Sidebar TOC
+    tocbot.init({
+      // Where to render the table of contents.
+      tocSelector: refNavSelector,
+      // Where to grab the headings to build the table of contents.
+      contentSelector: '.ref-holder',
+      // Which headings to grab inside of the contentSelector element.
+      headingSelector: 'h1, h2, h3, h4',
+      activeLinkClass: 'active',
+      listClass: 'menu menu-nav',
+      listItemClass: 'menu-item'
+    });
+    document.querySelector(refNavSelector).previousElementSibling.setAttribute('href', '#')
+  </script>
+</body>
+</html>

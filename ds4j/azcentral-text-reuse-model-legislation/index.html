@@ -83,8 +83,9 @@
             </div>
             <div class="column col-7 col-md-12">
                 <h3>Summary</h3>
-                <p>USA Today, The Arizona Republic, and the Center for Public Integrity examined over one million bills from state legislatures, using techniques similar to plagiarism detection to find similarities between them. This effort uncovered over 10,000 uses of model legislation, which are bills put together by special interest groups and usually only slightly adapted between each state.</p>
-<p>In this chapter, we will use Apache Tika to process all types of documents (PDFs, web pages, images) into a computer-readable format. Once they're ingested, we'll use Apache Solr to find documents similar to source legislation, and then Python text analysis tools to find the exact overlaps.</p>
+                <p>USA Today, The Arizona Republic, and the Center for Public Integrity examined over one million bills from state legislatures, using techniques similar to plagiarism detection. This effort uncovered over 10,000 uses of model legislation, which are bills put together and distributed by special interest groups and passed by elected officials.</p>
+<p>For this project, we will use Apache Tika to process all types of documents (PDFs, web pages, images) into a computer-readable format. Once they're ingested, we'll use Apache Solr to find documents similar to source legislation, and finally use Python text analysis tools to find the exact overlaps.</p>
+<p>This is a <strong>massive project</strong>, so it's broken into a lot of notebooks below. If you'd like to skip ahead, maybe try "Checking for legislative text reuse using Python, Solr, and ngrams."</p>
             </div>
         </div>
 
@@ -267,8 +268,8 @@
         
         <div class="columns">
     <div class="column col-8 col-sm-12">
-        <h4><a href="/ds4j/azcentral-text-reuse-model-legislation/04-import-content-into-solr-for-advanced-text-searching">Import content into Solr for advanced text searching.ipynb</a></h4>
-        <p>Import content into Solr for advanced text searching</p>
+        <h4><a href="/ds4j/azcentral-text-reuse-model-legislation/04-import-content-into-solr-for-advanced-text-searching">Import content into Solr for advanced text searching</a></h4>
+        <p>Apache Solr is a great resource for advanced text searching. It isn&#39;t a database - it sits alongside your data - but allows you to conduct powerful queries.</p>
     </div>
     <div class="column col-4 col-sm-12 access-link">
         
@@ -325,7 +326,7 @@
         <div class="columns">
     <div class="column col-8 col-sm-12">
         <h4><a href="/ds4j/azcentral-text-reuse-model-legislation/05-checking-for-legislative-text-reuse-using-python-solr-and-ngrams">Checking for legislative text reuse using Python, Solr, and ngrams</a></h4>
-        <p>Checking for legislative text reuse using Python, Solr, and ngrams</p>
+        <p>Using an n-gram index in Solr to quickly track down duplicated text between bills and model legislation, then using Python to find the extent of the overlaps.</p>
     </div>
     <div class="column col-4 col-sm-12 access-link">
         
@@ -382,7 +383,7 @@
         <div class="columns">
     <div class="column col-8 col-sm-12">
         <h4><a href="/ds4j/azcentral-text-reuse-model-legislation/05-checking-for-legislative-text-reuse-using-python-solr-and-simple-text-search">Checking for legislative text reuse using Python, Solr, and simple text search</a></h4>
-        <p>Checking for legislative text reuse using Python, Solr, and simple text search</p>
+        <p>Using simple text index in Solr to quickly track down duplicated text between bills and model legislation, then using Python to find the extent of the overlaps.</p>
     </div>
     <div class="column col-4 col-sm-12 access-link">
         
@@ -439,7 +440,7 @@
         <div class="columns">
     <div class="column col-8 col-sm-12">
         <h4><a href="/ds4j/azcentral-text-reuse-model-legislation/06-search-for-model-legislation-in-over-one-million-bills-using-postgres-and-solr">Search for model legislation in over one million bills using Postgres and Solr</a></h4>
-        <p>Search for model legislation in over one million bills using Postgres and Solr</p>
+        <p>In the other notebooks we&#39;re looking for text reuse one at a time. In this once, we&#39;ll be comparing all of our model legislation against our database of 1.2 million bills.</p>
     </div>
     <div class="column col-4 col-sm-12 access-link">
         
@@ -762,6 +763,7 @@
 
     }
 
+    // Chapter TOC
     tocbot.init({
       // Where to render the table of contents.
       tocSelector: '.js-toc',

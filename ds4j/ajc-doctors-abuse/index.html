@@ -74,18 +74,15 @@
 <li><a href="http://doctors.ajc.com">Doctors &amp; Sex Abuse</a>, the project homepage</li>
 <li><a href="http://doctors.ajc.com/part_1_license_to_betray/">License to betray</a>, the first installment of the series</li>
 <li><a href="http://doctors.ajc.com/about_this_investigation/">About the investigation</a></li>
+<li><a href="https://www.ajc.com/news/opinion/behind-the-scenes-how-the-doctors-sex-abuse-project-came-about/UKFjNSqXoVOF9754k4wZ3M/">Behind the scenes</a></li>
 </ul>
             </div>
             <div class="column col-7 col-md-12">
                 <h3>Summary</h3>
-                <p>In this chapter, you learn the basic concepts behind text analysis, such as word counting and stemming. You also learn about the machine learning technique classification, and the difference between predicting a category for your data vs. a probability of it being in a category.</p>
-<ol>
-<li>Search for single words that might indicate sexual abuse - e.g. "breast"</li>
-<li>Be cautious of false positives - e.g. "breast cancer"</li>
-<li>Add more and more words... how do you measure the result?</li>
-<li>Build a classifier based on those words</li>
-<li>Probability vs. predicted class</li>
-</ol>
+                <p>The Atlanta Journal Constitution obtained over 100,000 disciplinary documents for doctors through scraping and FOIA requests. They need to narrow them down to only those about sex-related offenses, but reading 100,000 individual documents would have just taken too much time.</p>
+<p>This project was similar to both the <a href="/ds4j/nyt-takata-airbags/">NYT airbags</a> and the <a href="/ds4j/wapo-app-reviews/">Washington Post app store</a> investigations. The classifier itself to the <a href="/ds4j/nyt-takata-airbags/nyt-takata-completed/">simplistic reproduction</a>, where Jeff Ernsthausen selected certain words to include or not include in the classifier.</p>
+<p>Jeff had to continually tweak the classifier based on both positive and negative features. For example, "breast" could trigger a classification as being a sex-related disciplinary document, but could also signal something like "breast cancer." By adding "breast cancer" as a term he was able to cut down on  accidentally flagged documents.</p>
+<p>If you're interested projects like this, I recommend taking a look at the "I don't want to read thousands of documents" section of the <a href="/ds4j/topics/">topics page</a>.</p>
             </div>
         </div>
 
@@ -129,6 +126,7 @@
 
     }
 
+    // Chapter TOC
     tocbot.init({
       // Where to render the table of contents.
       tocSelector: '.js-toc',

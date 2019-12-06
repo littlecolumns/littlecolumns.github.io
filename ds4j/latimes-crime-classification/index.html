@@ -146,7 +146,7 @@
         <div class="columns">
     <div class="column col-8 col-sm-12">
         <h4><a href="/ds4j/latimes-crime-classification/actual-analysis">Predicting downgraded assaults with machine learning</a></h4>
-        <p>Using LAPD summaries of 160,000 cases of assault, we&#39;ll build a classification engine to detect when a report has been downgraded from aggravated assault to simple assault.</p>
+        <p>Using LAPD summaries of 160,000 cases of assault, we&#39;ll build a classification engine to detect when a report has been downgraded from aggravated assault to simple assault (note that we&#39;re the ones performing the downgrading).</p>
     </div>
     <div class="column col-4 col-sm-12 access-link">
         
@@ -259,8 +259,8 @@
         
         <div class="columns">
     <div class="column col-8 col-sm-12">
-        <h4><a href="/ds4j/latimes-crime-classification/trying-out-different-classifiers">Trying out different classifiers</a></h4>
-        <p>The LA Times used two different classifiers that they felt complemented each other in the investigation. Let&#39;s see how different machine learning algorithms compare.</p>
+        <h4><a href="/ds4j/latimes-crime-classification/trying-out-different-classifiers">Trying out and combining different classifiers</a></h4>
+        <p>The LA Times used two different classifiers that they felt complemented each other in the investigation. Let&#39;s see how different machine learning algorithms compare, and how to combine multiple classifiers to cast the widest net for possible downgrades.</p>
     </div>
     <div class="column col-4 col-sm-12 access-link">
         
@@ -384,6 +384,7 @@
 
     }
 
+    // Chapter TOC
     tocbot.init({
       // Where to render the table of contents.
       tocSelector: '.js-toc',

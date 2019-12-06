@@ -81,8 +81,8 @@
             </div>
             <div class="column col-7 col-md-12">
                 <h3>Summary</h3>
-                <p>This chapter reviews a piece from the Milwaukee Journal Sentinel that requires a unique combination of geographic data cleaning along with a linear regression using census data.</p>
-<p>After requesting pothole fill data from the city, we would receive given a file containing the addresses of reported potholes, along with the time the potholes were reported and fixed. To turn this into geographic data, we need to convert these addresses to latitude/longitude pairs (geocoding), and then use a spatial join to find out which census tract each address is in.</p>
+                <p>This chapter reviews a piece from the Milwaukee Journal Sentinel that requires a unique combination of geographic data cleaning along with a linear regression using census data. While the end result is similar to other logistic regressions, there are a lot of data cleaning steps between us and the finish line.</p>
+<p>After requesting pothole fill data from the city, you're granted a file containing the addresses of reported potholes, along with the time the potholes were reported and fixed. To turn this into geographic data, we need to convert these addresses to latitude/longitude pairs (geocoding), and then use a spatial join to find out which census tract each address is in.</p>
 <p>For each cesus tract, the Census Bureau publishes data on race, income, and population. We'll then downloaded this data and join it to the potholes dataset, allowing us to see the demographic details at each pothole's location.</p>
 <p>Once all the data is in one place - how long it took the potholes to be fixed along with demographic data for each pothole's location - we are finally able to use a linear regression to determine how an area's demographics relate to the number of days it takes to fix a pothole.</p>
 <p>The original piece uses more features than just race, but in its current incarnation our analysis only uses race. Combining with the same dataset as <a href="/ds4j/ap-regression-unemployment/">the AP regression on life expectancy</a> would be a quick upgrade.</p>
@@ -302,6 +302,7 @@
 
     }
 
+    // Chapter TOC
     tocbot.init({
       // Where to render the table of contents.
       tocSelector: '.js-toc',
