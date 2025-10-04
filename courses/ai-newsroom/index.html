@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Automated Newsroom: Build AI Workflows That Work</title>
+    <link href="output.css" rel="stylesheet">
+</head>
+
+<body>
+    <div data-theme="custom">
+        <div class="flex flex-col lg:flex-row relative">
+            <div class="flex-1">
+                <div class="p-8 lg:p-12 lg:pr-80 border-b-2 border-neutral/20">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="flex flex-col md:flex-row gap-6 lg:gap-8">
+                            <div class="lg:w-[30%] flex-shrink-0">
+                                <img src="banner-smaller.png" class="border-1 w-full max-h-[40vh] object-contain">
+                            </div>
+                            <div class="flex-1 space-y-4 lg:space-y-6">
+                                <div class="badge badge-neutral badge-md">PIONEER COHORT</div>
+                                <h1 class="text-3xl lg:text-5xl font-bold leading-tight mt-2">The Automated Newsroom: Build AI
+                                    Workflows That Work</h1>
+                                <p>A course from <a href="https://jonathansoma.com/" class="link link-primary">Jonathan Soma</a></p>
+                                <p class="text-lg lg:text-xl opacity-80">Learn to <strong>design, test, and improve newsroom AI</strong>,
+                                    whether you build the tools yourself or guide the teams who do.</p>
+                                <!-- <p class="text-sm lg:text-base opacity-70">From automating tip intake to generating story
+                                    summaries, this six-week, hands-on course shows how real newsrooms are putting AI to work.
+                                </p> -->
+
+                                <div class="flex flex-wrap gap-2 lg:gap-3 justify-left pt-4 text-sm lg:text-sm">
+                                    <div class="badge badge-outline badge-lg">🗓 6 weeks</div>
+                                    <div class="badge badge-outline badge-lg">📍 Live + Recorded</div>
+                                    <div class="badge badge-outline badge-lg">🔧 Hands-on projects</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="overview-section">
+                    <div class="max-w-5xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Overview</h2>
+                        <div class="space-y-4 text-sm lg:text-base leading-relaxed opacity-90">
+                            <p>Journalists and editors everywhere are experimenting with AI — but few understand how to
+                                evaluate what they build. <strong>The Automated Newsroom</strong> is a six-week,
+                                practical introduction to designing and testing AI workflows that serve real newsroom
+                                needs.</p>
+
+                            <p>Each week you'll explore a different part of the automation lifecycle: building small
+                                workflows, connecting components, tracking their performance, and learning how to
+                                evaluate success or failure. You'll see how these ideas apply to real newsroom tasks
+                                like summarizing interviews, monitoring meetings, or creating multilingual versions of
+                                your reporting.</p>
+
+                            <p>This first pioneer cohort is an experiment in itself: we'll adapt live to participant
+                                interests and emerging newsroom tools. You'll join a small group of journalists, data
+                                reporters, and newsroom technologists who want to understand how AI really fits into
+                                editorial work — not just theoretically, but operationally.</p>
+
+                            <p>By the end, you'll have a functioning automation (or two), an understanding of how to
+                                evaluate its performance, and a playbook for iterating on AI tools responsibly inside
+                                your organization.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 lg:p-12 lg:pr-80" id="who-section">
+                    <div class="max-w-5xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Who It's For</h2>
+                        <p class="text-sm lg:text-base opacity-80 mb-4 lg:mb-6">This course is designed for people
+                            across the newsroom who want to make AI practical:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
+                            <div class="flex gap-3 items-start p-3 lg:p-4 bg-base-100 rounded-lg">
+                                <div class="text-xl lg:text-2xl">📝</div>
+                                <div>
+                                    <h4 class="font-semibold text-sm lg:text-base">Reporters &amp; Editors</h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Exploring how to safely automate parts of
+                                        their workflow</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start p-3 lg:p-4 bg-base-100 rounded-lg">
+                                <div class="text-xl lg:text-2xl">📊</div>
+                                <div>
+                                    <h4 class="font-semibold text-sm lg:text-base">Data Journalists</h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Experimenting with structured AI pipelines
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start p-3 lg:p-4 bg-base-100 rounded-lg">
+                                <div class="text-xl lg:text-2xl">🛠️</div>
+                                <div>
+                                    <h4 class="font-semibold text-sm lg:text-base">Product &amp; Engineering</h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Overseeing newsroom AI projects</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start p-3 lg:p-4 bg-base-100 rounded-lg">
+                                <div class="text-xl lg:text-2xl">🎯</div>
+                                <div>
+                                    <h4 class="font-semibold text-sm lg:text-base">Newsroom Leaders</h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Responsible for strategy, ethics, and
+                                        evaluation</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 items-start p-3 lg:p-4 bg-base-100 rounded-lg">
+                                <div class="text-xl lg:text-2xl">💡</div>
+                                <div>
+                                    <h4 class="font-semibold text-sm lg:text-base">Curious Minds</h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Anyone wanting to understand AI beyond
+                                        buzzwords — no coding required</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm lg:text-sm opacity-70 mt-4 lg:mt-6 italic">You don't need to be technical to
+                            benefit, but you'll come away understanding how the technical pieces fit together.</p>
+                    </div>
+                </div>
+
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="outcomes-section">
+                    <div class="max-w-5xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">What You'll Learn</h2>
+                        <p class="text-sm lg:text-base opacity-80 mb-4 lg:mb-6">By the end of the course, you'll be able
+                            to:</p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
+                            <div class="flex gap-3 items-start">
+                                <div class="badge badge-secondary flex-shrink-0">✓</div>
+                                <p class="font-semibold text-sm lg:text-base">Build and test a simple newsroom
+                                    automation, from idea to prototype</p>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div class="badge badge-secondary flex-shrink-0">✓</div>
+                                <p class="font-semibold text-sm lg:text-base">Diagnose where and why AI systems fail —
+                                    and how to fix them</p>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div class="badge badge-secondary flex-shrink-0">✓</div>
+                                <p class="font-semibold text-sm lg:text-base">Use tracing and evaluation dashboards to
+                                    see inside your automations</p>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div class="badge badge-secondary flex-shrink-0">✓</div>
+                                <p class="font-semibold text-sm lg:text-base">Measure AI quality and reliability, not
+                                    just convenience</p>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div class="badge badge-secondary flex-shrink-0">✓</div>
+                                <p class="font-semibold text-sm lg:text-base">Document and communicate findings to
+                                    colleagues and managers</p>
+                            </div>
+                            <div class="flex gap-3 items-start">
+                                <div class="badge badge-secondary flex-shrink-0">✓</div>
+                                <p class="font-semibold text-sm lg:text-base">Apply product thinking to decide when AI
+                                    should help, and when it shouldn't</p>
+                            </div>
+                        </div>
+                        <p class="text-sm lg:text-sm opacity-70 mt-4 lg:mt-6 italic">You'll leave with reusable
+                            templates, datasets, and a repeatable process for iterating on AI workflows long after the
+                            course ends.</p>
+                    </div>
+                </div>
+
+                <div class="p-8 lg:p-12 lg:pr-80" id="why-section">
+                    <div class="max-w-5xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Why This Course</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+                            <div class="flex gap-3 lg:gap-4 items-start">
+                                <div class="text-2xl lg:text-3xl">⚡</div>
+                                <div>
+                                    <h4 class="font-semibold mb-1 lg:mb-2 text-sm lg:text-base">Practical from Day One
+                                    </h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Use the same tools active newsrooms are
+                                        experimenting with — from spreadsheet-based AI to workflow builders like
+                                        ActivePieces or n8n</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 lg:gap-4 items-start">
+                                <div class="text-2xl lg:text-3xl">🔧</div>
+                                <div>
+                                    <h4 class="font-semibold mb-1 lg:mb-2 text-sm lg:text-base">No Code Required, But
+                                        Code Welcome</h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Every lesson includes both no-code and
+                                        code-friendly examples</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 lg:gap-4 items-start">
+                                <div class="text-2xl lg:text-3xl">📊</div>
+                                <div>
+                                    <h4 class="font-semibold mb-1 lg:mb-2 text-sm lg:text-base">Evaluation Built In</h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Learn how to measure whether your
+                                        automation actually works, not just that it runs</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 lg:gap-4 items-start">
+                                <div class="text-2xl lg:text-3xl">📰</div>
+                                <div>
+                                    <h4 class="font-semibold mb-1 lg:mb-2 text-sm lg:text-base">Newsroom-Specific Focus
+                                    </h4>
+                                    <p class="text-sm lg:text-sm opacity-70">All examples come from editorial,
+                                        investigative, or production contexts — not marketing or "AI productivity"</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-3 lg:gap-4 items-start">
+                                <div class="text-2xl lg:text-3xl">🎓</div>
+                                <div>
+                                    <h4 class="font-semibold mb-1 lg:mb-2 text-sm lg:text-base">Led by Jonathan Soma
+                                    </h4>
+                                    <p class="text-sm lg:text-sm opacity-70">Data journalism professor at Columbia
+                                        University and director of the Data Journalism M.S. and the Lede Program</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="tools-section">
+                    <div class="max-w-5xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6 text-center">Technical Tools &amp;
+                            Concepts</h2>
+                        <p class="text-sm lg:text-base opacity-80 mb-6 text-center max-w-3xl mx-auto">You'll gain
+                            hands-on experience with the tools and frameworks that power modern newsroom automation:
+                        </p>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
+                            <div class="card bg-base-100">
+                                <div class="card-body p-4">
+                                    <h4 class="font-bold text-sm lg:text-base mb-2">Automation Tools (No-Code)</h4>
+                                    <p class="text-sm lg:text-sm opacity-80">Visual workflow builders like
+                                        ActivePieces, n8n, and Make that let you chain AI calls, APIs, and data
+                                        sources without writing code.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-100">
+                                <div class="card-body p-4">
+                                    <h4 class="font-bold text-sm lg:text-base mb-2">Agent Frameworks</h4>
+                                    <p class="text-sm lg:text-sm opacity-80">Libraries like LangChain and LlamaIndex
+                                        for building multi-step AI workflows with memory, tools, and decision-making
+                                        capabilities.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-100">
+                                <div class="card-body p-4">
+                                    <h4 class="font-bold text-sm lg:text-base mb-2">Observability &amp; Tracing</h4>
+                                    <p class="text-sm lg:text-sm opacity-80">Tools like Langfuse and Opik that show
+                                        you exactly what happens inside your AI pipeline — which prompts ran, what
+                                        they returned, and where things broke.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-100">
+                                <div class="card-body p-4">
+                                    <h4 class="font-bold text-sm lg:text-base mb-2">Evaluation Frameworks</h4>
+                                    <p class="text-sm lg:text-sm opacity-80">Techniques like LLM-as-judge, human
+                                        labeling, and automated scoring to measure accuracy, consistency, and
+                                        reliability of AI outputs.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-100">
+                                <div class="card-body p-4">
+                                    <h4 class="font-bold text-sm lg:text-base mb-2">Spreadsheet AI Integration</h4>
+                                    <p class="text-sm lg:text-sm opacity-80">Running Claude or GPT directly in
+                                        Google Sheets for quick experiments, batch processing, and collaborative
+                                        prompt testing.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-100">
+                                <div class="card-body p-4">
+                                    <h4 class="font-bold text-sm lg:text-base mb-2">Prompt Engineering</h4>
+                                    <p class="text-sm lg:text-sm opacity-80">Versioning, testing, and iterating on
+                                        prompts systematically — treating them like code you can debug and improve.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-100">
+                                <div class="card-body p-4">
+                                    <h4 class="font-bold text-sm lg:text-base mb-2">Test Data &amp; Synthetic
+                                        Generation</h4>
+                                    <p class="text-sm lg:text-sm opacity-80">Creating realistic test cases and edge
+                                        cases to stress-test your automation before it touches real newsroom
+                                        content.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-100">
+                                <div class="card-body p-4">
+                                    <h4 class="font-bold text-sm lg:text-base mb-2">Product Thinking for AI</h4>
+                                    <p class="text-sm lg:text-sm opacity-80">Defining success metrics, understanding
+                                        user needs, and making design decisions about when to automate and when to
+                                        keep humans in the loop.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <p class="text-sm lg:text-sm opacity-70 mt-6 text-center italic">All concepts are taught
+                            with both technical and non-technical paths — choose your depth.</p>
+                    </div>
+                </div>
+
+                <div class="p-8 lg:p-12 lg:pr-80" id="syllabus-section">
+                    <div class="max-w-5xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 text-center">Course Structure (6 Weeks)
+                        </h2>
+                        <div class="space-y-3 lg:space-y-4">
+                            <div class="card bg-base-200 border-l-4 border-primary">
+                                <div class="card-body p-3 lg:p-4">
+                                    <h3 class="font-bold text-base lg:text-lg">Week 1 – Build Something Simple (and
+                                        Watch It Fail)</h3>
+                                    <p class="text-sm lg:text-sm opacity-80">Start small with a one-step automation — a
+                                        tip classifier, a tone checker, a summarizer. Run real examples, discover where
+                                        it fails, and learn basic evaluation through labeling and manual analysis.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-200 border-l-4 border-secondary">
+                                <div class="card-body p-3 lg:p-4">
+                                    <h3 class="font-bold text-base lg:text-lg">Week 2 – Connect the Dots</h3>
+                                    <p class="text-sm lg:text-sm opacity-80">Turn single steps into pipelines. Automate
+                                        multi-stage tasks (classification → extraction → summarization) and see how
+                                        small errors compound. Learn to create and use synthetic test data to surface
+                                        weaknesses.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-200 border-l-4 border-accent">
+                                <div class="card-body p-3 lg:p-4">
+                                    <h3 class="font-bold text-base lg:text-lg">Week 3 – Observe and Debug</h3>
+                                    <p class="text-sm lg:text-sm opacity-80">Add visibility to your systems using tools
+                                        like Opik or Langfuse. Explore traces and spans, version prompts, and learn to
+                                        spot where logic collapses.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-200 border-l-4 border-info">
+                                <div class="card-body p-3 lg:p-4">
+                                    <h3 class="font-bold text-base lg:text-lg">Week 4 – Product Thinking and Metrics
+                                    </h3>
+                                    <p class="text-sm lg:text-sm opacity-80">Who is your automation for? What does
+                                        success look like? You'll practice defining metrics, aligning with user needs,
+                                        and documenting design trade-offs.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-200 border-l-4 border-success">
+                                <div class="card-body p-3 lg:p-4">
+                                    <h3 class="font-bold text-base lg:text-lg">Week 5 – Evaluation Dashboards</h3>
+                                    <p class="text-sm lg:text-sm opacity-80">Turn evaluation into its own workflow.
+                                        Build lightweight dashboards (Lovable, Sheets, or custom setups) to measure
+                                        reliability and track improvement over time.</p>
+                                </div>
+                            </div>
+                            <div class="card bg-base-200 border-l-4 border-warning">
+                                <div class="card-body p-3 lg:p-4">
+                                    <h3 class="font-bold text-base lg:text-lg">Week 6 – Reflection and Sharing</h3>
+                                    <p class="text-sm lg:text-sm opacity-80">Show what you built, analyze results, and
+                                        plan next steps. One month later, join an optional live session to share your
+                                        progress and updated automations with the cohort.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="included-section">
+                    <div class="max-w-5xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">What's Included</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-2 lg:gap-3">
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Weekly live sessions (2 hours each) + full
+                                    recordings</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Dedicated office hours and troubleshooting
+                                    support</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Slack/Discord community with topical channels</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Starter templates for workflows and evaluation
+                                    pipelines</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Prompt-testing sheets for Claude/GPT
+                                    integrations</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Evaluation checklists and rubrics for different
+                                    tasks</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Curated case-study library (NYT, AP, OjoPúblico)</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Full refund before Session 2</span>
+                            </div>
+                            <div class="flex gap-2 items-start">
+                                <span class="text-primary">✓</span>
+                                <span class="text-sm lg:text-sm">Discount for future advanced course</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 lg:p-12 lg:pr-80" id="instructor-section">
+                    <div class="max-w-4xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6 text-center">About the Instructor</h2>
+                        <div class="card bg-base-200">
+                            <div class="card-body p-4 lg:p-6">
+                                <div class="flex gap-6 items-start">
+                                    <div class="avatar avatar-placeholder flex-shrink-0">
+                                        <div class="bg-primary text-primary-content rounded-full w-24 lg:w-32">
+                                            <img src="headshot.jpg">
+                                        </div>
+                                    </div>
+                                    <div class="flex-1">
+                                        <h3 class="text-lg lg:text-xl font-bold mb-1">Jonathan Soma</h3>
+                                        <p class="text-sm lg:text-sm opacity-70 mb-3 lg:mb-4">Professor, Columbia
+                                            University Graduate School of Journalism</p>
+                                        <div class="space-y-2 lg:space-y-3 text-sm lg:text-sm leading-relaxed">
+                                            <p>Jonathan Soma directs Columbia's Data Journalism M.S. and the Lede
+                                                Program. He has taught automation and investigative data skills across
+                                                the world — from Tokyo to Rio — and created the
+                                                <a class="link link-primary" href="https://www.youtube.com/playlist?list=PLewNEVDy7gq1_GPUaL0OQ31QsiHP5ncAQ">Practical AI for Investigative Journalism</a> on YouTube.</p>
+                                            <p>His teaching emphasizes practical, transparent uses of AI that empower
+                                                journalists, not replace them.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="tuition-section">
+                    <div class="max-w-4xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Tuition &amp; Policies</h2>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
+                            <div>
+                                <h4 class="font-semibold mb-2 text-sm lg:text-base">Tuition</h4>
+                                <p class="text-sm lg:text-sm opacity-70">$1,100 USD with automatic pricing adjustments
+                                    for purchasing power parity (PPP). Early-signup coupon available for the pioneer
+                                    cohort.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2 text-sm lg:text-base">Refunds</h4>
+                                <p class="text-sm lg:text-sm opacity-70">100% refund available before Session 2. No
+                                    questions asked.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2 text-sm lg:text-base">Recordings</h4>
+                                <p class="text-sm lg:text-sm opacity-70">All sessions recorded and shared within 24
+                                    hours.</p>
+                            </div>
+                            <div>
+                                <h4 class="font-semibold mb-2 text-sm lg:text-base">Seats</h4>
+                                <p class="text-sm lg:text-sm opacity-70">Open enrollment — no cap on participants.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 lg:p-12 lg:pr-80" id="community-section">
+                    <div class="max-w-4xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-3 lg:mb-4">Community &amp; Support</h2>
+                        <div class="space-y-2 lg:space-y-3 text-sm lg:text-sm leading-relaxed opacity-80">
+                            <p>You'll have access to a private Slack/Discord space organized by topic and project type.
+                                Weekly office hours are available for help and discussion.</p>
+                            <p>No grades or certificates — just working automations, shared failures, and collective
+                                learning. Optional group showcase one month after the course ends.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="faq-section">
+                    <div class="max-w-4xl mx-auto">
+                        <h2 class="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 text-center">Frequently Asked Questions
+                        </h2>
+                        <div class="space-y-2 lg:space-y-4">
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion" checked="checked">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">Do I need to know how to
+                                    code?</div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">No. Every lesson includes both no-code and
+                                        code-optional paths.</p>
+                                </div>
+                            </div>
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">I already know some
+                                    Python — will this be too basic?</div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">Not at all. You can choose the technical
+                                        depth that fits your goals.</p>
+                                </div>
+                            </div>
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">Which tools will we use?
+                                </div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">Examples include Claude-style spreadsheet
+                                        integrations, ActivePieces or n8n for workflows, and Langfuse, Opik, or Lovable
+                                        for evaluation.</p>
+                                </div>
+                            </div>
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">Can I use my newsroom's
+                                    own tools instead?</div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">Absolutely. The concepts transfer across
+                                        platforms.</p>
+                                </div>
+                            </div>
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">Will I get access to
+                                    datasets?</div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">Yes — you'll receive structured sample
+                                        datasets to start with, and you're welcome to bring your own.</p>
+                                </div>
+                            </div>
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">What if I miss a session?
+                                </div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">All sessions are recorded and available
+                                        within 24 hours.</p>
+                                </div>
+                            </div>
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">Can I expense this
+                                    through my newsroom?</div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">Most participants do — you'll receive an
+                                        invoice suitable for reimbursement.</p>
+                                </div>
+                            </div>
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">Is this course
+                                    experimental?</div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">Yes. This is the pioneer cohort, so expect
+                                        active iteration and direct feedback.</p>
+                                </div>
+                            </div>
+                            <div class="collapse collapse-arrow bg-base-100">
+                                <input type="radio" name="faq-accordion">
+                                <div class="collapse-title font-semibold text-sm lg:text-base">What happens after the
+                                    course?</div>
+                                <div class="collapse-content">
+                                    <p class="text-sm lg:text-sm opacity-70">You'll have templates, dashboards, and
+                                        skills to continue improving automations — plus a steep discount for the next
+                                        advanced course.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="p-8 lg:p-12 lg:pr-80 text-center border-t-2 border-primary/20 mb-20 lg:mb-0">
+                    <div class="max-w-2xl mx-auto space-y-4 lg:space-y-6">
+                        <h2 class="text-3xl lg:text-4xl font-bold">Join the Pioneer Cohort</h2>
+                        <p class="text-sm lg:text-base opacity-70">Learn how to build, test, and improve newsroom
+                            automations, and finally understand what makes them work.</p>
+                        <p class="text-sm lg:text-sm opacity-60 mt-4">Starts [date] · Full refund before Session 2 ·
+                            Early signup discount available</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="hidden lg:block fixed right-0 top-0 w-72 h-full p-4" style="pointer-events: none;">
+                <div class="sticky top-4" style="pointer-events: auto;">
+                    <div class="bg-base-100 card shadow-xl border-2 border-base-300">
+                        <div class="card-body p-6">
+                            <div class="space-y-3 mb-4">
+                                <div class="space-y-1 text-xs opacity-70 my-2">
+                                    <div class="flex items-start gap-2">
+                                        <span>✓</span>
+                                        <span>6 weeks of live sessions</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span>✓</span>
+                                        <span>Full recordings &amp; templates</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span>✓</span>
+                                        <span>Office hours &amp; community</span>
+                                    </div>
+                                    <div class="flex items-start gap-2">
+                                        <span>✓</span>
+                                        <span>100% refund before Session 2</span>
+                                    </div>
+                                </div>
+                                <div class="divider my-2"></div>
+                                <div class="flex justify-between items-center">
+                                    <span class="text-sm opacity-70">Tuition:</span>
+                                    <span class="font-bold text-lg">$1,100</span>
+                                </div>
+                            </div>
+                            <a href="https://buy.stripe.com/4gMcN540E1dr0sygHW4ow00">
+                                <button id="btn-enroll-sticky" class="btn btn-primary btn-block">Enroll Now</button>
+                            </a>
+                            <p class="text-xs text-center opacity-60 mt-3"><em>Regional pricing available</em></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-base-300 border-t-2 border-primary/30 shadow-xl z-50">
+                <a href="https://buy.stripe.com/4gMcN540E1dr0sygHW4ow00">
+                    <button id="btn-enroll-mobile" class="btn btn-primary btn-block btn-lg">Enroll Now - $1,100</button>
+                </a>
+                <p class="text-sm text-center opacity-60 mt-2">PPP pricing · 100% refund before Session 2</p>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
