@@ -15,13 +15,77 @@
             showBanner: true,
         });
     </script>
+    <script>
+        // Adjust enrollment button based on page content position
+        document.addEventListener('DOMContentLoaded', function() {
+            let pageContentsOffset = 0;
+
+            function calculatePageContentsOffset() {
+                const pageContents = document.getElementById('page-contents');
+                if (pageContents) {
+                    const rect = pageContents.getBoundingClientRect();
+                    const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+                    pageContentsOffset = rect.top + scrollTop;
+                }
+            }
+
+            function adjustEnrollmentPosition() {
+                const stickyContainer = document.querySelector('.hidden.lg\\:block.fixed');
+                if (!stickyContainer) return;
+
+                const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+                // If we've scrolled past where page-contents starts, stick to top
+                // Otherwise, position it at the page-contents offset
+                if (scrollTop >= pageContentsOffset) {
+                    stickyContainer.style.top = '0';
+                } else {
+                    stickyContainer.style.top = (pageContentsOffset - scrollTop) + 'px';
+                }
+            }
+
+            // Calculate initial offset
+            calculatePageContentsOffset();
+            adjustEnrollmentPosition();
+
+            // Recalculate when page might have changed (Parity Deals loads async)
+            const checkInterval = setInterval(() => {
+                calculatePageContentsOffset();
+                adjustEnrollmentPosition();
+            }, 100);
+
+            // Stop checking after 5 seconds
+            setTimeout(() => clearInterval(checkInterval), 5000);
+
+            // Adjust on scroll
+            window.addEventListener('scroll', adjustEnrollmentPosition);
+
+            // Recalculate on resize
+            window.addEventListener('resize', () => {
+                calculatePageContentsOffset();
+                adjustEnrollmentPosition();
+            });
+
+            // Watch for DOM changes (in case banner is added/removed dynamically)
+            const observer = new MutationObserver(() => {
+                calculatePageContentsOffset();
+                adjustEnrollmentPosition();
+            });
+            observer.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['class', 'style']
+            });
+        });
+    </script>
 </head>
 
-<body data-pd-price="1100">
-    <div data-theme="custom">
+<body>
+    <div data-theme="custom" id="page-contents">
         <div class="flex flex-col lg:flex-row relative">
             <div class="flex-1">
-                <div class="p-8 lg:p-12 lg:pr-80 border-b-2 border-neutral/20">
+                <div class="p-8 lg:p-12 lg:pr-96 border-b-2 border-neutral/20">
                     <div class="max-w-4xl mx-auto">
                         <div class="flex flex-col md:flex-row gap-6 lg:gap-8">
                             <div class="lg:w-[30%] flex-shrink-0">
@@ -48,7 +112,7 @@
                     </div>
                 </div>
 
-                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="overview-section">
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-96" id="overview-section">
                     <div class="max-w-5xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Overview</h2>
                         <div class="space-y-4 text-sm lg:text-base leading-relaxed opacity-90">
@@ -75,7 +139,7 @@
                     </div>
                 </div>
 
-                <div class="p-8 lg:p-12 lg:pr-80" id="who-section">
+                <div class="p-8 lg:p-12 lg:pr-96" id="who-section">
                     <div class="max-w-5xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Who It's For</h2>
                         <p class="text-sm lg:text-base opacity-80 mb-4 lg:mb-6">This course is designed for people
@@ -126,7 +190,7 @@
                     </div>
                 </div>
 
-                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="outcomes-section">
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-96" id="outcomes-section">
                     <div class="max-w-5xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">What You'll Learn</h2>
                         <p class="text-sm lg:text-base opacity-80 mb-4 lg:mb-6">By the end of the course, you'll be able
@@ -169,7 +233,7 @@
                     </div>
                 </div>
 
-                <div class="p-8 lg:p-12 lg:pr-80" id="why-section">
+                <div class="p-8 lg:p-12 lg:pr-96" id="why-section">
                     <div class="max-w-5xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Why This Course</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 lg:gap-6">
@@ -223,7 +287,7 @@
                 </div>
 
 
-                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="tools-section">
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-96" id="tools-section">
                     <div class="max-w-5xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6 text-center">Technical Tools &amp;
                             Concepts</h2>
@@ -302,7 +366,7 @@
                     </div>
                 </div>
 
-                <div class="p-8 lg:p-12 lg:pr-80" id="syllabus-section">
+                <div class="p-8 lg:p-12 lg:pr-96" id="syllabus-section">
                     <div class="max-w-5xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 text-center">Course Structure (6 Weeks)
                         </h2>
@@ -362,7 +426,7 @@
                     </div>
                 </div>
 
-                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="included-section">
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-96" id="included-section">
                     <div class="max-w-5xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">What's Included</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-2 lg:gap-3">
@@ -411,7 +475,7 @@
                     </div>
                 </div>
 
-                <div class="p-8 lg:p-12 lg:pr-80" id="instructor-section">
+                <div class="p-8 lg:p-12 lg:pr-96" id="instructor-section">
                     <div class="max-w-4xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6 text-center">About the Instructor</h2>
                         <div class="card bg-base-200">
@@ -441,13 +505,13 @@
                     </div>
                 </div>
 
-                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="tuition-section">
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-96" id="tuition-section">
                     <div class="max-w-4xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Tuition &amp; Policies</h2>
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
                             <div>
                                 <h4 class="font-semibold mb-2 text-sm lg:text-base">Tuition</h4>
-                                <p class="text-sm lg:text-sm opacity-70"><span data-pd-price-formatted>$1,100</span> USD with automatic pricing adjustments
+                                <p class="text-sm lg:text-sm opacity-70"  data-pd-price="1100"><span data-pd-price-formatted>$1,100</span> USD with automatic pricing adjustments
                                     based on your geography. I bet you can find a coupone code if you search for one!</p>
                             </div>
                             <div>
@@ -468,7 +532,7 @@
                     </div>
                 </div>
 
-                <div class="p-8 lg:p-12 lg:pr-80" id="community-section">
+                <div class="p-8 lg:p-12 lg:pr-96" id="community-section">
                     <div class="max-w-4xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-3 lg:mb-4">Community &amp; Support</h2>
                         <div class="space-y-2 lg:space-y-3 text-sm lg:text-sm leading-relaxed opacity-80">
@@ -480,7 +544,7 @@
                     </div>
                 </div>
 
-                <div class="bg-base-200 p-8 lg:p-12 lg:pr-80" id="faq-section">
+                <div class="bg-base-200 p-8 lg:p-12 lg:pr-96" id="faq-section">
                     <div class="max-w-4xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-6 lg:mb-8 text-center">Frequently Asked Questions
                         </h2>
@@ -559,7 +623,7 @@
                     </div>
                 </div>
 
-                <div class="p-8 lg:p-12 lg:pr-80 border-t-2 border-primary/20 mb-20 lg:mb-0">
+                <div class="p-8 lg:p-12 lg:pr-96 border-t-2 border-primary/20 mb-20 lg:mb-0">
                     <div class="max-w-2xl mx-auto space-y-4 lg:space-y-6">
                         <h2 class="text-3xl lg:text-4xl font-bold">Join the Pioneer Cohort</h2>
                         <p class="text-sm lg:text-base opacity-70">Learn how to build, test, and improve newsroom
@@ -570,7 +634,7 @@
                 </div>
             </div>
 
-            <div class="hidden lg:block fixed right-0 top-0 w-72 h-full p-4" style="pointer-events: none;">
+            <div class="hidden lg:block fixed right-0 top-0 w-80 h-full p-4" style="pointer-events: none;">
                 <div class="sticky top-4" style="pointer-events: auto;">
                     <div class="bg-base-100 card shadow-xl border-2 border-base-300">
                         <div class="card-body p-6">
@@ -596,7 +660,7 @@
                                 <div class="divider my-2"></div>
                                 <div class="flex justify-between items-center">
                                     <span class="text-sm opacity-70">Tuition:</span>
-                                    <span class="font-bold text-lg">
+                                    <span class="font-bold text-lg" data-pd-price="1100">
                                         <span data-pd-price-formatted>$1,100</span>
                                     </span>
                                 </div>
