@@ -476,7 +476,7 @@
                                     </h3>
                                     <p class="text-sm lg:text-sm opacity-80">Who is your automation for? What does
                                         success look like? You'll practice defining metrics, aligning with user needs,
-                                        and documenting design trade-offs.</p>
+                                        and documenting design trade-offs. And since you're reading so closely, <a class="link link-neutral" onclick="document.getElementById('coupon_modal').showModal()">how about a 10% off coupon?</a></p>
                                 </div>
                             </div>
                             <div class="card bg-base-200 border-l-4 border-warning">
@@ -614,8 +614,8 @@
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
                             <div>
                                 <h4 class="font-semibold mb-2 text-sm lg:text-base">Tuition</h4>
-                                <p class="text-sm lg:text-sm opacity-70"  data-pd-price="1100"><span data-pd-price-formatted>$1,100</span> USD with automatic pricing adjustments
-                                    based on your geography. I bet you can find a coupon code if you search for one!</p>
+                                <p class="text-sm lg:text-sm opacity-70">$1,100 USD with automatic pricing adjustments
+                                    based on your geography. I bet you can find a coupon code if you <a class="link link-neutral" onclick="document.getElementById('coupon_modal').showModal()">look hard enough</a>.</p>
                             </div>
                             <div>
                                 <h4 class="font-semibold mb-2 text-sm lg:text-base">Refunds</h4>
@@ -828,6 +828,37 @@
             <div class="modal-action">
                 <form method="dialog">
                     <button class="btn btn-sm">Close</button>
+                </form>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
+
+    <!-- Coupon Code Modal -->
+    <dialog id="coupon_modal" class="modal" data-theme="custom">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg mb-4">🎉 Close Reader Discount</h3>
+            <p class="text-sm opacity-80 mb-4">
+                Thanks for reading this far! You've earned a special discount code:
+            </p>
+            <div class="alert alert-success mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <div>
+                    <div class="text-sm font-semibold">Coupon Code:</div>
+                    <div class="text-2xl font-mono font-bold">READER10</div>
+                </div>
+            </div>
+            <p class="text-sm opacity-80 mb-2">
+                <strong>10% off your enrollment!</strong>
+            </p>
+            <p class="text-xs opacity-60">
+                Enter this code at checkout to receive your discount. This code is for close readers who take the time to explore all the details.
+            </p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-sm btn-primary">Got it!</button>
                 </form>
             </div>
         </div>
