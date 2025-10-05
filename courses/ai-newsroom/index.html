@@ -10,11 +10,114 @@
     function resolvePdSDKFunction(e,...t){return new Promise((n,i)=>{!function r(){window.PDPromotionUISDK&&"function"==typeof window.PDPromotionUISDK[e]?window.PDPromotionUISDK[e](...t).then(n).catch(i):setTimeout(r,100)}()})}!function(e,t,n,i,r,a,c){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(Array.prototype.slice.call(arguments))},a=t.createElement(n),c=t.getElementsByTagName(n)[0],a.id="parity-deals-sdk",a.async=1,a.src=r,c.parentNode.insertBefore(a,c)}(window,document,"script","PDPromotionUISDK","https://cdn.paritydeals.com/js-promotions-ui/1.0.0/js-promotions-ui.umd.js"),window.PDPromotionUI={init:function(e){PDPromotionUISDK("init",e)},getUpdatedPrice:function(e,t){return resolvePdSDKFunction("getUpdatedPrice",e,t)},updatePriceElement:function(e,t){return resolvePdSDKFunction("updatePriceElement",e,t)},updatePrice:function(e){return resolvePdSDKFunction("updatePrice",e)}};
     </script>
     <script>
-        PDPromotionUI.init({
-            productId: 'promo_d0a12047ebee4ab2882905296ae33274',
-            showBanner: true,
+        // Wait for SDK to be ready before initializing
+        function initParityDeals() {
+            if (typeof PDPromotionUISDK === 'function') {
+                PDPromotionUI.init({
+                    productId: 'promo_d0a12047ebee4ab2882905296ae33274',
+                    showBanner: true,
+                });
+            } else {
+                // Retry after a short delay if SDK isn't ready
+                setTimeout(initParityDeals, 100);
+            }
+        }
+
+        // Start initialization attempt
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initParityDeals);
+        } else {
+            initParityDeals();
+        }
+        function getFlag() {
+            var flag = document.querySelector("#flag");
+            if(flag) {
+                [...document.querySelectorAll(".flag")].forEach(e => {
+                    e.innerHTML = flag.innerHTML;
+                })
+            } else {
+                setTimeout(getFlag, 50)
+            }
+        }
+        getFlag()
+
+        // Monitor for discount changes
+        function checkForDiscount() {
+            // Check desktop pricing
+            const originalPriceDiv = document.querySelector('.original-price[data-pd-original-price-display]');
+            const discountIndicator = document.querySelector('.discount-indicator');
+
+            if (originalPriceDiv && discountIndicator) {
+                // Check if original price has content (indicating a discount)
+                const hasStrikethroughContent = originalPriceDiv.querySelector('span[data-pd-price-integer]');
+                const priceInteger = hasStrikethroughContent ? hasStrikethroughContent.textContent.trim() : '';
+
+                if (priceInteger && priceInteger !== '') {
+                    // Show original price and discount indicator
+                    originalPriceDiv.style.display = '';
+                    discountIndicator.style.display = '';
+                } else {
+                    // Hide both if no discount
+                    originalPriceDiv.style.display = 'none';
+                    discountIndicator.style.display = 'none';
+                }
+            }
+
+            // Check mobile pricing
+            const originalPriceMobile = document.querySelector('.original-price-mobile[data-pd-original-price-display]');
+            const discountIndicatorMobile = document.querySelector('.discount-indicator-mobile');
+            const noDiscountMobile = document.querySelector('.no-discount-mobile');
+
+            if (originalPriceMobile && discountIndicatorMobile && noDiscountMobile) {
+                const hasStrikethroughContent = originalPriceMobile.querySelector('span[data-pd-price-integer]');
+                const priceInteger = hasStrikethroughContent ? hasStrikethroughContent.textContent.trim() : '';
+
+                if (priceInteger && priceInteger !== '') {
+                    originalPriceMobile.style.display = '';
+                    discountIndicatorMobile.style.display = '';
+                    noDiscountMobile.style.display = 'none';
+                } else {
+                    originalPriceMobile.style.display = 'none';
+                    discountIndicatorMobile.style.display = 'none';
+                    noDiscountMobile.style.display = '';
+                }
+            }
+        }
+
+        // Set up MutationObserver to watch for price changes
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initial check
+            setTimeout(checkForDiscount, 1000);
+
+            // Observe changes to price elements
+            const observer = new MutationObserver(function(mutations) {
+                checkForDiscount();
+            });
+
+            // Start observing the pricing containers (both desktop and mobile)
+            const priceContainers = document.querySelectorAll('[data-pd-price="1100"]');
+            priceContainers.forEach(container => {
+                if (container && container.parentElement) {
+                    observer.observe(container.parentElement, {
+                        childList: true,
+                        subtree: true,
+                        characterData: true,
+                        attributes: true
+                    });
+                }
+            });
+
+            // Also check periodically for the first few seconds
+            let checkCount = 0;
+            const checkInterval = setInterval(() => {
+                checkForDiscount();
+                checkCount++;
+                if (checkCount > 20) { // Check for 10 seconds
+                    clearInterval(checkInterval);
+                }
+            }, 500);
         });
-    </script>
+</script>
     <script>
         // Adjust enrollment button based on page content position
         document.addEventListener('DOMContentLoaded', function() {
@@ -135,18 +238,13 @@
                             <p>By the end, you'll have a functioning automation (or two), an understanding of how to
                                 evaluate its performance, and a playbook for iterating on AI tools responsibly inside
                                 your organization.</p>
+                            <p class="border-t pt-4">Yes, we're going to show you how to put together AI workflows and pipelines using a handful of tools, but <strong>that isn't the important part.</strong></p>
+                            <p>The thing to pay attention to is that we're going to <strong>show you how to evaluate your pipelines</strong>, which lets you iterate and improve your product. This is how you actually take something from a <strong>vaguely useful prototype to a legitimate product</strong>.</p>
+                            <p>We spend three weeks building and evaluating a pipeline together (a reader tip line!), then one week on product thinking, then finish up on the "adanced stuff" like custom interfaces and how to integrate things with your CMS (we're going to cheat on that one and use <a class="link link-primary" href="https://www.tampermonkey.net/">Tampermonkey</a> or <a class="link link-primary" href="https://developers.google.com/apps-script">Google Apps Script</a>).</p>
+                            <p>It's going to be <em>great</em>. It'll be like my <a class="link link-primary" href="https://www.youtube.com/playlist?list=PLewNEVDy7gq1_GPUaL0OQ31QsiHP5ncAQ">AI for investigative journalism</a> course, but more directed, applied, and product oriented. So maybe not very much like it at all, really?</p>
                         </div>
                     </div>
-                    <div class="max-w-5xl mx-auto">
-                        <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">The Brief, To-The-Point Summary</h2>
-                        <div class="space-y-4 text-sm lg:text-base leading-relaxed opacity-90">
-                            <p>We're going to have a class.</p>
-                            <p>Yes, we're going to show you how to put together AI workflows and pipelines, but <strong>that isn't the important part.</strong></p>
-                            <p>The thing to pay attention to is that we're going to <strong>show you how to evaluate them</strong>, which lets you iterate and improve your product. This is how you actually take something from a <strong>vaguely useful prototype to a legitimate product</strong>.</p>
-                            <p>We spend three weeks building and evaluating a pipeline together (a reader tip line!), then one week on product thinking, then two weeks on the "adanced stuff" like custom interfaces and how to integrate things with your CMS (we're going to cheat on that one).</p>
-                        </div>
-                    </div>
-
+                </div>
                 <div class="p-8 lg:p-12 lg:pr-96" id="who-section">
                     <div class="max-w-5xl mx-auto">
                         <h2 class="text-2xl lg:text-3xl font-bold mb-4 lg:mb-6">Who It's For</h2>
@@ -429,6 +527,38 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="mt-8 pt-6 border-t border-base-300">
+                            <h3 class="text-lg lg:text-xl font-bold mb-4">Session Schedule</h3>
+                            <p class="text-sm lg:text-base font-semibold mb-4">Weekly sessions on Tuesdays at 10:00 AM ET</p>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 lg:gap-4">
+                                <div class="flex gap-3 items-center">
+                                    <span class="badge badge-neutral badge-sm">Nov 5</span>
+                                    <span class="text-sm">Week 1: Build Something Simple</span>
+                                </div>
+                                <div class="flex gap-3 items-center">
+                                    <span class="badge badge-neutral badge-sm">Nov 12</span>
+                                    <span class="text-sm">Week 2: Connect the Dots</span>
+                                </div>
+                                <div class="flex gap-3 items-center">
+                                    <span class="badge badge-neutral badge-sm">Nov 19</span>
+                                    <span class="text-sm">Week 3: Observe and Debug</span>
+                                </div>
+                                <div class="flex gap-3 items-center">
+                                    <span class="badge badge-neutral badge-sm">Nov 26</span>
+                                    <span class="text-sm">Week 4: Product Thinking</span>
+                                </div>
+                                <div class="flex gap-3 items-center">
+                                    <span class="badge badge-neutral badge-sm">Dec 3</span>
+                                    <span class="text-sm">Week 5: Tools & Integration</span>
+                                </div>
+                                <div class="flex gap-3 items-center">
+                                    <span class="badge badge-neutral badge-sm">Dec 10</span>
+                                    <span class="text-sm">Week 6: Evaluation Dashboards</span>
+                                </div>
+                            </div>
+                            <p class="text-xs lg:text-sm opacity-60 mt-4 italic">All sessions are recorded and available within 24 hours</p>
+                        </div>
                     </div>
                 </div>
 
@@ -664,28 +794,48 @@
                                     </div>
                                 </div>
                                 <div class="divider my-2"></div>
-                                <div class="flex justify-between items-center">
-                                    <span class="text-sm opacity-70">Tuition:</span>
-                                    <span class="font-bold text-lg" data-pd-price="1100">
-                                        <span data-pd-price-formatted>$1,100</span>
-                                    </span>
+                                <div class="space-y-1">
+                                    <div class="flex items-start justify-between">
+                                        <span class="text-sm opacity-70">Tuition:</span>
+                                        <div class="flex flex-col items-end">
+                                            <span class="font-bold text-xl" data-pd-price="1100" data-pd-rel="price">
+                                                <span data-pd-price-formatted>$1,100</span>
+                                            </span>
+                                            <div class="original-price text-sm opacity-50 line-through" data-pd-original-price-display="1100" data-pd-rel="price" style="display: none;">
+                                                <span data-pd-currency-symbol></span><span data-pd-price-integer></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="discount-indicator text-xs text-right opacity-70" style="display: none;">
+                                        <span class="flag"></span> Regional rate applied
+                                    </div>
                                 </div>
                             </div>
                             <a href="https://www.paritydeals.com/api/v1/stripe-buy-now/?payment_id=plink_1SEcVWHcvvKiuZ6GiyxwXFEz&product_id=promo_d0a12047ebee4ab2882905296ae33274&success_url=https%3A%2F%2Flittlecolumns.com/">
                                 <button id="btn-enroll-sticky" class="btn btn-primary btn-block">Enroll Now</button>
                             </a>
-                            <p class="text-xs text-center opacity-60 mt-3"><em>Regional pricing available for folks from outside the US! Check the banner up top.</em></p>
                         </div>
                     </div>
                 </div>
             </div>
 
             <div
-                class="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-base-300 border-t-2 border-primary/30 shadow-xl z-50">
+                class="lg:hidden fixed bottom-0 left-0 right-0 p-3 bg-base-300 border-t-2 border-primary/30 shadow-xl z-50">
+                <div class="flex items-center justify-center gap-2 mb-1">
+                    <span class="font-bold text-base" data-pd-price="1100" data-pd-rel="mobile-price">
+                        <span data-pd-price-formatted>$1,100</span>
+                    </span>
+                    <div class="original-price-mobile text-sm opacity-50 line-through" data-pd-original-price-display="1100" data-pd-rel="mobile-price" style="display: none;">
+                        <span data-pd-currency-symbol></span><span data-pd-price-integer></span>
+                    </div>
+                </div>
                 <a href="https://www.paritydeals.com/api/v1/stripe-buy-now/?payment_id=plink_1SEcVWHcvvKiuZ6GiyxwXFEz&product_id=promo_d0a12047ebee4ab2882905296ae33274&success_url=https%3A%2F%2Flittlecolumns.com/">
-                    <button id="btn-enroll-mobile" class="btn btn-primary btn-block btn-lg">Enroll Now - $1,100</button>
+                    <button id="btn-enroll-mobile" class="btn btn-primary btn-block btn-lg">Enroll Now</button>
                 </a>
-                <p class="text-sm text-center opacity-60 mt-2">PPP pricing · 100% refund before Session 2</p>
+                <div class="discount-indicator-mobile text-xs text-center opacity-50 mt-2" style="display: none;">
+                    <span class="flag"></span> Regional pricing applied · 100% refund before Session 2
+                </div>
+                <p class="text-xs text-center opacity-50 mt-1 no-discount-mobile">100% refund before Session 2</p>
             </div>
         </div>
     </div>
