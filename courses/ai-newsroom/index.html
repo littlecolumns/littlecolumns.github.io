@@ -6,131 +6,85 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Automated Newsroom: Build AI Workflows That Work</title>
     <link href="output.css" rel="stylesheet">
-    <script type="text/javascript">
-    function resolvePdSDKFunction(e,...t){return new Promise((n,i)=>{!function r(){window.PDPromotionUISDK&&"function"==typeof window.PDPromotionUISDK[e]?window.PDPromotionUISDK[e](...t).then(n).catch(i):setTimeout(r,100)}()})}!function(e,t,n,i,r,a,c){e[i]=e[i]||function(){(e[i].q=e[i].q||[]).push(Array.prototype.slice.call(arguments))},a=t.createElement(n),c=t.getElementsByTagName(n)[0],a.id="parity-deals-sdk",a.async=1,a.src=r,c.parentNode.insertBefore(a,c)}(window,document,"script","PDPromotionUISDK","https://cdn.paritydeals.com/js-promotions-ui/1.0.0/js-promotions-ui.umd.js"),window.PDPromotionUI={init:function(e){PDPromotionUISDK("init",e)},getUpdatedPrice:function(e,t){return resolvePdSDKFunction("getUpdatedPrice",e,t)},updatePriceElement:function(e,t){return resolvePdSDKFunction("updatePriceElement",e,t)},updatePrice:function(e){return resolvePdSDKFunction("updatePrice",e)}};
-    </script>
     <script>
-        // Wait for SDK to be ready before initializing
-        function initParityDeals() {
-            if (typeof PDPromotionUISDK === 'function') {
-                PDPromotionUI.init({
-                    productId: 'promo_d0a12047ebee4ab2882905296ae33274',
-                    showBanner: true,
-                });
-            } else {
-                // Retry after a short delay if SDK isn't ready
-                setTimeout(initParityDeals, 100);
+        // Custom pricing service
+        const PRICING_ENDPOINT = 'https://pricing-gateway.vercel.app/pricing';
+        const BUY_ENDPOINT = 'https://pricing-gateway.vercel.app/buy';
+
+        // Fetch pricing from API
+        async function fetchPricing() {
+            try {
+                const response = await fetch(PRICING_ENDPOINT);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Failed to fetch pricing:', error);
+                // Fallback to default pricing
+                return {"country":"US","discounted":false,"price":1100,"original":1100};
             }
         }
 
-        // Start initialization attempt
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initParityDeals);
-        } else {
-            initParityDeals();
-        }
-        function getFlag() {
-            var flag = document.querySelector("#flag");
-            if(flag) {
-                [...document.querySelectorAll(".flag")].forEach(e => {
-                    e.innerHTML = flag.innerHTML;
-                })
-            } else {
-                setTimeout(getFlag, 50)
-            }
-        }
-        getFlag()
+        // Apply pricing to the page
+        async function applyPricing() {
+            const pricing = await fetchPricing();
 
-        // Monitor for discount changes
-        function checkForDiscount() {
-            // Check desktop pricing
-            const originalPriceDiv = document.querySelector('.original-price[data-pd-original-price-display]');
+            // Format price with currency symbol
+            const formattedPrice = `$${pricing.price.toLocaleString()}`;
+            const formattedOriginal = `$${pricing.original.toLocaleString()}`;
+
+            // Update all price displays
+            document.querySelectorAll('[data-price-display]').forEach(el => {
+                el.textContent = formattedPrice;
+            });
+
+            // Update all original price displays
+            document.querySelectorAll('[data-original-price-display]').forEach(el => {
+                el.textContent = formattedOriginal;
+            });
+
+            // Update country flags
+            document.querySelectorAll('.country-flag').forEach(el => {
+                el.textContent = getFlagEmoji(pricing.country);
+            });
+
+            // Show/hide discount indicators based on whether there's a discount
+            const hasDiscount = pricing.discounted && pricing.price !== pricing.original;
+
+            // Desktop pricing
+            const originalPriceDiv = document.querySelector('.original-price');
             const discountIndicator = document.querySelector('.discount-indicator');
-            const currentPriceDiv = document.querySelector('[data-pd-price="1100"][data-pd-rel="price"]');
-
-            if (originalPriceDiv && discountIndicator && currentPriceDiv) {
-                // Get both prices to compare
-                const originalPriceInt = originalPriceDiv.querySelector('span[data-pd-price-integer]');
-                const currentPriceFormatted = currentPriceDiv.querySelector('span[data-pd-price-formatted]');
-
-                const originalPrice = originalPriceInt ? originalPriceInt.textContent.trim() : '';
-                const currentPrice = currentPriceFormatted ? currentPriceFormatted.textContent.trim() : '';
-
-                // Only show discount if we have both prices and they're different
-                const hasDiscount = originalPrice && currentPrice && originalPrice !== '' &&
-                                   !currentPrice.includes(originalPrice);
-
-                if (hasDiscount) {
-                    originalPriceDiv.style.display = '';
-                    discountIndicator.style.display = '';
-                } else {
-                    originalPriceDiv.style.display = 'none';
-                    discountIndicator.style.display = 'none';
-                }
+            if (originalPriceDiv && discountIndicator) {
+                originalPriceDiv.style.display = hasDiscount ? '' : 'none';
+                discountIndicator.style.display = hasDiscount ? '' : 'none';
             }
 
-            // Check mobile pricing
-            const originalPriceMobile = document.querySelector('.original-price-mobile[data-pd-original-price-display]');
+            // Mobile pricing
+            const originalPriceMobile = document.querySelector('.original-price-mobile');
             const discountIndicatorMobile = document.querySelector('.discount-indicator-mobile');
             const noDiscountMobile = document.querySelector('.no-discount-mobile');
-            const currentPriceMobile = document.querySelector('[data-pd-price="1100"][data-pd-rel="mobile-price"]');
-
-            if (originalPriceMobile && discountIndicatorMobile && noDiscountMobile && currentPriceMobile) {
-                const originalPriceInt = originalPriceMobile.querySelector('span[data-pd-price-integer]');
-                const currentPriceFormatted = currentPriceMobile.querySelector('span[data-pd-price-formatted]');
-
-                const originalPrice = originalPriceInt ? originalPriceInt.textContent.trim() : '';
-                const currentPrice = currentPriceFormatted ? currentPriceFormatted.textContent.trim() : '';
-
-                const hasDiscount = originalPrice && currentPrice && originalPrice !== '' &&
-                                   !currentPrice.includes(originalPrice);
-
-                if (hasDiscount) {
-                    originalPriceMobile.style.display = '';
-                    discountIndicatorMobile.style.display = '';
-                    noDiscountMobile.style.display = 'none';
-                } else {
-                    originalPriceMobile.style.display = 'none';
-                    discountIndicatorMobile.style.display = 'none';
-                    noDiscountMobile.style.display = '';
-                }
+            if (originalPriceMobile && discountIndicatorMobile && noDiscountMobile) {
+                originalPriceMobile.style.display = hasDiscount ? '' : 'none';
+                discountIndicatorMobile.style.display = hasDiscount ? '' : 'none';
+                noDiscountMobile.style.display = hasDiscount ? 'none' : '';
             }
         }
 
-        // Set up MutationObserver to watch for price changes
-        document.addEventListener('DOMContentLoaded', function() {
-            // Initial check
-            setTimeout(checkForDiscount, 1000);
+        // Convert country code to flag emoji
+        function getFlagEmoji(countryCode) {
+            const codePoints = countryCode
+                .toUpperCase()
+                .split('')
+                .map(char => 127397 + char.charCodeAt());
+            return String.fromCodePoint(...codePoints);
+        }
 
-            // Observe changes to price elements
-            const observer = new MutationObserver(function(mutations) {
-                checkForDiscount();
-            });
-
-            // Start observing the pricing containers (both desktop and mobile)
-            const priceContainers = document.querySelectorAll('[data-pd-price="1100"]');
-            priceContainers.forEach(container => {
-                if (container && container.parentElement) {
-                    observer.observe(container.parentElement, {
-                        childList: true,
-                        subtree: true,
-                        characterData: true,
-                        attributes: true
-                    });
-                }
-            });
-
-            // Also check periodically for the first few seconds
-            let checkCount = 0;
-            const checkInterval = setInterval(() => {
-                checkForDiscount();
-                checkCount++;
-                if (checkCount > 20) { // Check for 10 seconds
-                    clearInterval(checkInterval);
-                }
-            }, 500);
-        });
-</script>
+        // Initialize pricing on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyPricing);
+        } else {
+            applyPricing();
+        }
+    </script>
     <script>
         // Adjust enrollment button based on page content position
         document.addEventListener('DOMContentLoaded', function() {
@@ -811,20 +765,21 @@
                                     <div class="flex items-start justify-between">
                                         <span class="text-sm opacity-70">Tuition:</span>
                                         <div class="flex flex-col items-end">
-                                            <span class="font-bold text-xl" data-pd-price="1100" data-pd-rel="price">
-                                                <span data-pd-price-formatted>$1,100</span>
-                                            </span>
-                                            <div class="original-price text-sm opacity-50 line-through" data-pd-original-price-display="1100" data-pd-rel="price" style="display: none;">
-                                                <span data-pd-currency-symbol></span><span data-pd-price-integer></span>
+                                            <span class="font-bold text-xl" data-price-display>$1,100</span>
+                                            <div class="original-price text-sm opacity-50 line-through" style="display: none;">
+                                                <span data-original-price-display>$1,100</span>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="discount-indicator text-xs text-right opacity-70" style="display: none;">
-                                        <span class="flag"></span> Regional rate applied
+                                        <button type="button" class="link link-hover inline-flex items-center gap-1" onclick="document.getElementById('pricing_modal').showModal()">
+                                            <span class="country-flag"></span> Regional rate applied
+                                            <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
-                            <a href="https://www.paritydeals.com/api/v1/stripe-buy-now/?payment_id=plink_1SEcVWHcvvKiuZ6GiyxwXFEz&product_id=promo_d0a12047ebee4ab2882905296ae33274&success_url=https%3A%2F%2Flittlecolumns.com/">
+                            <a href="https://pricing-gateway.vercel.app/buy">
                                 <button id="btn-enroll-sticky" class="btn btn-primary btn-block">Enroll Now</button>
                             </a>
                         </div>
@@ -835,23 +790,51 @@
             <div
                 class="lg:hidden fixed bottom-0 left-0 right-0 p-3 bg-base-300 border-t-2 border-primary/30 shadow-xl z-50">
                 <div class="flex items-center justify-center gap-2 mb-1">
-                    <span class="font-bold text-base" data-pd-price="1100" data-pd-rel="mobile-price">
-                        <span data-pd-price-formatted>$1,100</span>
-                    </span>
-                    <div class="original-price-mobile text-sm opacity-50 line-through" data-pd-original-price-display="1100" data-pd-rel="mobile-price" style="display: none;">
-                        <span data-pd-currency-symbol></span><span data-pd-price-integer></span>
+                    <span class="font-bold text-base" data-price-display>$1,100</span>
+                    <div class="original-price-mobile text-sm opacity-50 line-through" style="display: none;">
+                        <span data-original-price-display>$1,100</span>
                     </div>
                 </div>
-                <a href="https://www.paritydeals.com/api/v1/stripe-buy-now/?payment_id=plink_1SEcVWHcvvKiuZ6GiyxwXFEz&product_id=promo_d0a12047ebee4ab2882905296ae33274&success_url=https%3A%2F%2Flittlecolumns.com/">
+                <a href="https://pricing-gateway.vercel.app/buy">
                     <button id="btn-enroll-mobile" class="btn btn-primary btn-block btn-lg">Enroll Now</button>
                 </a>
-                <div class="discount-indicator-mobile text-xs text-center opacity-50 mt-2" style="display: none;">
-                    <span class="flag"></span> Regional pricing applied · 100% refund before Session 2
+                <div class="discount-indicator-mobile text-xs text-center opacity-50 mt-1" style="display: none;">
+                    <button type="button" class="link link-hover inline-flex items-center gap-1" onclick="document.getElementById('pricing_modal').showModal()">
+                        <span class="country-flag"></span> Regional pricing applied
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </button> · 100% refund before Session 2
                 </div>
                 <p class="text-xs text-center opacity-50 mt-1 no-discount-mobile">100% refund before Session 2</p>
             </div>
         </div>
     </div>
+
+    <!-- Regional Pricing Modal -->
+    <dialog id="pricing_modal" class="modal" data-theme="custom">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg mb-4">Regional Pricing Information</h3>
+            <p class="text-sm opacity-80 mb-4">
+                You're receiving regional pricing based on your location. To ensure your enrollment is processed correctly:
+            </p>
+            <div class="alert alert-warning mb-4">
+                <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <span class="text-sm">
+                    <strong>Important:</strong> The country of your billing address must match the country of your discount, or your enrollment will be canceled.
+                </span>
+            </div>
+            <p class="text-xs opacity-60">
+                This pricing adjustment is designed to make the course more accessible to participants around the world while maintaining fair pricing for all.
+            </p>
+            <div class="modal-action">
+                <form method="dialog">
+                    <button class="btn btn-sm">Close</button>
+                </form>
+            </div>
+        </div>
+        <form method="dialog" class="modal-backdrop">
+            <button>close</button>
+        </form>
+    </dialog>
 </body>
 
 </html>
