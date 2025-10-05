@@ -46,18 +46,24 @@
             // Check desktop pricing
             const originalPriceDiv = document.querySelector('.original-price[data-pd-original-price-display]');
             const discountIndicator = document.querySelector('.discount-indicator');
+            const currentPriceDiv = document.querySelector('[data-pd-price="1100"][data-pd-rel="price"]');
 
-            if (originalPriceDiv && discountIndicator) {
-                // Check if original price has content (indicating a discount)
-                const hasStrikethroughContent = originalPriceDiv.querySelector('span[data-pd-price-integer]');
-                const priceInteger = hasStrikethroughContent ? hasStrikethroughContent.textContent.trim() : '';
+            if (originalPriceDiv && discountIndicator && currentPriceDiv) {
+                // Get both prices to compare
+                const originalPriceInt = originalPriceDiv.querySelector('span[data-pd-price-integer]');
+                const currentPriceFormatted = currentPriceDiv.querySelector('span[data-pd-price-formatted]');
 
-                if (priceInteger && priceInteger !== '') {
-                    // Show original price and discount indicator
+                const originalPrice = originalPriceInt ? originalPriceInt.textContent.trim() : '';
+                const currentPrice = currentPriceFormatted ? currentPriceFormatted.textContent.trim() : '';
+
+                // Only show discount if we have both prices and they're different
+                const hasDiscount = originalPrice && currentPrice && originalPrice !== '' &&
+                                   !currentPrice.includes(originalPrice);
+
+                if (hasDiscount) {
                     originalPriceDiv.style.display = '';
                     discountIndicator.style.display = '';
                 } else {
-                    // Hide both if no discount
                     originalPriceDiv.style.display = 'none';
                     discountIndicator.style.display = 'none';
                 }
@@ -67,12 +73,19 @@
             const originalPriceMobile = document.querySelector('.original-price-mobile[data-pd-original-price-display]');
             const discountIndicatorMobile = document.querySelector('.discount-indicator-mobile');
             const noDiscountMobile = document.querySelector('.no-discount-mobile');
+            const currentPriceMobile = document.querySelector('[data-pd-price="1100"][data-pd-rel="mobile-price"]');
 
-            if (originalPriceMobile && discountIndicatorMobile && noDiscountMobile) {
-                const hasStrikethroughContent = originalPriceMobile.querySelector('span[data-pd-price-integer]');
-                const priceInteger = hasStrikethroughContent ? hasStrikethroughContent.textContent.trim() : '';
+            if (originalPriceMobile && discountIndicatorMobile && noDiscountMobile && currentPriceMobile) {
+                const originalPriceInt = originalPriceMobile.querySelector('span[data-pd-price-integer]');
+                const currentPriceFormatted = currentPriceMobile.querySelector('span[data-pd-price-formatted]');
 
-                if (priceInteger && priceInteger !== '') {
+                const originalPrice = originalPriceInt ? originalPriceInt.textContent.trim() : '';
+                const currentPrice = currentPriceFormatted ? currentPriceFormatted.textContent.trim() : '';
+
+                const hasDiscount = originalPrice && currentPrice && originalPrice !== '' &&
+                                   !currentPrice.includes(originalPrice);
+
+                if (hasDiscount) {
                     originalPriceMobile.style.display = '';
                     discountIndicatorMobile.style.display = '';
                     noDiscountMobile.style.display = 'none';
